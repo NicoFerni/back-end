@@ -1,33 +1,31 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+
 @Entity()
 export class User{
-    @PrimaryGeneratedColumn({
-        type: 'bigint',
-        name: 'user_id',
-      })
-      id: number;
+      @PrimaryGeneratedColumn("uuid")
+         id: any;
     
       @Column({
         nullable: false,
         default: '',
         name: 'names'
       })
-      nombres: string;
+      names: string;
     
       @Column({
         nullable: false,
         default: '',
         name: 'last_name'
       })
-      apellidos: string;
+      lastNames: string;
     
       @Column({
         nullable: false,
         default: '',
         name: 'password'
       })
-      contraseña: string;
+      password: string;
 
       @Column({
         nullable: false,
@@ -39,15 +37,16 @@ export class User{
         type: 'boolean', 
         default: 'false'})
       active: boolean;
-
+      
       @Column({
-        type: 'uuid', 
-        unique: true, 
-        name:'activation_token'})
-      activationToken: string
+        default: 'false',
+        name: 'activation_token'})
+       activationToken: string;
 
-      @CreateDateColumn({name: 'created_on'})
+      @CreateDateColumn({
+        name: 'created_on'
+      })
       createdOn: Date;
 
-
+ 
 }
