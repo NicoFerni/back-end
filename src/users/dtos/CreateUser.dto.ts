@@ -1,23 +1,27 @@
-import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { DeleteDateColumn } from "typeorm";
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @MinLength(3)
-  nombre: string;
+  @MinLength(2)
+  @MaxLength(28)
+  nombres: string;
 
   @IsNotEmpty()
-  @MinLength(8)
-  apellido: string;
+  @MinLength(2)
+  @MaxLength(29)
+  apellidos: string;
 
   @IsNotEmpty()
-  @MinLength(8)
-  password: string;
+  @MinLength(6)
+  @MaxLength(22)
+  contraseña: string;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
-  @MinLength(8)
-  ubicacion: string;
+  @DeleteDateColumn()
+  deletedAt: Date;
+
 }
