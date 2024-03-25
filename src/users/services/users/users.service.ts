@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { v4 } from 'uuid'
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
+import * as nodemailer from 'nodemailer';
  
 @Injectable()
 export class UsersService {
@@ -33,9 +34,37 @@ export class UsersService {
       password: await hashedPass,
       activationToken:token,
     });
-    return await this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    this.sendMailActivation(newUser.email, newUser.activationToken);
+
+    return newUser;
     
   }
+
+  async sendMailActivation(email: string, activationToken: string) {
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'vallie59@ethereal.email',
+        pass: 'c8sRyZkSVrZ5K3nk26'
+      }
+    })
+    let mailOptions = {
+      from: 'vallie59@ethereal.email',
+      to: email,
+      subject: 'Esto es una prueba',
+      text: `Activa tu cuenta con el siguiente codigo ${activationToken}`
+    }
+    transporter.sendMail(mailOptions, function(error: string, info: any){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
+  }
+
   
   async findOneByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ where: { email } });

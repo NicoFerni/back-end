@@ -33,8 +33,10 @@ import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
         return this.userService.login(loginDto)
       }
 
-      @Get('/activate-account')
-      activateAccount(@Query() activateUserDto: ActivateUserDto): Promise<void>{
+      @Post('activate')
+      async activate(@Body() activateUserDto: ActivateUserDto){
         return this.userService.activateUserDto(activateUserDto)
       }
+      
+  
     }
