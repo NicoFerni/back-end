@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException, UnprocessableEntityException, Req, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +10,8 @@ import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { v4 } from 'uuid'
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import * as nodemailer from 'nodemailer';
+import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
+import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
  
 @Injectable()
 export class UsersService {
@@ -67,7 +69,12 @@ export class UsersService {
 
   
   async findOneByEmail(email: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { email } });
+    const user:User =  await this.userRepository.findOne({ where: { email } });
+
+    if(!user){
+      throw new NotFoundException(`User with email ${email} not found`)
+    }
+    return user;
   }
   
   async checkPassword(password: string, userPassword:string): Promise<boolean>{
@@ -76,17 +83,19 @@ export class UsersService {
 
   async login(loginDto: LoginDto): Promise<{accessToken: string}>{
     const { email, password } = loginDto;
-    const user = await this.findOneByEmail(email)
+    const user:User = await this.findOneByEmail(email)
     
-    if(
-      user && 
-      (await this.checkPassword(password, user.password))){
+    if (await this.checkPassword(password, user.password)){
         const payload: JwtPayload = { id: user.id, email, active: user.active};
         const accessToken = await this.jwtService.sign(payload)
         return { accessToken }
       }
       throw new UnauthorizedException('Chequea tus credenciales')
     
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return await bcryptjs.hash(password, 10);
   }
 
   async activateUser(user:User): Promise<void>{
@@ -110,6 +119,32 @@ export class UsersService {
     } 
     await this.activateUser(user)
   }
+
+  async requestResetPassword(requestResetPasswordDto: RequestResetPasswordDto): Promise<void>{
+    const { email } = requestResetPasswordDto;
+    const user:User = await this.findOneByEmail(email)
+    user.resetPasswordToken = v4()
+    this.userRepository.save(user)
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise <void> {
+    const { resetPasswordToken, password } = resetPasswordDto;
+    const user:User = await this.findOneByResetPasswordToken(resetPasswordToken)
+
+    user.password = await this.checkPassword(password);
+    user.resetPasswordToken = null;
+    this.userRepository.save(user)
+  }
+
+  async findOneByResetPasswordToken(resetPasswordToken: string): Promise<User> {
+    const user: User = await this.userRepository.findOne({ where: { resetPasswordToken } })
+
+    if(!user){
+      throw new NotFoundException
+    } 
+    return user
+  }
+
 
   getUsers() {
     return this.userRepository.find();

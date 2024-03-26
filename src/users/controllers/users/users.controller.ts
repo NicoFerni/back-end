@@ -5,12 +5,15 @@ import {
     Post,
     Query,
     UsePipes,
+    Patch,
     ValidationPipe,
     } from '@nestjs/common';
     import { UsersService } from 'src/users/services/users/users.service';
     import { CreateUserDto } from 'src/users/dtos/createUser.dto';
     import { LoginDto } from 'src/users/dtos/login.dto';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
+import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
+import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
 
 
     @Controller('api/v1/user')
@@ -38,5 +41,14 @@ import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
         return this.userService.activateUserDto(activateUserDto)
       }
       
-  
+      @Patch('request-reset-password')
+        requestResetPasswordDto(@Body() RequestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
+          return this.userService.requestResetPassword(RequestResetPasswordDto)
+        }
+
+      @Patch('reset-password')
+        resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
+          return this.userService.resetPassword(resetPasswordDto);
+        }
+      
     }
