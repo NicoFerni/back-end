@@ -1,4 +1,4 @@
-import { IsNotEmpty, MinLength, MaxLength, IsEmail, isUUID, IsUUID } from "class-validator";
+import { IsNotEmpty, MinLength, MaxLength, IsEmail } from "class-validator";
 
 
 export class LoginDto{

@@ -21,7 +21,7 @@ export class UsersService {
   ) {}
       
   async createUser({names, lastNames, password, email}: CreateUserDto) {
-    const hashedPass = await bcryptjs.hash(password, 10)
+    const hashedPass = await this.hashPassword(password)
     const existingUser = await this.userRepository.findOne( {where: { email: email }});
     const token = v4()
 
@@ -131,7 +131,7 @@ export class UsersService {
     const { resetPasswordToken, password } = resetPasswordDto;
     const user:User = await this.findOneByResetPasswordToken(resetPasswordToken)
 
-    user.password = await this.checkPassword(password);
+    user.password = await this.hashPassword(password);
     user.resetPasswordToken = null;
     this.userRepository.save(user)
   }

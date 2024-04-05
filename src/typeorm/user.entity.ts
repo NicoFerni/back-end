@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class User{
@@ -55,6 +55,11 @@ export class User{
         name: 'created_on'
       })
       createdOn: Date;
+
+       //Making OneToOne relation
+       @OneToOne(() => Profile)
+       @JoinColumn({ name: 'id'}) 
+       profile: Profile;
 
  
 }
