@@ -6,6 +6,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import entities from './typeorm';
 import { ProfileModule } from './profile/profile.module';
 import { ProfileService } from './profile/services/profile.service';
+import { LocationService } from './profile/services/location.service';
 
 
 @Module({
