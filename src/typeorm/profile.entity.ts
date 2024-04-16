@@ -39,6 +39,7 @@ export class Profile {
       @Column({
         nullable: false,
         default: '',
+        enum: ['Menos de 2 años', 'De 2 a 6 años', 'Más de 6 años'],
         name: 'experience'
       })
       experience: string;
@@ -63,6 +64,13 @@ export class Profile {
         name: 'gender'
       })
       gender: string;
+
+
+      @Column({
+        nullable: false,
+        name: 'birthday'
+      })
+      birthday: Date;
 
       @Column({
         nullable: false,

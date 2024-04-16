@@ -1,4 +1,4 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Query } from "@nestjs/common";
 import { ProfileService } from "../services/profile.service";
 import { Get } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
@@ -21,4 +21,11 @@ import { LocationService } from "../services/location.service";
         getCountries(){
             return this.locationService.getCountries()
         }
+
+        @Get('state')
+        getStates(@Query('country') country : string){
+           return this.locationService.getStates(country);
+
+        }
+
     } 
