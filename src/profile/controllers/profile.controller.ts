@@ -1,8 +1,11 @@
 import { Controller, Query } from "@nestjs/common";
-import { ProfileService } from "../services/profile.service";
-import { Get } from '@nestjs/common'
+import { ProfileService} from "../services/profile.service";
+import { Get, Post, Body } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
 import { LocationService } from "../services/location.service";
+import { Profile } from "src/typeorm";
+import { CreateProfileDto } from "../dtos/createProfile.dto";
+
 
     @Controller('api/v1/profile')
     export class ProfileController {
@@ -21,11 +24,16 @@ import { LocationService } from "../services/location.service";
         getCountries(){
             return this.locationService.getCountries()
         }
+        
+        @Post('')
+        async create(@Body() createProfileDto:CreateProfileDto) : Promise <Profile>{
+            return this.profileService.createProfile(createProfileDto);
+        }
 
         @Get('state')
         getStates(@Query('country') country : string){
            return this.locationService.getStates(country);
-
         }
+
 
     } 

@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
-
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { SocialNetworks } from "./socialNetworks.entity";
 import { User } from "./user.entity";
 
 @Entity()
 export class Profile {
 
      @PrimaryGeneratedColumn("uuid")
-     id: any
+     profileId: any
 
     @Column({
         nullable: false,
@@ -79,12 +79,12 @@ export class Profile {
       })
       profilePicture: string;
 
-      @Column({
-        nullable: false,
-        default: '',
-        name: 'social_networks'
-      })
-      socialNetworks: string;
+      // @Column({
+      //   nullable: true,
+      //   default: '',
+      //   name: 'social_networks'
+      // })
+      // socialNetworks: object;
 
       @Column({
         nullable: false,
@@ -95,5 +95,9 @@ export class Profile {
 
       @OneToOne(() => User, (user) => user.profile)
       user: User;
+
+      @OneToOne(() => SocialNetworks, socialNetworks => socialNetworks.profile, { cascade: true, eager: true })
+      @JoinColumn()
+      socialNetworks: SocialNetworks;
 
 }

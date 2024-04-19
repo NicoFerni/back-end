@@ -10,6 +10,7 @@ import { ExperienceDto } from "../dtos/experience.dto";
 import { EducationDto } from "../dtos/education.dto";
 import { BirthdayDto } from "../dtos/birthday.dto";
 import { GenderDto } from "../dtos/gender.dto";
+import { CreateProfileDto } from "../dtos/createProfile.dto";
 
 @Injectable()
 export class ProfileService{
@@ -24,10 +25,10 @@ export class ProfileService{
     ) {}
 
 
-    async findProfileById(id:any): Promise<Profile>{
-      const profile = await this.profileRepository.findOne(id);
+    async findProfileById(profileId:any): Promise<Profile>{
+      const profile = await this.profileRepository.findOne(profileId);
       if (!profile) {
-        throw new NotFoundException(`Perfil con ID ${id} no encontrado`);
+        throw new NotFoundException(`Perfil con ID ${profileId} no encontrado`);
       }
       return profile;
     }
@@ -41,19 +42,19 @@ export class ProfileService{
       return this.locationService.getCountries()
     }
 
-    async availability(availabilityDto: AvailabilityDto, id: any ) {
+    async availability(availabilityDto: AvailabilityDto, profileId: any ) {
        const { weeklyHours, availableDays, currentlyActive } = availabilityDto
-       this.profileRepository.findOne({ where : {id:(id) }})
+       this.profileRepository.findOne({ where : {profileId:(profileId) }})
 
-       const profile = await this.profileRepository.findOne(id);
+       const profile = await this.profileRepository.findOne(profileId);
        if (!profile) {
-         throw new NotFoundException(`Profile with ID ${id} not found`);
+         throw new NotFoundException(`Profile with ID ${profileId} not found`);
        }
      }
 
-    async experience(experienceDto: ExperienceDto, id: any) : Promise<Profile>{
+    async experience(experienceDto: ExperienceDto, profileId: any) : Promise<Profile>{
         const { experience } = experienceDto
-        const profile = await this.findProfileById(id)
+        const profile = await this.findProfileById(profileId)
 
         profile.experience = experience
         await this.profileRepository.save(profile)
@@ -61,9 +62,9 @@ export class ProfileService{
         return profile
      }
 
-     async education(educationDto: EducationDto, id:any) : Promise<Profile>{
+     async education(educationDto: EducationDto, profileId:any) : Promise<Profile>{
       const { education } = educationDto
-      const profile = await this.findProfileById(id)
+      const profile = await this.findProfileById(profileId)
 
       profile.education = education
       await this.profileRepository.save(profile)
@@ -71,10 +72,10 @@ export class ProfileService{
       return profile
      }
 
-     async birthday(birthdayDto: BirthdayDto, id: string) : Promise<Profile>{
+     async birthday(birthdayDto: BirthdayDto, profileId: string) : Promise<Profile>{
       const { birthday } = birthdayDto
 
-      const profile = await this.findProfileById(id)
+      const profile = await this.findProfileById(profileId)
 
       profile.birthday = new Date(birthday)
 
@@ -83,10 +84,10 @@ export class ProfileService{
       return profile
      }
 
-     async gender(genderDto: GenderDto, id: string) : Promise<Profile>{
+     async gender(genderDto: GenderDto, profileId: string) : Promise<Profile>{
       const { gender } = genderDto
 
-      const profile = await this.findProfileById(id)
+      const profile = await this.findProfileById(profileId)
 
       profile.gender = gender
 
@@ -95,13 +96,35 @@ export class ProfileService{
       return profile
      }
 
-     async social(){
+     async social(profileId: string, socialNetworksData: Partial<SocialNetworks>): Promise<SocialNetworks> {
+      const profile =await this.profileRepository.findOne({ where: { profileId: profileId }, relations: ['socialNetworks'] });
+      if (!profile) {
+        throw new NotFoundException(`Profile with ID ${profileId} not found`);
+      }
+      let socialNetworks;
+      if (profile.socialNetworks) {
+        socialNetworks = this.socialNetworksRepository.merge(profile.socialNetworks, socialNetworksData);
+      } else {
+        socialNetworks = this.socialNetworksRepository.create(socialNetworksData);
+        profile.socialNetworks = socialNetworks;
+        await this.profileRepository.save(profile);
+      }
+      await this.socialNetworksRepository.save(socialNetworks);
+    
+      return socialNetworks;
+    } 
+    
+    async createProfile(createProfileDto: CreateProfileDto, ): Promise<Profile>{
+      const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, ...profileData } = createProfileDto;
+      const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
+      await this.socialNetworksRepository.save(socialNetworks)
 
-     }
+      const profile = this.profileRepository.create({...profileData, socialNetworks})
+      await this.profileRepository.save(profile);
 
-     async description(){
+  return profile;
+}
+    }
 
-     }
  
-// Falta profile pick
-  }
+ 
