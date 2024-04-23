@@ -10,6 +10,7 @@ export class CreateProfileDto {
     gender: string;
     profilePicture: string;
     description: string;
+    birthday: Date;
   
     // SocialNetworks properties
     facebook: string;

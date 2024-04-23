@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile, SocialNetworks } from "src/typeorm";
 import { Repository } from "typeorm";
@@ -11,6 +11,11 @@ import { EducationDto } from "../dtos/education.dto";
 import { BirthdayDto } from "../dtos/birthday.dto";
 import { GenderDto } from "../dtos/gender.dto";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
+import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
+import 'firebase/storage';
+import * as admin from 'firebase-admin';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Injectable()
 export class ProfileService{
@@ -84,6 +89,21 @@ export class ProfileService{
       return profile
      }
 
+     async selectedLanguage(selectedLanguageDto: SelectedLanguageDto, profileId: string): Promise<Profile> {
+        const languages = this.languagesService.getLanguages()
+        const languageName = languages[selectedLanguageDto.selectedLanguage]
+        const profile = await this.findProfileById(profileId)
+
+
+        if(!languageName) {
+          throw new NotFoundException(`Language with code ${selectedLanguageDto.selectedLanguage} not found`)
+        }
+        profile.languages = languageName
+        await this.profileRepository.save(profile)
+
+        return profile
+     }
+
      async gender(genderDto: GenderDto, profileId: string) : Promise<Profile>{
       const { gender } = genderDto
 
@@ -113,6 +133,34 @@ export class ProfileService{
     
       return socialNetworks;
     } 
+
+    async saveImage(file: Express.Multer.File, profileId: string): Promise<Profile>{
+      try{ const bucket = admin.storage().bucket()
+        const uuid = uuidv4()
+  
+        const uploadResponse = await bucket.upload(file.path,{
+          destination: `profile-pictures/${file.originalname}`,
+          metadata: {
+            contentType: file.mimetype,
+            metadata: {
+              firebaseStorageDownloadTokens: uuid,
+            }
+          }
+        })
+        const fileName = uploadResponse[0].name;
+        const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
+  
+        const profile = await this.findProfileById(profileId)
+        profile.profilePicture = url;
+        await this.profileRepository.save(profile)
+  
+        return profile
+      }
+      catch (error) {
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+  
+    }
     
     async createProfile(createProfileDto: CreateProfileDto, ): Promise<Profile>{
       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, ...profileData } = createProfileDto;
@@ -123,7 +171,7 @@ export class ProfileService{
       await this.profileRepository.save(profile);
 
   return profile;
-}
+  }
     }
 
  

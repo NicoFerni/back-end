@@ -1,4 +1,5 @@
-import { Controller, Query } from "@nestjs/common";
+import { Controller, Query, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService} from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
@@ -29,6 +30,17 @@ import { CreateProfileDto } from "../dtos/createProfile.dto";
         async create(@Body() createProfileDto:CreateProfileDto) : Promise <Profile>{
             return this.profileService.createProfile(createProfileDto);
         }
+
+        
+  @Post()
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  async createProfile(@UploadedFile() file, @Body() createProfileDto: CreateProfileDto) {
+    const profile = await this.profileService.createProfile(createProfileDto);
+    if (file) {
+      await this.profileService.saveImage(file, profile.profileId);
+    }
+    return profile;
+  }
 
         @Get('state')
         getStates(@Query('country') country : string){

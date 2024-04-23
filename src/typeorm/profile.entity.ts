@@ -18,9 +18,9 @@ export class Profile {
       @Column({
         nullable: false,
         default: '',
-        name: 'lenguages'
+        name: 'languages'
       })
-      lenguages: string;
+      languages: string;
 
       @Column({
         nullable: false,
@@ -79,12 +79,7 @@ export class Profile {
       })
       profilePicture: string;
 
-      // @Column({
-      //   nullable: true,
-      //   default: '',
-      //   name: 'social_networks'
-      // })
-      // socialNetworks: object;
+
 
       @Column({
         nullable: false,
