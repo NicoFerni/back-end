@@ -137,8 +137,12 @@ export class ProfileService{
 
     async saveImage(file: Express.Multer.File, profileId: string): Promise<Profile>{
       try{ 
+
+        console.log("Starting image upload...");
         const bucket = app.storage().bucket()
         const uuid = uuidv4()
+
+
         const uploadResponse = await bucket.upload(file.path,{
           destination: `profile-picture/${file.originalname}`,
           metadata: {
@@ -149,19 +153,33 @@ export class ProfileService{
           }
         })
         
+        console.log("Image uploaded successfully!");
+    
 
         const fileName = uploadResponse[0].name;
         const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
 
-        const profile = await this.findProfileById(profileId);
-        profile.profilePicture =  url; 
-        
-        await this.profileRepository.save(profile);
-        console.log(profile)
-        return profile;
+        const profile = await this.profileRepository.findOne({ where: { profileId: profileId } });
+    
+
+        profile.profilePicture = url
+  
+        await this.profileRepository.save(profile)
+  
+        console.log("Profile picture URL updated:", url);
+        if (profile) {
+          console.log("Profile details:", profile);
+      } else {
+          console.log("Profile not found for ID:", profileId);
+      }
+
+
+        return profile; 
       }
       catch (error) {
-        throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        console.error("Error during image upload:", error);
+
+        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
       }
   
     }
