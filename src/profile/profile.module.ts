@@ -6,10 +6,16 @@ import { ProfileService } from "./services/profile.service";
 import { HttpModule } from "@nestjs/axios";
 import { LanguagesService } from "./services/languages.service";
 import { LocationService } from "./services/location.service";
+import { MulterModule } from "@nestjs/platform-express";
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Profile, SocialNetworks]), HttpModule],
+    imports: [TypeOrmModule.forFeature([User, Profile, SocialNetworks]), 
+              HttpModule,
+              MulterModule.register({
+                dest: './uploads',
+                   }),
+    ],
     controllers: [ProfileController],
     providers: [ProfileService, LanguagesService, LocationService, SocialNetworks],
 })

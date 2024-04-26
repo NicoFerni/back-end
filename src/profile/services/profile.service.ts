@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile, SocialNetworks } from "src/typeorm";
 import { Repository } from "typeorm";
@@ -14,6 +14,7 @@ import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
 import * as admin from 'firebase-admin';
+import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -135,11 +136,11 @@ export class ProfileService{
     } 
 
     async saveImage(file: Express.Multer.File, profileId: string): Promise<Profile>{
-      try{ const bucket = admin.storage().bucket()
+      try{ 
+        const bucket = app.storage().bucket()
         const uuid = uuidv4()
-  
         const uploadResponse = await bucket.upload(file.path,{
-          destination: `profile-pictures/${file.originalname}`,
+          destination: `profile-picture/${file.originalname}`,
           metadata: {
             contentType: file.mimetype,
             metadata: {
@@ -147,32 +148,36 @@ export class ProfileService{
             }
           }
         })
+        
+
         const fileName = uploadResponse[0].name;
         const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
-  
-        const profile = await this.findProfileById(profileId)
-        profile.profilePicture = url;
-        await this.profileRepository.save(profile)
-  
-        return profile
+
+        const profile = await this.findProfileById(profileId);
+        profile.profilePicture =  url; 
+        
+        await this.profileRepository.save(profile);
+        console.log(profile)
+        return profile;
       }
       catch (error) {
-        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
       }
   
     }
+
     
-    async createProfile(createProfileDto: CreateProfileDto, ): Promise<Profile>{
-      const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, ...profileData } = createProfileDto;
-      const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
-      await this.socialNetworksRepository.save(socialNetworks)
+     async createProfile(createProfileDto: CreateProfileDto, ): Promise<Profile>{
+       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, ...profileData } = createProfileDto;
+       const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
+       await this.socialNetworksRepository.save(socialNetworks)
 
-      const profile = this.profileRepository.create({...profileData, socialNetworks})
-      await this.profileRepository.save(profile);
+       const profile = this.profileRepository.create({...profileData, socialNetworks})
+       await this.profileRepository.save(profile);
 
-  return profile;
+   return profile;
+   }
+
   }
-    }
-
  
  

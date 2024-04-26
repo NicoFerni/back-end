@@ -26,21 +26,22 @@ import { CreateProfileDto } from "../dtos/createProfile.dto";
             return this.locationService.getCountries()
         }
         
-        @Post('')
-        async create(@Body() createProfileDto:CreateProfileDto) : Promise <Profile>{
-            return this.profileService.createProfile(createProfileDto);
-        }
+        // @Post('')
+        // async create(@Body() createProfileDto:CreateProfileDto) : Promise <Profile>{
+        //     return this.profileService.createProfile(createProfileDto);
+        // }
 
         
-  @Post()
-  @UseInterceptors(FileInterceptor('profilePicture'))
-  async createProfile(@UploadedFile() file, @Body() createProfileDto: CreateProfileDto) {
-    const profile = await this.profileService.createProfile(createProfileDto);
-    if (file) {
-      await this.profileService.saveImage(file, profile.profileId);
-    }
-    return profile;
-  }
+        @Post('')
+        @UseInterceptors(FileInterceptor('profilePicture'))
+        async createProfile(@UploadedFile() profilePicture: Express.Multer.File , @Body() createProfileDto: CreateProfileDto) {
+
+          const profile = await this.profileService.createProfile(createProfileDto)
+          if (profilePicture) {
+            await this.profileService.saveImage(profilePicture, profile.profileId);
+          }
+          return profile;
+        }
 
         @Get('state')
         getStates(@Query('country') country : string){

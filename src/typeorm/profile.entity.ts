@@ -75,11 +75,9 @@ export class Profile {
       @Column({
         nullable: false,
         default: '',
-        name: 'profile_picture'
+        name: 'profile_picture',
       })
       profilePicture: string;
-
-
 
       @Column({
         nullable: false,
