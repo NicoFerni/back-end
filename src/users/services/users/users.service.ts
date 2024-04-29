@@ -12,7 +12,10 @@ import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import * as nodemailer from 'nodemailer';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
- 
+import * as dotenv from 'dotenv'
+
+dotenv.config();
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -45,20 +48,20 @@ export class UsersService {
 
   async sendMailActivation(email: string, activationToken: string) {
     let transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
+      host: 'smtp.office365.com',
       port: 587,
       auth: {
-        user: 'vallie59@ethereal.email',
-        pass: 'c8sRyZkSVrZ5K3nk26'
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
       }
     })
     let mailOptions = {
-      from: 'vallie59@ethereal.email',
+      from:`Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Esto es una prueba',
       text: `Activa tu cuenta con el siguiente codigo ${activationToken}`
     }
-    transporter.sendMail(mailOptions, function(error: string, info: any){
+     await transporter.sendMail(mailOptions, function(error: string, info: any){
       if (error) {
         console.log(error);
       } else {

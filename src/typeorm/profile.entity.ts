@@ -75,7 +75,7 @@ export class Profile {
       @Column({
         nullable: false,
         default: '',
-        name: 'profile_picture',
+        name: 'profile_picture'
       })
       profilePicture: string;
 
@@ -86,8 +86,8 @@ export class Profile {
       })
       description: string;
 
-      @OneToOne(() => User, (user) => user.profile)
-      user: User;
+      // @OneToOne(() => User, (user) => user.profile)
+      // user: User;
 
       @OneToOne(() => SocialNetworks, socialNetworks => socialNetworks.profile, { cascade: true, eager: true })
       @JoinColumn()

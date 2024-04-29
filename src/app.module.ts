@@ -2,12 +2,8 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import {TypeOrmModule} from '@nestjs/typeorm';
-// import { AuthModule } from './auth/auth.module';
 import entities from './typeorm';
 import { ProfileModule } from './profile/profile.module';
-import { ProfileService } from './profile/services/profile.service';
-import { LocationService } from './profile/services/location.service';
-
 
 @Module({
   imports: [
@@ -17,7 +13,7 @@ import { LocationService } from './profile/services/location.service';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
+        port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
