@@ -9,7 +9,7 @@ import {
     ValidationPipe,
     } from '@nestjs/common';
     import { UsersService } from 'src/users/services/users/users.service';
-    import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+    import { CreateUserDto } from '../../dtos/createUser.dto';
     import { LoginDto } from 'src/users/dtos/login.dto';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
