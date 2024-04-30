@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "outDir": "./output",
+    "outDir": "",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
