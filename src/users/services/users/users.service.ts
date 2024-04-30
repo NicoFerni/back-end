@@ -2,9 +2,9 @@ import { Injectable, HttpException, HttpStatus, UnauthorizedException, Unprocess
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from 'src/users/dtos/createUser.dto';
 import * as bcryptjs from 'bcryptjs'
 import { LoginDto } from 'src/users/dtos/login.dto';
+import { CreateUserDto } from '../../dtos/createUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { v4 } from 'uuid'
