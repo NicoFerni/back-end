@@ -14,7 +14,7 @@ import { LoginDto } from 'src/users/dtos/login.dto';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
-import { CreateUserDto } from 'src/users/dtos/createUser.dto.ts';
+import { CreateUserDto } from 'src/users/dtos/create.user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
