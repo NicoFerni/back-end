@@ -4,7 +4,7 @@ import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
 import * as bcryptjs from 'bcryptjs'
 import { LoginDto } from 'src/users/dtos/login.dto';
-import { CreateUserDto } from '../../dtos/createUser.dto';
+import { CreateUserDto } from 'src/users/dtos/createUser.dto.ts';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { v4 } from 'uuid'
