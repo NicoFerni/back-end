@@ -9,12 +9,12 @@ import {
     Patch,
     ValidationPipe,
     } from '@nestjs/common';
-    import { UsersService } from 'src/users/services/users/users.service';
-    import { CreateUserDto } from 'src/users/dtos/createUser.dto.ts';
-    import { LoginDto } from 'src/users/dtos/login.dto';
+import { UsersService } from 'src/users/services/users/users.service';
+import { LoginDto } from 'src/users/dtos/login.dto';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
+import { CreateUserDto } from 'src/users/dtos/createUser.dto.ts';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
