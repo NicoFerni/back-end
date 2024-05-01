@@ -14,10 +14,13 @@ import { LoginDto } from 'src/users/dtos/login.dto';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
+<<<<<<< HEAD:src/users/controllers/users.controller.ts
 import { CreateUserDto } from 'src/users/dtos/create.user.dto';
 import { ApiTags } from '@nestjs/swagger';
+=======
+>>>>>>> parent of 5aed90c (all done, part 1):src/users/controllers/users/users.controller.ts
 
-@ApiTags('users')
+
     @Controller('api/v1/user')
     export class UsersController {
       constructor(private readonly userService: UsersService) {}
