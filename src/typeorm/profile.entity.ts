@@ -86,8 +86,6 @@ export class Profile {
       })
       description: string;
 
-      @OneToOne(() => User, (user) => user.profile)
-      user: User;
 
       @OneToOne(() => SocialNetworks, socialNetworks => socialNetworks.profile, { cascade: true, eager: true })
       @JoinColumn()

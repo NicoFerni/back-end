@@ -56,10 +56,8 @@ export class User{
       })
       createdOn: Date;
 
-       //Making OneToOne relation
-       @OneToOne(() => Profile)
-       @JoinColumn({ name: 'id'}) 
-       profile: Profile;
-
+      @OneToOne(() => Profile)
+      @JoinColumn() 
+      profile: Profile;
  
 }
