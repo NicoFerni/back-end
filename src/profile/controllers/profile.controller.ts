@@ -4,10 +4,10 @@ import { ProfileService} from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
 import { LocationService } from "../services/location.service";
-import { Profile } from "src/typeorm";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
+import { ApiTags } from "@nestjs/swagger";
 
-
+@ApiTags('profiles')
     @Controller('api/v1/profile')
     export class ProfileController {
         constructor(private readonly profileService: ProfileService, 
