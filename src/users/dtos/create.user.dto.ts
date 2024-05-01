@@ -21,9 +21,6 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  // @IsNotEmpty()
-  // @IsUUID('4')
-  // activationToken: any
 
   @DeleteDateColumn()
   deletedAt: Date;

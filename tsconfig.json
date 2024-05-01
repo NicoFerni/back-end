@@ -18,10 +18,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "noEmit": true,
-    "emitDeclarationOnly": false,
     "allowImportingTsExtensions": true,
-  
+    "noEmit": true,
   }
-
 }
