@@ -68,7 +68,8 @@ export class Profile {
 
       @Column({
         nullable: false,
-        name: 'birthday'
+        name: 'birthday',
+        type: 'date'
       })
       birthday: Date;
 

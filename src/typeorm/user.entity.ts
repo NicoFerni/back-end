@@ -53,7 +53,6 @@ export class User{
 
       @CreateDateColumn({
         name: 'created_on',
-        type: 'date' 
       })
       createdOn: Date;
 
