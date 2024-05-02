@@ -52,7 +52,8 @@ export class User{
       resetPasswordToken: string;
 
       @CreateDateColumn({
-        name: 'created_on'
+        name: 'created_on',
+        type: 'date' 
       })
       createdOn: Date;
 
