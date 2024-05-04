@@ -5,7 +5,7 @@ import { Profile } from "./profile.entity";
 export class Availability {
 
 @PrimaryGeneratedColumn("uuid")
-availabilityId: any
+availabilityId: string
 
 @Column({
     nullable: false,
@@ -14,7 +14,10 @@ availabilityId: any
 })
 weeklyHours: number;
 
-@Column({
+@Column(
+    "int",
+    {
+    array: true,
     nullable: false,
     default: [],
     name: 'available_days'
@@ -25,7 +28,7 @@ availableDays: string[];
 @Column({
     nullable: false,
     default: '',
-    name: 'currently_ctive'
+    name: 'currently_active'
 })
   currentlyActive: string;
 
