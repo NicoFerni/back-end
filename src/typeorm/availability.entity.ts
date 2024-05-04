@@ -15,7 +15,7 @@ availabilityId: string
 weeklyHours: number;
 
 @Column(
-    "char",
+    "varchar",
     {
     array: true,
     nullable: false,
