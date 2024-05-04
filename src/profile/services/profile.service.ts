@@ -196,10 +196,15 @@ export class ProfileService{
     }
 
     
-     async createProfile(createProfileDto: CreateProfileDto, ): Promise<Profile>{
-       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, ...profileData } = createProfileDto;
+     async createProfile(createProfileDto: CreateProfileDto): Promise<Profile>{
+       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, weeklyHours, availableDays, currentlyActive, ...profileData } = createProfileDto;
+       
        const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
+       const availability = this.availabilityRepository.create({weeklyHours, availableDays, currentlyActive})
+
+       await this.availabilityRepository.save(availability)
        await this.socialNetworksRepository.save(socialNetworks)
+       
 
        const profile = this.profileRepository.create({...profileData, socialNetworks})
        await this.profileRepository.save(profile);
