@@ -1,5 +1,5 @@
 export class CreateProfileDto {
-  // Profile properties
+  
   knowledge: string;
   languages: string;
   location: string;
@@ -10,11 +10,11 @@ export class CreateProfileDto {
   profilePicture: string;
   description: string;
   birthday: Date;
+
   weeklyHours:number;
   availableDays: string[];
   currentlyActive: string
 
-  // SocialNetworks properties
   facebook: string;
   instagram: string;
   threads: string;
