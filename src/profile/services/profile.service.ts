@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile, SocialNetworks } from "src/typeorm";
 import { Repository } from "typeorm";
@@ -13,9 +13,9 @@ import { GenderDto } from "../dtos/gender.dto";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
-import * as admin from 'firebase-admin';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
+import { Availability } from "../../typeorm/availability.entity";
 
 
 @Injectable()
@@ -25,6 +25,8 @@ export class ProfileService{
         private readonly profileRepository: Repository<Profile>, 
         @InjectRepository(SocialNetworks)
         private readonly socialNetworksRepository: Repository<SocialNetworks>,
+        @InjectRepository(Availability)
+        private availabilityRepository: Repository<Availability>,
         private readonly languagesService: LanguagesService,
         private readonly locationService: LocationService,
         private httpService: HttpService
@@ -48,14 +50,20 @@ export class ProfileService{
       return this.locationService.getCountries()
     }
 
-    async availability(availabilityDto: AvailabilityDto, profileId: any ) {
+    async availability(availabilityDto: AvailabilityDto, profileId: any ): Promise<Profile> {
        const { weeklyHours, availableDays, currentlyActive } = availabilityDto
-       this.profileRepository.findOne({ where : {profileId:(profileId) }})
+       const profile = await this.findProfileById(profileId)
+      
+       const availability = new Availability();
+        availability.weeklyHours = weeklyHours;
+        availability.availableDays = availableDays;
+        availability.currentlyActive = currentlyActive;
 
-       const profile = await this.profileRepository.findOne(profileId);
-       if (!profile) {
-         throw new NotFoundException(`Profile with ID ${profileId} not found`);
-       }
+        profile.availability = availability;
+
+       await this.profileRepository.save(profile);
+
+       return profile
      }
 
     async experience(experienceDto: ExperienceDto, profileId: any) : Promise<Profile>{
@@ -122,7 +130,7 @@ export class ProfileService{
       if (!profile) {
         throw new NotFoundException(`Profile with ID ${profileId} not found`);
       }
-      let socialNetworks;
+      let socialNetworks: SocialNetworks;
       if (profile.socialNetworks) {
         socialNetworks = this.socialNetworksRepository.merge(profile.socialNetworks, socialNetworksData);
       } else {

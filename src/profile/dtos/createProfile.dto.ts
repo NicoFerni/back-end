@@ -3,7 +3,7 @@ export class CreateProfileDto {
   knowledge: string;
   languages: string;
   location: string;
-  availability: string;
+  availability: {};
   experience: string;
   price: number;
   education: string;

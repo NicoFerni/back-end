@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { SocialNetworks } from "./socialNetworks.entity";
-import { User } from "./user.entity";
+import { SocialNetworks } from "./socialNetworks.entity"; 
+import { Availability } from "./availability.entity";
 
 @Entity()
 export class Profile {
@@ -28,13 +28,6 @@ export class Profile {
         name: 'location'
       })
       location: string
-
-      @Column({
-        nullable: false,
-        default: '',
-        name: 'availability'
-      })
-      availability: string;
 
       @Column({
         nullable: false,
@@ -74,19 +67,21 @@ export class Profile {
       birthday: Date;
 
       @Column({
-        nullable: false,
+        nullable: true,
         default: '',
         name: 'profile_picture',
       })
       profilePicture: string;
 
       @Column({
-        nullable: false,
+        nullable: true,
         default: '',
         name: 'description'
       })
       description: string;
 
+      @OneToOne(() =>Availability, availability => availability.profile, { cascade: true })
+      availability: Availability;
 
       @OneToOne(() => SocialNetworks, socialNetworks => socialNetworks.profile, { cascade: true, eager: true })
       @JoinColumn()
