@@ -7,16 +7,17 @@ import { HttpModule } from "@nestjs/axios";
 import { LanguagesService } from "./services/languages.service";
 import { LocationService } from "./services/location.service";
 import { MulterModule } from "@nestjs/platform-express";
+import { Availability } from "../typeorm/availability.entity";
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Profile, SocialNetworks]), 
+    imports: [TypeOrmModule.forFeature([User, Profile, SocialNetworks, Availability]), 
               HttpModule,
               MulterModule.register({
                 dest: './uploads',
                    }),
     ],
     controllers: [ProfileController],
-    providers: [ProfileService, LanguagesService, LocationService, SocialNetworks],
+    providers: [ProfileService, LanguagesService, LocationService, SocialNetworks, Availability],
 })
 export class ProfileModule {}
