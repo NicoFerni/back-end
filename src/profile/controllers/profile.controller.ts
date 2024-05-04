@@ -25,13 +25,12 @@ import { ApiTags } from "@nestjs/swagger";
         getCountries(){
             return this.locationService.getCountries()
         }
-        
-        // @Post('')
-        // async create(@Body() createProfileDto:CreateProfileDto) : Promise <Profile>{
-        //     return this.profileService.createProfile(createProfileDto);
-        // }
+  
+        @Get('')
+        getProfiles(){
+            return this.profileService.getProfiles()
+        }
 
-        
         @Post('')
         @UseInterceptors(FileInterceptor('profilePicture'))
         async createProfile(@UploadedFile() profilePicture: Express.Multer.File , @Body() createProfileDto: CreateProfileDto) {

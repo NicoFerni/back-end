@@ -41,6 +41,9 @@ export class ProfileService{
       return profile;
     }
 
+    async getProfiles(){
+      return this.profileRepository.find()
+    }
 
     async getLanguages() {
       return this.languagesService.getLanguages()
