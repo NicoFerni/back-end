@@ -7,6 +7,7 @@ import {
     UsePipes,
     Patch,
     ValidationPipe,
+    Query,
     } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users/users.service';
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -38,7 +39,7 @@ import { ApiTags } from '@nestjs/swagger';
       }
 
       @Post('activate')
-      async activate(@Body() activateUserDto: ActivateUserDto){
+      async activate(@Query() activateUserDto: ActivateUserDto){
         return this.userService.activateUserDto(activateUserDto)
       }
       

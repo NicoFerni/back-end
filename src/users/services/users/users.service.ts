@@ -33,8 +33,8 @@ export class UsersService {
       names,
       lastNames,
       email,
-      password: await hashedPass,
-      activationToken:token,
+      password: hashedPass,
+      activationToken: token,
     });
     await this.userRepository.save(newUser);
     this.sendMailActivation(newUser.email, newUser.activationToken);
