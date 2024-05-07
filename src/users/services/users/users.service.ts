@@ -45,8 +45,9 @@ export class UsersService {
 
   async sendMailActivation(email: string, activationToken: string) {
     let transporter = nodemailer.createTransport({
-      host: 'smtp.office365.com',
-      port: 587,
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD
