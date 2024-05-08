@@ -206,7 +206,7 @@ export class ProfileService{
        await this.socialNetworksRepository.save(socialNetworks)
        
 
-       const profile = this.profileRepository.create({...profileData, socialNetworks})
+       const profile = this.profileRepository.create({...profileData, socialNetworks, availability})
        await this.profileRepository.save(profile);
 
    return profile;
