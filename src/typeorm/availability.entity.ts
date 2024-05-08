@@ -17,7 +17,6 @@ weeklyHours: number;
 @Column(
     "varchar",
     {
-    array: true,
     nullable: false,
     default: [],
     name: 'available_days'
