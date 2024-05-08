@@ -104,15 +104,15 @@ export class UsersService {
   }
 
   async findOneInactiveByIdAndActivationToken(
-    id: string,
+    email: string,
     code: string): Promise<User>{
-    return this.userRepository.findOne({ where : {id: (id), activationToken: code, active: false }})
+    return this.userRepository.findOne({ where : {email: (email), activationToken: code, active: false }})
   }
   
 
   async activateUserDto(activateUserDto: ActivateUserDto): Promise<void>{
-    const { id, code } = activateUserDto;
-    const user: User = await this.findOneInactiveByIdAndActivationToken(id, code)
+    const { email, code } = activateUserDto;
+    const user: User = await this.findOneInactiveByIdAndActivationToken(email, code)
   
     if(!user){
       throw new UnprocessableEntityException('This action cannot be done ')
