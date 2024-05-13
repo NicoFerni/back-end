@@ -110,7 +110,7 @@ export class UsersService {
   }
   
 
-  async activateUserDto(activateUserDto: ActivateUserDto): Promise<void>{
+  async activateUserDto(activateUserDto: ActivateUserDto): Promise<ActivateUserDto>{
     const { email, code } = activateUserDto;
     const user: User = await this.findOneInactiveByIdAndActivationToken(email, code)
   
@@ -118,6 +118,9 @@ export class UsersService {
       throw new UnprocessableEntityException('This action cannot be done ')
     } 
     await this.activateUser(user)
+
+    return {email, code}
+
   }
 
   async requestResetPassword(requestResetPasswordDto: RequestResetPasswordDto): Promise<void>{
