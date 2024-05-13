@@ -6,6 +6,7 @@ import { LanguagesService } from "../services/languages.service";
 import { LocationService } from "../services/location.service";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { UsersService } from "../../users/services/users/users.service";
 
 @ApiTags('profiles')
     @Controller('api/v1/profile')
@@ -13,6 +14,7 @@ import { ApiTags } from "@nestjs/swagger";
         constructor(private readonly profileService: ProfileService, 
             private readonly languagesService: LanguagesService,
             private readonly locationService: LocationService,
+            // private readonly userService: UsersService
             ){}
 
 
@@ -37,7 +39,7 @@ import { ApiTags } from "@nestjs/swagger";
 
           const profile = await this.profileService.createProfile(createProfileDto)
           if (profilePicture) {
-            await this.profileService.saveImage(profilePicture, profile.profileId);
+            await this.profileService.saveImage(profilePicture, profile.Id);
           }
           return profile;
         }

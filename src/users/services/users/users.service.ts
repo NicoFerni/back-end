@@ -1,6 +1,6 @@
-import { Injectable, HttpException, HttpStatus, UnauthorizedException, UnprocessableEntityException, Req, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException, UnprocessableEntityException, Req, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/typeorm';
+import { Profile, User } from 'src/typeorm';
 import { Repository } from 'typeorm';
 import * as bcryptjs from 'bcryptjs'
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -12,11 +12,13 @@ import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import * as nodemailer from 'nodemailer';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
+import { CreateProfileDto } from '../../../profile/dtos/createProfile.dto';
  
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
     private jwtService: JwtService
   ) {}
       
@@ -29,6 +31,8 @@ export class UsersService {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
   }
 
+
+
     const newUser = this.userRepository.create({
       names,
       lastNames,
@@ -39,7 +43,20 @@ export class UsersService {
     await this.userRepository.save(newUser);
     this.sendMailActivation(newUser.email, newUser.activationToken);
 
-    return newUser;
+    
+  if(this.profileRepository.hasId){
+    return {
+      "Profile": true,
+      "Token": newUser.activationToken,
+      "UserId": newUser.id
+    }
+  } return {
+    "Profile": false,
+    "Token": newUser.activationToken,
+    "UserId": newUser.id
+  }
+
+
     
   }
 

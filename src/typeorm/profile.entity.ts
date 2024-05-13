@@ -6,7 +6,7 @@ import { Availability } from "./availability.entity";
 export class Profile {
 
      @PrimaryGeneratedColumn("uuid")
-     profileId: any
+     Id: any
 
     @Column({
         nullable: false,
