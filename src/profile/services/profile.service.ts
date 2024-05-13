@@ -33,10 +33,10 @@ export class ProfileService{
     ) {}
 
 
-    async findProfileById(profileId:any): Promise<Profile>{
-      const profile = await this.profileRepository.findOne(profileId);
+    async findProfileById(Id:any): Promise<Profile>{
+      const profile = await this.profileRepository.findOne(Id);
       if (!profile) {
-        throw new NotFoundException(`Perfil con ID ${profileId} no encontrado`);
+        throw new NotFoundException(`Perfil con ID ${Id} no encontrado`);
       }
       return profile;
     }
@@ -53,9 +53,9 @@ export class ProfileService{
       return this.locationService.getCountries()
     }
 
-    async availability(availabilityDto: AvailabilityDto, profileId: any ): Promise<Profile> {
+    async availability(availabilityDto: AvailabilityDto, Id: any ): Promise<Profile> {
        const { weeklyHours, availableDays, currentlyActive } = availabilityDto
-       const profile = await this.findProfileById(profileId)
+       const profile = await this.findProfileById(Id)
       
        const availability = new Availability();
         availability.weeklyHours = weeklyHours;
@@ -69,9 +69,9 @@ export class ProfileService{
        return profile
      }
 
-    async experience(experienceDto: ExperienceDto, profileId: any) : Promise<Profile>{
+    async experience(experienceDto: ExperienceDto, Id: any) : Promise<Profile>{
         const { experience } = experienceDto
-        const profile = await this.findProfileById(profileId)
+        const profile = await this.findProfileById(Id)
 
         profile.experience = experience
         await this.profileRepository.save(profile)
@@ -79,9 +79,9 @@ export class ProfileService{
         return profile
      }
 
-     async education(educationDto: EducationDto, profileId:any) : Promise<Profile>{
+     async education(educationDto: EducationDto, Id:any) : Promise<Profile>{
       const { education } = educationDto
-      const profile = await this.findProfileById(profileId)
+      const profile = await this.findProfileById(Id)
 
       profile.education = education
       await this.profileRepository.save(profile)
@@ -89,10 +89,10 @@ export class ProfileService{
       return profile
      }
 
-     async birthday(birthdayDto: BirthdayDto, profileId: string) : Promise<Profile>{
+     async birthday(birthdayDto: BirthdayDto, Id: string) : Promise<Profile>{
       const { birthday } = birthdayDto
 
-      const profile = await this.findProfileById(profileId)
+      const profile = await this.findProfileById(Id)
 
       profile.birthday = new Date(birthday)
 
@@ -101,10 +101,10 @@ export class ProfileService{
       return profile
      }
 
-     async selectedLanguage(selectedLanguageDto: SelectedLanguageDto, profileId: string): Promise<Profile> {
+     async selectedLanguage(selectedLanguageDto: SelectedLanguageDto, Id: string): Promise<Profile> {
         const languages = this.languagesService.getLanguages()
         const languageName = languages[selectedLanguageDto.selectedLanguage]
-        const profile = await this.findProfileById(profileId)
+        const profile = await this.findProfileById(Id)
 
 
         if(!languageName) {
@@ -116,10 +116,10 @@ export class ProfileService{
         return profile
      }
 
-     async gender(genderDto: GenderDto, profileId: string) : Promise<Profile>{
+     async gender(genderDto: GenderDto, Id: string) : Promise<Profile>{
       const { gender } = genderDto
 
-      const profile = await this.findProfileById(profileId)
+      const profile = await this.findProfileById(Id)
 
       profile.gender = gender
 
@@ -128,10 +128,10 @@ export class ProfileService{
       return profile
      }
 
-     async social(profileId: string, socialNetworksData: Partial<SocialNetworks>): Promise<SocialNetworks> {
-      const profile =await this.profileRepository.findOne({ where: { profileId: profileId }, relations: ['socialNetworks'] });
+     async social(Id: string, socialNetworksData: Partial<SocialNetworks>): Promise<SocialNetworks> {
+      const profile =await this.profileRepository.findOne({ where: { Id: Id }, relations: ['socialNetworks'] });
       if (!profile) {
-        throw new NotFoundException(`Profile with ID ${profileId} not found`);
+        throw new NotFoundException(`Profile with ID ${Id} not found`);
       }
       let socialNetworks: SocialNetworks;
       if (profile.socialNetworks) {
@@ -146,7 +146,7 @@ export class ProfileService{
       return socialNetworks;
     } 
 
-    async saveImage(file: Express.Multer.File, profileId: string): Promise<Profile>{
+    async saveImage(file: Express.Multer.File, Id: string): Promise<Profile>{
       try{ 
 
         console.log("Starting image upload...");
@@ -170,7 +170,7 @@ export class ProfileService{
         const fileName = uploadResponse[0].name;
         const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
 
-        const profile = await this.profileRepository.findOne({ where: { profileId: profileId } });
+        const profile = await this.profileRepository.findOne({ where: { Id: Id } });
     
 
         profile.profilePicture = url
@@ -181,7 +181,7 @@ export class ProfileService{
         if (profile) {
           console.log("Profile details:", profile);
       } else {
-          console.log("Profile not found for ID:", profileId);
+          console.log("Profile not found for ID:", Id);
       }
 
 
