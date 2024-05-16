@@ -44,6 +44,11 @@ export class UsersService {
     await this.userRepository.save(newUser);
     this.sendMailActivation(newUser.email, newUser.activationToken);
 
+    return{
+      "token": token,
+      "profile": newUser.hasProfile,
+      "id": newUser.id
+    }
     
   }
 
