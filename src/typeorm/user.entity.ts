@@ -56,6 +56,13 @@ export class User{
       })
       createdOn: Date;
 
+      @Column({
+        type: 'boolean',
+        name: 'has_profile',
+        default: false
+      })
+      hasProfile: boolean
+
       @OneToOne(() => Profile)
       @JoinColumn() 
       profile: Profile;

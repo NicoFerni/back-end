@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Profile, SocialNetworks } from "src/typeorm";
+import { Profile, SocialNetworks, User } from "src/typeorm";
 import { Repository } from "typeorm";
 import { HttpService } from '@nestjs/axios';
 import { LanguagesService } from "./languages.service";
@@ -27,6 +27,8 @@ export class ProfileService{
         private readonly socialNetworksRepository: Repository<SocialNetworks>,
         @InjectRepository(Availability)
         private availabilityRepository: Repository<Availability>,
+        @InjectRepository(User)
+        private readonly usersRepository: Repository<User>,
         private readonly languagesService: LanguagesService,
         private readonly locationService: LocationService,
         private httpService: HttpService
@@ -196,7 +198,7 @@ export class ProfileService{
     }
 
     
-     async createProfile(createProfileDto: CreateProfileDto): Promise<Profile>{
+     async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile>{
        const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, weeklyHours, availableDays, currentlyActive, ...profileData } = createProfileDto;
        
        const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
@@ -205,6 +207,12 @@ export class ProfileService{
        await this.availabilityRepository.save(availability)
        await this.socialNetworksRepository.save(socialNetworks)
        
+       const user = await this.usersRepository.findOne({where: {id: userId }})
+       if (!user) {
+        throw new Error('User not found');
+      }
+       user.hasProfile = true
+       await this.usersRepository.save(user);
 
        const profile = this.profileRepository.create({...profileData, socialNetworks, availability})
        await this.profileRepository.save(profile);

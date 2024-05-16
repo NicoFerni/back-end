@@ -7,6 +7,7 @@ import { LocationService } from "../services/location.service";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { UsersService } from "../../users/services/users/users.service";
+import { User } from "../../typeorm";
 
 @ApiTags('profiles')
     @Controller('api/v1/profile')
@@ -35,9 +36,9 @@ import { UsersService } from "../../users/services/users/users.service";
 
         @Post('')
         @UseInterceptors(FileInterceptor('profilePicture'))
-        async createProfile(@UploadedFile() profilePicture: Express.Multer.File , @Body() createProfileDto: CreateProfileDto) {
+        async createProfile(@UploadedFile() profilePicture: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string) {
 
-          const profile = await this.profileService.createProfile(createProfileDto)
+          const profile = await this.profileService.createProfile(createProfileDto, userId)
           if (profilePicture) {
             await this.profileService.saveImage(profilePicture, profile.Id);
           }
