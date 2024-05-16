@@ -44,11 +44,9 @@ export class UsersService {
     await this.userRepository.save(newUser);
     this.sendMailActivation(newUser.email, newUser.activationToken);
 
-    return{
-      "token": token,
-      "profile": newUser.hasProfile,
-      "id": newUser.id
-    }
+    return(
+     'Account created successfully'
+    )
     
   }
 
@@ -90,16 +88,22 @@ export class UsersService {
     return await bcryptjs.compare(password, userPassword)
   }
 
-  async login(loginDto: LoginDto): Promise<{accessToken: string}>{
+  async login(loginDto: LoginDto): Promise<{accessToken: string, profile: boolean, id: string}>{
     const { email, password } = loginDto;
     const user:User = await this.findOneByEmail(email)
     
     if (await this.checkPassword(password, user.password)){
         const payload: JwtPayload = { id: user.id, email, active: user.active};
         const accessToken = await this.jwtService.sign(payload)
-        return { accessToken }
+        return { 
+          "accessToken": accessToken,
+          "profile": user.hasProfile,
+          "id": user.id
+         }
       }
       throw new UnauthorizedException('Chequea tus credenciales')
+
+    
     
   }
 

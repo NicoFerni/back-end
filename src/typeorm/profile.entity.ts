@@ -81,7 +81,7 @@ export class Profile {
   description: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     name: 'user_id'
   })
   userId: string;
