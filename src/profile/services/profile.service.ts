@@ -207,6 +207,7 @@ export class ProfileService{
        await this.availabilityRepository.save(availability)
        await this.socialNetworksRepository.save(socialNetworks)
        
+     
        const user = await this.usersRepository.findOne({where: {id: userId }})
        if (!user) {
         throw new Error('User not found');
@@ -214,6 +215,8 @@ export class ProfileService{
        user.hasProfile = true
        await this.usersRepository.save(user);
 
+       userId = user.id
+     
        const profile = this.profileRepository.create({...profileData, socialNetworks, availability})
        await this.profileRepository.save(profile);
 
