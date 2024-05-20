@@ -165,7 +165,7 @@ export class UsersService {
 
     const user: User = await this.userRepository.findOne({where: {activationToken}})
 
-    if(user.active = true){
+    if(user.active === true){
       return {
         "Verified" : true
       }
