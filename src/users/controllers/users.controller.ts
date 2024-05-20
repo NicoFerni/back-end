@@ -8,6 +8,7 @@ import {
     Patch,
     ValidationPipe,
     Query,
+    Headers,
     } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users/users.service';
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -43,6 +44,11 @@ import { ApiTags } from '@nestjs/swagger';
         return this.userService.activateUserDto(activateUserDto)
       }
       
+      @Post('/email/verified')
+      isVerified(@Headers() active: boolean){
+        return this.userService.isVerified(active)
+      }
+
       @Patch('request-reset-password')
         requestResetPasswordDto(@Body() RequestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
           return this.userService.requestResetPassword(RequestResetPasswordDto)

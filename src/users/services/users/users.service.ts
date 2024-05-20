@@ -161,6 +161,16 @@ export class UsersService {
     return user
   }
 
+  async isVerified(active: boolean){
+    if(!active){
+      return {
+        "Verified" : false
+      }
+    }
+    return {
+      "Verified" : true
+    }
+  }
 
   getUsers() {
     return this.userRepository.find();
