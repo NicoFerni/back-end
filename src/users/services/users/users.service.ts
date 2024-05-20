@@ -161,16 +161,21 @@ export class UsersService {
     return user
   }
 
-  async isVerified(active: boolean){
-    if(active = false){
+  async isVerified(activationToken){
+
+    const user: User = await this.userRepository.findOne({where: {activationToken}})
+
+    if(user.active = true){
       return {
-        "Verified" : false
+        "Verified" : true
       }
     }
     return {
-      "Verified" : true
+      "Verified" : false
     }
   }
+
+  
 
   getUsers() {
     return this.userRepository.find();
