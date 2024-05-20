@@ -162,7 +162,7 @@ export class UsersService {
   }
 
   async isVerified(active: boolean){
-    if(!active){
+    if(active = false){
       return {
         "Verified" : false
       }
