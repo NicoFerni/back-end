@@ -1,11 +1,8 @@
-import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 
     @Injectable()
     export class LanguagesService {
-        constructor (private httpService: HttpService) {}
-
-        getLanguages(){
+        getLanguages() : object{
             return  {
                 af: 'Afrikaans',
                 ar: 'Arabic',

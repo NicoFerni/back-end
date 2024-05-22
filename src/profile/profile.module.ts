@@ -8,6 +8,7 @@ import { LanguagesService } from "./services/languages.service";
 import { LocationService } from "./services/location.service";
 import { MulterModule } from "@nestjs/platform-express";
 import { Availability } from "../typeorm/availability.entity";
+import { TechnologiesService } from "./services/programingLanguagesList.service";
 
 
 @Module({
@@ -18,6 +19,6 @@ import { Availability } from "../typeorm/availability.entity";
                    }),
     ],
     controllers: [ProfileController],
-    providers: [ProfileService, LanguagesService, LocationService, SocialNetworks, Availability],
+    providers: [ProfileService, LanguagesService, LocationService, SocialNetworks, Availability, TechnologiesService],
 })
 export class ProfileModule {}

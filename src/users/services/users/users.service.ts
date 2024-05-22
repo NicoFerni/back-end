@@ -161,7 +161,7 @@ export class UsersService {
     return user
   }
 
-  async isVerified(activationToken){
+  async isVerified(activationToken: string){
 
     const user: User = await this.userRepository.findOne({where: {activationToken}})
 

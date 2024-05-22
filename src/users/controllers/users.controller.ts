@@ -45,7 +45,7 @@ import { ApiTags } from '@nestjs/swagger';
       }
       
       @Post('/email/verified')
-      isVerified(@Headers('token') active: boolean){
+      isVerified(@Headers('token') active: string){
         return this.userService.isVerified(active)
       }
 

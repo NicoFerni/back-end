@@ -6,8 +6,7 @@ import { LanguagesService } from "../services/languages.service";
 import { LocationService } from "../services/location.service";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { UsersService } from "../../users/services/users/users.service";
-import { User } from "../../typeorm";
+import { TechnologiesService } from "../services/programingLanguagesList.service"
 
 @ApiTags('profiles')
     @Controller('api/v1/profile')
@@ -15,7 +14,7 @@ import { User } from "../../typeorm";
         constructor(private readonly profileService: ProfileService, 
             private readonly languagesService: LanguagesService,
             private readonly locationService: LocationService,
-            // private readonly userService: UsersService
+            private readonly technologiesService: TechnologiesService
             ){}
 
 
@@ -50,5 +49,9 @@ import { User } from "../../typeorm";
            return this.locationService.getStates(country);
         }
 
+        @Get('tech')
+        getTechnologies(){
+            return this.technologiesService.getTechnologies()
+        }
 
     } 

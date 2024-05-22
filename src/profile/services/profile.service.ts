@@ -16,6 +16,8 @@ import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
 import { Availability } from "../../typeorm/availability.entity";
+import { TechnologiesService } from "./programingLanguagesList.service";
+import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
 
 @Injectable()
@@ -31,6 +33,7 @@ export class ProfileService{
         private readonly usersRepository: Repository<User>,
         private readonly languagesService: LanguagesService,
         private readonly locationService: LocationService,
+        private readonly programingLangaugesService: TechnologiesService,
         private httpService: HttpService
     ) {}
 
@@ -41,6 +44,10 @@ export class ProfileService{
         throw new NotFoundException(`Perfil con ID ${Id} no encontrado`);
       }
       return profile;
+    }
+
+    async getTechnologies(){
+      return this.programingLangaugesService.getTechnologies()
     }
 
     async getProfiles(){
@@ -101,6 +108,23 @@ export class ProfileService{
       await this.profileRepository.save(profile)
 
       return profile
+     }
+
+     async selectedTech(selectedTechnologiesDto: SelectedTechnologiesDto, Id: string): Promise <object>{
+      const technologies = this.programingLangaugesService.getTechnologies();
+      const selectedTechnologies:any = {}
+      const profile = await this.findProfileById(Id)
+      
+      for(const tech of selectedTechnologiesDto.selectedTechnologies){
+        if(technologies[tech]){
+          selectedTechnologies[tech] = technologies[tech]
+        }
+      }
+
+      profile.knowledge = selectedTechnologies;
+      await this.profileRepository.save(profile)
+
+      return selectedTechnologies
      }
 
      async selectedLanguage(selectedLanguageDto: SelectedLanguageDto, Id: string): Promise<Profile> {
@@ -206,7 +230,7 @@ export class ProfileService{
 
        await this.availabilityRepository.save(availability)
        await this.socialNetworksRepository.save(socialNetworks)
-       
+
      
        const user = await this.usersRepository.findOne({where: {id: userId }})
        if (!user) {
