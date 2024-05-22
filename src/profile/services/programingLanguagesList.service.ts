@@ -6,58 +6,61 @@ import { HttpService } from "@nestjs/axios";
         constructor (
             private httpService: HttpService,
             ) {}
-    getTechnologies() : object{
+    getTechnologies() : object {
 
     const programingLanguagesList = {
-        "Python": {
+        "conocimientos" : [
+        "Python",{
             "frameworks": ["Django", "Flask", "PyTorch", "TensorFlow"]
         },
-        "JavaScript": {
+        "JavaScript", {
             "frameworks": ["React", "Angular", "Vue.js", "Node.js"]
         },
-        "Java": {
+        "Java", {
             "frameworks": ["Spring", "Hibernate", "Struts"]
         },
-        "C++": {
+        "C++", {
             "frameworks": ["Qt", "Boost", "Poco"]
         },
-        "C#": {
+        "C#", {
             "frameworks": [".NET", "Unity", "Xamarin"]
         },
-        "Go": {
+        "Go", {
             "frameworks": ["Revel", "Gin", "Echo"]
         },
-        "Rust": {
+        "Rust", {
             "frameworks": ["Rocket", "Actix", "Tide"]
         },
-        "Kotlin": {
+        "Kotlin", {
             "frameworks": ["Ktor", "Spring Boot", "Vert.x"]
         },
-        "Swift": {
+        "Swift" , {
             "frameworks": ["UIKit", "SwiftUI", "Vapor"]
         },
-        "TypeScript": {
+        "TypeScript", {
             "frameworks": ["Angular", "React", "Vue.js"]
         },
-        "Ruby": {
+        "Ruby", {
             "frameworks": ["Ruby on Rails", "Sinatra", "Hanami"]
         },
-        "PHP": {
+        "PHP", {
             "frameworks": ["Laravel", "Symfony", "CodeIgniter"]
         },
-        "Dart": {
+        "Dart", {
             "frameworks": ["Flutter", "AngularDart", "Aqueduct"]
         },
-        "HTML": {
+        "HTML", {
             "frameworks": ["Semantic UI"]
         },
-        "CSS": {
+        "CSS", {
             "frameworks": ["Bootstrap", "Tailwind CSS", "Bulma", "Materialize"]
         },
-        "Git/GitHub": {
+        "Git/GitHub", {
             "frameworks": ["GitHub Pages", "GitHub Actions", "Git LFS"]
         }
-    }
+        ]
+        }
+    
     
     return  programingLanguagesList
 }
