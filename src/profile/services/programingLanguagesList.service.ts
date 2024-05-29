@@ -1,67 +1,85 @@
 import { Injectable } from "@nestjs/common";
 import { HttpService } from "@nestjs/axios";
 
-    @Injectable()
-    export class TechnologiesService {
-        constructor (
-            private httpService: HttpService,
-            ) {}
-    getTechnologies() : object {
+@Injectable()
+export class TechnologiesService {
+    constructor(
+        private httpService: HttpService,
+    ) { }
+    getTechnologies(): object {
 
-    const programingLanguagesList = {
-        "conocimientos" : [
-        "Python",{
-            "frameworks": ["Django", "Flask", "PyTorch", "TensorFlow"]
-        },
-        "JavaScript", {
-            "frameworks": ["React", "Angular", "Vue.js", "Node.js"]
-        },
-        "Java", {
-            "frameworks": ["Spring", "Hibernate", "Struts"]
-        },
-        "C++", {
-            "frameworks": ["Qt", "Boost", "Poco"]
-        },
-        "C#", {
-            "frameworks": [".NET", "Unity", "Xamarin"]
-        },
-        "Go", {
-            "frameworks": ["Revel", "Gin", "Echo"]
-        },
-        "Rust", {
-            "frameworks": ["Rocket", "Actix", "Tide"]
-        },
-        "Kotlin", {
-            "frameworks": ["Ktor", "Spring Boot", "Vert.x"]
-        },
-        "Swift" , {
-            "frameworks": ["UIKit", "SwiftUI", "Vapor"]
-        },
-        "TypeScript", {
-            "frameworks": ["Angular", "React", "Vue.js"]
-        },
-        "Ruby", {
-            "frameworks": ["Ruby on Rails", "Sinatra", "Hanami"]
-        },
-        "PHP", {
-            "frameworks": ["Laravel", "Symfony", "CodeIgniter"]
-        },
-        "Dart", {
-            "frameworks": ["Flutter", "AngularDart", "Aqueduct"]
-        },
-        "HTML", {
-            "frameworks": ["Semantic UI"]
-        },
-        "CSS", {
-            "frameworks": ["Bootstrap", "Tailwind CSS", "Bulma", "Materialize"]
-        },
-        "Git/GitHub", {
-            "frameworks": ["GitHub Pages", "GitHub Actions", "Git LFS"]
-        }
-        ]
-        }
-    
-    
-    return  programingLanguagesList
-}
+        const programingLanguagesList = 
+        {
+            "conocimientos": [
+              {
+                "nombre": "Python",
+                "frameworks": ["Django", "Flask", "PyTorch", "TensorFlow"]
+              },
+              {
+                "nombre": "JavaScript",
+                "frameworks": ["React", "Angular", "Vue.js", "Node.js"]
+              },
+              {
+                "nombre": "Java",
+                "frameworks": ["Spring", "Hibernate", "Struts"]
+              },
+              {
+                "nombre": "C++",
+                "frameworks": ["Qt", "Boost", "Poco"]
+              },
+              {
+                "nombre": "C#",
+                "frameworks": [".NET", "Unity", "Xamarin"]
+              },
+              {
+                "nombre": "Go",
+                "frameworks": ["Revel", "Gin", "Echo"]
+              },
+              {
+                "nombre": "Rust",
+                "frameworks": ["Rocket", "Actix", "Tide"]
+              },
+              {
+                "nombre": "Kotlin",
+                "frameworks": ["Ktor", "Spring Boot", "Vert.x"]
+              },
+              {
+                "nombre": "Swift",
+                "frameworks": ["UIKit", "SwiftUI", "Vapor"]
+              },
+              {
+                "nombre": "TypeScript",
+                "frameworks": ["Angular", "React", "Vue.js"]
+              },
+              {
+                "nombre": "Ruby",
+                "frameworks": ["Ruby on Rails", "Sinatra", "Hanami"]
+              },
+              {
+                "nombre": "PHP",
+                "frameworks": ["Laravel", "Symfony", "CodeIgniter"]
+              },
+              {
+                "nombre": "Dart",
+                "frameworks": ["Flutter", "AngularDart", "Aqueduct"]
+              },
+              {
+                "nombre": "HTML",
+                "frameworks": ["Semantic UI"]
+              },
+              {
+                "nombre": "CSS",
+                "frameworks": ["Bootstrap", "Tailwind CSS", "Bulma", "Materialize"]
+              },
+              {
+                "nombre": "Git/GitHub",
+                "frameworks": ["GitHub Pages", "GitHub Actions", "Git LFS"]
+              }
+            ]
+          }
+          
+
+
+        return programingLanguagesList
+    }
 }

@@ -12,14 +12,11 @@ import { map, catchError } from 'rxjs/operators';
             ) {}
        
         getCountries(){
-            const url = 'https://www.universal-tutorial.com/api/countries/';
-            const headerRequest = {
-                'Authorization': `Bearer ${this.configService.get('AUTHORIZATION')}`,
-                'Accept' : 'application/json'
-            }
-             return this.httpService.get(url, { headers: headerRequest })
+            const url = 'https://countriesnow.space/api/v0.1/countries';
+            
+            return this.httpService.get(url)
              .pipe(
-              map(response => response.data.map(item => item.country_name)),
+              map(response => response.data.map(item => item.country)),
                catchError(error => {
                  console.error('Error occurred:', error);
                  throw error;
