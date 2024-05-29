@@ -2,7 +2,7 @@ import { Entity, Column, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile.entity";
 
 @Entity()
-export class SocialNetworks {
+export class redes {
 
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -40,7 +40,7 @@ export class SocialNetworks {
   @Column({ nullable: true })
   github: string;
 
-  @OneToOne(() => Profile, profile => profile.socialNetworks)
+  @OneToOne(() => Profile, profile => profile.redes)
   profile: Profile;
 
 }

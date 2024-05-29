@@ -4,5 +4,5 @@ export class EducationDto{
     @IsNotEmpty()
     @IsString()
     @IsIn(['Universidad' , 'Otros'])
-    education: string
+    estudios: string
 }

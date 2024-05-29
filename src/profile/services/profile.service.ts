@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Profile, SocialNetworks, User } from "src/typeorm";
+import { Profile, redes, User } from "src/typeorm";
 import { Repository } from "typeorm";
 import { HttpService } from '@nestjs/axios';
 import { LanguagesService } from "./languages.service";
 import { LocationService } from "./location.service";
-import { AvailabilityDto } from "../dtos/availability.dto";
+import { disponibilidadDto } from "../dtos/availability.dto";
 import { ExperienceDto } from "../dtos/experience.dto";
 import { EducationDto } from "../dtos/education.dto";
 import { BirthdayDto } from "../dtos/birthday.dto";
@@ -15,7 +15,7 @@ import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
-import { Availability } from "../../typeorm/availability.entity";
+import { disponibilidad } from "../../typeorm/availability.entity";
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
@@ -25,10 +25,10 @@ export class ProfileService{
     constructor(
         @InjectRepository(Profile) 
         private readonly profileRepository: Repository<Profile>, 
-        @InjectRepository(SocialNetworks)
-        private readonly socialNetworksRepository: Repository<SocialNetworks>,
-        @InjectRepository(Availability)
-        private availabilityRepository: Repository<Availability>,
+        @InjectRepository(redes)
+        private readonly redesRepository: Repository<redes>,
+        @InjectRepository(disponibilidad)
+        private disponibilidadRepository: Repository<disponibilidad>,
         @InjectRepository(User)
         private readonly usersRepository: Repository<User>,
         private readonly languagesService: LanguagesService,
@@ -62,16 +62,16 @@ export class ProfileService{
       return this.locationService.getCountries()
     }
 
-    async availability(availabilityDto: AvailabilityDto, Id: any ): Promise<Profile> {
-       const { weeklyHours, availableDays, currentlyActive } = availabilityDto
+    async disponibilidad(disponibilidadDto: disponibilidadDto, Id: any ): Promise<Profile> {
+       const {horasSemanales, diasDisponibles, activo} = disponibilidadDto
        const profile = await this.findProfileById(Id)
       
-       const availability = new Availability();
-        availability.weeklyHours = weeklyHours;
-        availability.availableDays = availableDays;
-        availability.currentlyActive = currentlyActive;
+       const availability = new disponibilidad();
+       availability.horasSemanales = horasSemanales;
+       availability.diasDisponibles = diasDisponibles;
+       availability.activo = activo;
 
-        profile.availability = availability;
+        profile.disponibilidad = new disponibilidad;
 
        await this.profileRepository.save(profile);
 
@@ -79,31 +79,31 @@ export class ProfileService{
      }
 
     async experience(experienceDto: ExperienceDto, Id: any) : Promise<Profile>{
-        const { experience } = experienceDto
+        const { experiencia } = experienceDto
         const profile = await this.findProfileById(Id)
 
-        profile.experience = experience
+        profile.experiencia = experiencia
         await this.profileRepository.save(profile)
 
         return profile
      }
 
      async education(educationDto: EducationDto, Id:any) : Promise<Profile>{
-      const { education } = educationDto
+      const { estudios } = educationDto
       const profile = await this.findProfileById(Id)
 
-      profile.education = education
+      profile.estudios = estudios
       await this.profileRepository.save(profile)
 
       return profile
      }
 
      async birthday(birthdayDto: BirthdayDto, Id: string) : Promise<Profile>{
-      const { birthday } = birthdayDto
+      const { nacimiento } = birthdayDto
 
       const profile = await this.findProfileById(Id)
 
-      profile.birthday = new Date(birthday)
+      profile.nacimiento = new Date(nacimiento)
 
       await this.profileRepository.save(profile)
 
@@ -121,7 +121,7 @@ export class ProfileService{
         }
       }
 
-      profile.knowledge = selectedTechnologies;
+      profile.conocimientos = selectedTechnologies;
       await this.profileRepository.save(profile)
 
       return selectedTechnologies
@@ -136,40 +136,40 @@ export class ProfileService{
         if(!languageName) {
           throw new NotFoundException(`Language with code ${selectedLanguageDto.selectedLanguage} not found`)
         }
-        profile.languages = languageName
+        profile.idiomas = languageName
         await this.profileRepository.save(profile)
 
         return profile
      }
 
      async gender(genderDto: GenderDto, Id: string) : Promise<Profile>{
-      const { gender } = genderDto
+      const { genero } = genderDto
 
       const profile = await this.findProfileById(Id)
 
-      profile.gender = gender
+      profile.genero = genero
 
       await this.profileRepository.save(profile)
 
       return profile
      }
 
-     async social(Id: string, socialNetworksData: Partial<SocialNetworks>): Promise<SocialNetworks> {
-      const profile =await this.profileRepository.findOne({ where: { Id: Id }, relations: ['socialNetworks'] });
+     async social(Id: string, redesData: Partial<redes>): Promise<redes> {
+      const profile =await this.profileRepository.findOne({ where: { Id: Id }, relations: ['redes'] });
       if (!profile) {
         throw new NotFoundException(`Profile with ID ${Id} not found`);
       }
-      let socialNetworks: SocialNetworks;
-      if (profile.socialNetworks) {
-        socialNetworks = this.socialNetworksRepository.merge(profile.socialNetworks, socialNetworksData);
+      let redes: redes;
+      if (profile.redes) {
+        redes = this.redesRepository.merge(profile.redes, redesData);
       } else {
-        socialNetworks = this.socialNetworksRepository.create(socialNetworksData);
-        profile.socialNetworks = socialNetworks;
+        redes = this.redesRepository.create(redesData);
+        profile.redes = redes;
         await this.profileRepository.save(profile);
       }
-      await this.socialNetworksRepository.save(socialNetworks);
+      await this.redesRepository.save(redes);
     
-      return socialNetworks;
+      return redes;
     } 
 
     async saveImage(file: Express.Multer.File, Id: string): Promise<Profile>{
@@ -199,7 +199,7 @@ export class ProfileService{
         const profile = await this.profileRepository.findOne({ where: { Id: Id } });
     
 
-        profile.profilePicture = url
+        profile.fotoDePerfil = url
   
         await this.profileRepository.save(profile)
   
@@ -223,13 +223,13 @@ export class ProfileService{
 
     
      async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile>{
-       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, weeklyHours, availableDays, currentlyActive, ...profileData } = createProfileDto;
+       const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ...profileData } = createProfileDto;
        
-       const socialNetworks = this.socialNetworksRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
-       const availability = this.availabilityRepository.create({weeklyHours, availableDays, currentlyActive})
+       const redes = this.redesRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
+       const disponibilidad = this.disponibilidadRepository.create({horasSemanales, diasDisponibles, activo})
 
-       await this.availabilityRepository.save(availability)
-       await this.socialNetworksRepository.save(socialNetworks)
+       await this.disponibilidadRepository.save(disponibilidad)
+       await this.redesRepository.save(redes)
 
      
        const user = await this.usersRepository.findOne({where: {id: userId }})
@@ -241,7 +241,7 @@ export class ProfileService{
 
        userId = user.id
      
-       const profile = this.profileRepository.create({...profileData, socialNetworks, availability, userId})
+       const profile = this.profileRepository.create({...profileData, redes, disponibilidad, userId})
        await this.profileRepository.save(profile);
 
    return profile;

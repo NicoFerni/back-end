@@ -36,7 +36,7 @@ export class User{
       @Column({
         type: 'boolean', 
         default: 'false'})
-      active: boolean;
+      activo: boolean;
       
       @Column({
         default: 'false',

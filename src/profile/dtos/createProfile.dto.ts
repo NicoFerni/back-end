@@ -1,19 +1,19 @@
 export class CreateProfileDto {
   
-  knowledge: string;
-  languages: string;
-  location: string;
-  experience: string;
-  price: number;
-  education: string;
-  gender: string;
-  profilePicture: string;
-  description: string;
-  birthday: Date;
+  conocimientos: string;
+  idiomas: string;
+  ubicacion: string;
+  experiencia: string;
+  precio: number;
+  estudios: string;
+  genero: string;
+  fotoDePerfil: string;
+  descripcion: string;
+  nacimiento: Date;
 
-  weeklyHours:number;
-  availableDays: string[];
-  currentlyActive: string
+  horasSemanales:number;
+  diasDisponibles: string[];
+  activo: string
 
   facebook: string;
   instagram: string;

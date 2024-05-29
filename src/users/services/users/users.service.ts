@@ -93,7 +93,7 @@ export class UsersService {
     const user:User = await this.findOneByEmail(email)
     
     if (await this.checkPassword(password, user.password)){
-        const payload: JwtPayload = { id: user.id, email, active: user.active};
+        const payload: JwtPayload = { id: user.id, email, activo: user.activo};
         const accessToken = await this.jwtService.sign(payload)
         return { 
           "accessToken": accessToken,
@@ -112,20 +112,20 @@ export class UsersService {
   }
 
   async activateUser(user:User): Promise<void>{
-    user.active = true;
+    user.activo = true;
     this.userRepository.save(user);
   }
 
-  async findOneInactiveByIdAndActivationToken(
+  async findOneInactivoByIdAndActivationToken(
     email: string,
     code: string): Promise<User>{
-    return this.userRepository.findOne({ where : {email: (email), activationToken: code, active: false }})
+    return this.userRepository.findOne({ where : {email: (email), activationToken: code, activo: false }})
   }
   
 
   async activateUserDto(activateUserDto: ActivateUserDto): Promise<ActivateUserDto>{
     const { email, code } = activateUserDto;
-    const user: User = await this.findOneInactiveByIdAndActivationToken(email, code)
+    const user: User = await this.findOneInactivoByIdAndActivationToken(email, code)
   
     if(!user){
       throw new UnprocessableEntityException('This action cannot be done ')
@@ -165,7 +165,7 @@ export class UsersService {
 
     const user: User = await this.userRepository.findOne({where: {activationToken}})
 
-    if(user.active === true){
+    if(user.activo === true){
       return {
         "Verified" : true
       }

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { SocialNetworks } from "./socialNetworks.entity";
-import { Availability } from "./availability.entity";
+import { redes } from "./socialNetworks.entity";
+import { disponibilidad } from "./availability.entity";
 
 @Entity()
 export class Profile {
@@ -11,74 +11,74 @@ export class Profile {
   @Column({
     nullable: false,
     default: '',
-    name: 'knowledge'
+    name: 'conocimientos'
   })
-  knowledge: string;
+  conocimientos: string;
 
   @Column({
     nullable: false,
     default: '',
-    name: 'languages'
+    name: 'idiomas'
   })
-  languages: string;
+  idiomas: string;
 
   @Column({
     nullable: false,
     default: '',
-    name: 'location'
+    name: 'ubicacion'
   })
-  location: string
+  ubicacion: string
 
   @Column({
     nullable: false,
     default: '',
     enum: ['Menos de 2 años', 'De 2 a 6 años', 'Más de 6 años'],
-    name: 'experience'
+    name: 'experiencia'
   })
-  experience: string;
+  experiencia: string;
 
   @Column({
     nullable: false,
     default: 0,
-    name: 'price'
+    name: 'precio'
   })
-  price: number;
+  precio: number;
 
   @Column({
     nullable: false,
     default: '',
-    name: 'education'
+    name: 'estudios'
   })
-  education: string;
+  estudios: string;
 
   @Column({
     nullable: false,
     default: '',
-    name: 'gender'
+    name: 'genero'
   })
-  gender: string;
+  genero: string;
 
 
   @Column({
     nullable: false,
-    name: 'birthday',
+    name: 'nacimiento',
     type: 'date'
   })
-  birthday: Date;
+  nacimiento: Date;
 
   @Column({
     nullable: true,
     default: '',
-    name: 'profile_picture',
+    name: 'fotoDePerfil',
   })
-  profilePicture: string;
+  fotoDePerfil: string;
 
   @Column({
     nullable: true,
     default: '',
-    name: 'description'
+    name: 'descripcion'
   })
-  description: string;
+  descripcion: string;
 
   @Column({
     nullable: true,
@@ -86,12 +86,12 @@ export class Profile {
   })
   userId: string;
 
-  @OneToOne(() => Availability, availability => availability.profile, { cascade: true })
+  @OneToOne(() => disponibilidad, disponibilidad => disponibilidad.profile, { cascade: true })
   @JoinColumn()
-  availability: Availability;
+  disponibilidad: disponibilidad;
 
-  @OneToOne(() => SocialNetworks, socialNetworks => socialNetworks.profile, { cascade: true, eager: true })
+  @OneToOne(() => redes, redes => redes.profile, { cascade: true, eager: true })
   @JoinColumn()
-  socialNetworks: SocialNetworks;
+  redes: redes;
 
 }

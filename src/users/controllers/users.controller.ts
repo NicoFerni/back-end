@@ -45,8 +45,8 @@ import { ApiTags } from '@nestjs/swagger';
       }
       
       @Post('/email/verified')
-      isVerified(@Headers('token') active: string){
-        return this.userService.isVerified(active)
+      isVerified(@Headers('token') activo: string){
+        return this.userService.isVerified(activo)
       }
 
       @Patch('request-reset-password')

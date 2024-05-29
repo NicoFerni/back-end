@@ -5,5 +5,5 @@ export class GenderDto{
     @IsNotEmpty()
     @IsString()
     @IsIn(['Femenino', 'Masculino'])
-    gender: string;
+    genero: string;
 }

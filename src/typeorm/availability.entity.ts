@@ -2,36 +2,36 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "ty
 import { Profile } from "./profile.entity";
 
 @Entity()
-export class Availability {
+export class disponibilidad {
 
 @PrimaryGeneratedColumn("uuid")
-availabilityId: string
+disponibilidadId: string
 
 @Column({
     nullable: false,
     default: 0,
-    name: 'weekly_hours'
+    name: 'horas_semanales'
 })
-weeklyHours: number;
+horasSemanales: number;
 
 @Column(
     "varchar",
     {
     nullable: false,
     default: [],
-    name: 'available_days'
+    name: 'dias_disponibles'
 })
-availableDays: string[];
+diasDisponibles: string[];
 
  
 @Column({
     nullable: false,
     default: '',
-    name: 'currently_active'
+    name: 'activo'
 })
-  currentlyActive: string;
+  activo: string;
 
-  @OneToOne(() => Profile, profile => profile.availability)
+  @OneToOne(() => Profile, profile => profile.disponibilidad)
   @JoinColumn()
   profile: Profile;
 }
