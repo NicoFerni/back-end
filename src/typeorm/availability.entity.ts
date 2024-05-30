@@ -2,10 +2,10 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "ty
 import { Profile } from "./profile.entity";
 
 @Entity()
-export class disponibilidad {
+export class Disponibilidad {
 
 @PrimaryGeneratedColumn("uuid")
-disponibilidadId: string
+DisponibilidadId: string
 
 @Column({
     nullable: false,
