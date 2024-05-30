@@ -34,12 +34,12 @@ import { TechnologiesService } from "../services/programingLanguagesList.service
         }
 
         @Post('')
-        @UseInterceptors(FileInterceptor('profilePicture'))
-        async createProfile(@UploadedFile() profilePicture: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string) {
+        @UseInterceptors(FileInterceptor('fotoDePerfil'))
+        async createProfile(@UploadedFile() fotoDePerfil: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string) {
 
           const profile = await this.profileService.createProfile(createProfileDto, userId)
-          if (profilePicture) {
-            await this.profileService.saveImage(profilePicture, profile.Id);
+          if (fotoDePerfil) {
+            await this.profileService.saveImage(fotoDePerfil, profile.Id);
           }
           return profile;
         }
