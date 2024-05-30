@@ -13,7 +13,7 @@ export class Profile {
     default: '',
     name: 'conocimientos'
   })
-  conocimientos: string;
+  conocimientos: string[];
 
   @Column({
     nullable: false,

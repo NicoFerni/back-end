@@ -61,6 +61,7 @@ export class ProfileService{
     async getLocation() {
       return this.locationService.getCountries()
     }
+    
 
     async disponibilidad(disponibilidadDto: disponibilidadDto, Id: any ): Promise<Profile> {
        const {horasSemanales, diasDisponibles, activo} = disponibilidadDto
@@ -112,12 +113,12 @@ export class ProfileService{
 
      async selectedTech(selectedTechnologiesDto: SelectedTechnologiesDto, Id: string): Promise <object>{
       const technologies = this.programingLangaugesService.getTechnologies();
-      const selectedTechnologies:any = {}
+      const selectedTechnologies: string[] = []
       const profile = await this.findProfileById(Id)
       
       for(const tech of selectedTechnologiesDto.selectedTechnologies){
         if(technologies[tech]){
-          selectedTechnologies[tech] = technologies[tech]
+          selectedTechnologies.push(technologies[tech])
         }
       }
 
@@ -231,7 +232,8 @@ export class ProfileService{
        await this.disponibilidadRepository.save(disponibilidad)
        await this.redesRepository.save(redes)
 
-     
+
+
        const user = await this.usersRepository.findOne({where: {id: userId }})
        if (!user) {
         throw new Error('User not found');

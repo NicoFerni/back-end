@@ -17,7 +17,7 @@ import { map, catchError } from 'rxjs/operators';
             return this.httpService.get(url)
              .pipe(
               map(response => response.data.map(item => item.country)),
-               catchError(error => {
+              catchError(error => {
                  console.error('Error occurred:', error);
                  throw error;
                }),
