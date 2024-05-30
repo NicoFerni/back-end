@@ -9,10 +9,10 @@ export class Profile {
   Id: any
 
   @Column(
-    "varchar",
+    "text",
     {
     nullable: false,
-    default: [],
+    default: [ ],
     name: 'conocimientos'
   })
   conocimientos: string[];
