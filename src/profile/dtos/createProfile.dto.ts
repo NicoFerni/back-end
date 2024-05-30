@@ -1,6 +1,6 @@
 export class CreateProfileDto {
   
-  conocimientos: string;
+  conocimientos: string[];
   idiomas: string;
   ubicacion: string;
   experiencia: string;

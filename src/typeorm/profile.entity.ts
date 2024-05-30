@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { Redes } from "./socialNetworks.entity";
+import { Redes } from "./redes.entity";
 import { Disponibilidad } from "./availability.entity";
 
 @Entity()
@@ -8,9 +8,11 @@ export class Profile {
   @PrimaryGeneratedColumn("uuid")
   Id: any
 
-  @Column({
+  @Column(
+    "varchar",
+    {
     nullable: false,
-    default: '',
+    default: [],
     name: 'conocimientos'
   })
   conocimientos: string[];
@@ -89,6 +91,7 @@ export class Profile {
   @OneToOne(() => Disponibilidad, disponibilidad => disponibilidad.profile, { cascade: true })
   @JoinColumn()
   disponibilidad: Disponibilidad;
+
 
   @OneToOne(() => Redes, redes => redes.profile, { cascade: true, eager: true })
   @JoinColumn()

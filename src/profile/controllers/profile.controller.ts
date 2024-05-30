@@ -1,4 +1,4 @@
-import { Controller, Query, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { Controller, Query, UseInterceptors, UploadedFile, Delete } from "@nestjs/common";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService} from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'

@@ -15,7 +15,7 @@ import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
-import { disponibilidad } from "../../typeorm/availability.entity";
+import { Disponibilidad } from "../../typeorm/availability.entity";
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
@@ -27,8 +27,8 @@ export class ProfileService{
         private readonly profileRepository: Repository<Profile>, 
         @InjectRepository(Redes)
         private readonly redesRepository: Repository<Redes>,
-        @InjectRepository(disponibilidad)
-        private disponibilidadRepository: Repository<disponibilidad>,
+        @InjectRepository(Disponibilidad)
+        private disponibilidadRepository: Repository<Disponibilidad>,
         @InjectRepository(User)
         private readonly usersRepository: Repository<User>,
         private readonly languagesService: LanguagesService,
@@ -67,12 +67,12 @@ export class ProfileService{
        const {horasSemanales, diasDisponibles, activo} = disponibilidadDto
        const profile = await this.findProfileById(Id)
       
-       const availability = new disponibilidad();
+       const availability = new Disponibilidad();
        availability.horasSemanales = horasSemanales;
        availability.diasDisponibles = diasDisponibles;
        availability.activo = activo;
 
-        profile.disponibilidad = new disponibilidad;
+        profile.disponibilidad = new Disponibilidad;
 
        await this.profileRepository.save(profile);
 
@@ -231,8 +231,6 @@ export class ProfileService{
 
        await this.disponibilidadRepository.save(disponibilidad)
        await this.redesRepository.save(redes)
-
-
 
        const user = await this.usersRepository.findOne({where: {id: userId }})
        if (!user) {
