@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Profile, redes, User } from "src/typeorm";
+import { Profile, Redes, User } from "src/typeorm";
 import { Repository } from "typeorm";
 import { HttpService } from '@nestjs/axios';
 import { LanguagesService } from "./languages.service";
@@ -25,8 +25,8 @@ export class ProfileService{
     constructor(
         @InjectRepository(Profile) 
         private readonly profileRepository: Repository<Profile>, 
-        @InjectRepository(redes)
-        private readonly redesRepository: Repository<redes>,
+        @InjectRepository(Redes)
+        private readonly redesRepository: Repository<Redes>,
         @InjectRepository(disponibilidad)
         private disponibilidadRepository: Repository<disponibilidad>,
         @InjectRepository(User)
@@ -155,12 +155,12 @@ export class ProfileService{
       return profile
      }
 
-     async social(Id: string, redesData: Partial<redes>): Promise<redes> {
+     async social(Id: string, redesData: Partial<Redes>): Promise<Redes> {
       const profile =await this.profileRepository.findOne({ where: { Id: Id }, relations: ['redes'] });
       if (!profile) {
         throw new NotFoundException(`Profile with ID ${Id} not found`);
       }
-      let redes: redes;
+      let redes: Redes;
       if (profile.redes) {
         redes = this.redesRepository.merge(profile.redes, redesData);
       } else {

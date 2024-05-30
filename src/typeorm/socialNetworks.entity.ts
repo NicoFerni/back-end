@@ -2,7 +2,7 @@ import { Entity, Column, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile.entity";
 
 @Entity()
-export class redes {
+export class Redes {
 
   @PrimaryGeneratedColumn("uuid")
   id: string;
