@@ -12,7 +12,6 @@ export class Profile {
     "text",
     {
     nullable: false,
-    default: [ ],
     name: 'conocimientos'
   })
   conocimientos: string[];
