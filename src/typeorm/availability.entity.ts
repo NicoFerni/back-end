@@ -5,7 +5,7 @@ import { Profile } from "./profile.entity";
 export class Disponibilidad {
 
 @PrimaryGeneratedColumn("uuid")
-DisponibilidadId: string
+Id: string
 
 @Column({
     nullable: false,

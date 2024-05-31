@@ -8,10 +8,11 @@ export class Profile {
   @PrimaryGeneratedColumn("uuid")
   Id: any
 
-  @Column(
-    "text",
-    {
+  @Column('text',
+  {
+    array: true,
     nullable: false,
+    default: [],
     name: 'conocimientos'
   })
   conocimientos: string[];
