@@ -10,7 +10,6 @@ export class Profile {
 
   @Column('text',
   {
-    array: true,
     nullable: false,
     default: [],
     name: 'conocimientos'
