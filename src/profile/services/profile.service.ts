@@ -175,8 +175,6 @@ export class ProfileService{
 
     async saveImage(file: Express.Multer.File, Id: string): Promise<Profile>{
       try{ 
-
-        console.log("Starting image upload...");
         const bucket = app.storage().bucket()
         const uuid = uuidv4()
 
@@ -239,7 +237,7 @@ export class ProfileService{
 
        userId = user.id
      
-       const profile = this.profileRepository.create({...profileData, ...(redes || {}), ...disponibilidad, userId})
+       const profile = this.profileRepository.create({...profileData, ...redes, disponibilidad, userId})
        await this.profileRepository.save(profile);
 
        profile.redes = redes;
