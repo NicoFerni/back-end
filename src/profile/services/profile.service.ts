@@ -245,13 +245,14 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, pais, ciudad, ...profileData } = createProfileDto;
+    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, pais, ciudad, idiomas, ...profileData } = createProfileDto;
 
 
 
     const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode })
     await this.redesRepository.save(redes);
 
+  
     const ubicacion = { pais: pais, ciudad: ciudad }
     const disponibilidad = this.disponibilidadRepository.create({ horasSemanales, diasDisponibles, activo })
     await this.disponibilidadRepository.save(disponibilidad)

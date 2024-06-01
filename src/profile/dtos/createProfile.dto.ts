@@ -3,7 +3,7 @@ import { isObject } from "class-validator";
 export class CreateProfileDto {
   
   conocimientos: string[];
-  idiomas: string;
+  idiomas: string[];
   experiencia: string;
   precio: number;
   estudios: string;
