@@ -7,15 +7,15 @@ export class CreateProfileDto {
   experiencia: string;
   precio: number;
   estudios: string;
-  genero: string;
+  sexo: string;
   fotoDePerfil: string;
   descripcion: string;
   nacimiento: Date;
 
-  ubicacion: {
+  
     pais: string;
     ciudad: string;
-  }
+  
 
   horasSemanales:number;
   diasDisponibles: string[];

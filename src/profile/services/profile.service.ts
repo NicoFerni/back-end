@@ -144,11 +144,11 @@ export class ProfileService {
   }
 
   async gender(genderDto: GenderDto, Id: string): Promise<Profile> {
-    const { genero } = genderDto
+    const { sexo } = genderDto
 
     const profile = await this.findProfileById(Id)
 
-    profile.genero = genero
+    profile.sexo = sexo
 
     await this.profileRepository.save(profile)
 
@@ -245,14 +245,14 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ubicacion, ...profileData } = createProfileDto;
+    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, pais, ciudad, ...profileData } = createProfileDto;
 
 
 
     const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode })
     await this.redesRepository.save(redes);
 
-
+    const ubicacion = { pais: pais, ciudad: ciudad }
     const disponibilidad = this.disponibilidadRepository.create({ horasSemanales, diasDisponibles, activo })
     await this.disponibilidadRepository.save(disponibilidad)
 

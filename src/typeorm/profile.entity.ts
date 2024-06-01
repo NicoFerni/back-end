@@ -60,9 +60,9 @@ export class Profile {
   @Column({
     nullable: false,
     default: '',
-    name: 'genero'
+    name: 'sexo'
   })
-  genero: string;
+  sexo: string;
 
 
   @Column({
