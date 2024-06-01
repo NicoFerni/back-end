@@ -212,6 +212,17 @@ export class ProfileService{
     }
 
     
+    async transformProfile(profile: Profile): Promise<Profile> {
+      const transformedProfile = { ...profile };
+      Object.keys(transformedProfile.redes).forEach(key => {
+        if (transformedProfile.redes[key] === null) {
+          delete transformedProfile.redes[key];
+        }
+      });
+      return transformedProfile;
+    }
+    
+
      async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile>{
        const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ...profileData } = createProfileDto;
        
@@ -244,7 +255,7 @@ export class ProfileService{
        profile.disponibilidad = disponibilidad;
 
 
-   return profile
+       return this.transformProfile(profile)
 }
   }
  
