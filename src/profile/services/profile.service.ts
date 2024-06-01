@@ -231,7 +231,7 @@ export class ProfileService {
       });
     }
 
-    
+
     if (transformedProfile.disponibilidad) {
       Object.keys(transformedProfile.disponibilidad).forEach(key => {
         if (key === 'Id') {
@@ -245,7 +245,7 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ...profileData } = createProfileDto;
+    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ubicacion, ...profileData } = createProfileDto;
 
 
 
@@ -266,7 +266,7 @@ export class ProfileService {
 
     userId = user.id
 
-    const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId })
+    const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId, ubicacion})
     await this.profileRepository.save(profile);
     profile.disponibilidad = disponibilidad;
 
