@@ -16,12 +16,12 @@ export class Profile {
     })
   conocimientos: string[];
 
-  @Column({
+  @Column('simple-array',{
     nullable: false,
-    default: '',
+    default: [],
     name: 'idiomas'
   })
-  idiomas: string;
+  idiomas: string[];
 
   @Column({
     type: 'json',

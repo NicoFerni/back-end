@@ -267,7 +267,7 @@ export class ProfileService {
 
     userId = user.id
 
-    const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId, ubicacion})
+    const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId, ubicacion, idiomas})
     await this.profileRepository.save(profile);
     profile.disponibilidad = disponibilidad;
 
