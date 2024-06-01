@@ -24,11 +24,16 @@ export class Profile {
   idiomas: string;
 
   @Column({
+    type: 'json',
     nullable: false,
-    default: '',
+    default: {},
     name: 'ubicacion'
   })
-  ubicacion: string
+  ubicacion: {
+    pais: string;
+    ciudad: string;
+  };
+  
 
   @Column({
     nullable: false,

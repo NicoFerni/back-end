@@ -219,7 +219,13 @@ export class ProfileService{
        const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ...profileData } = createProfileDto;
        
        const redes = this.redesRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
+       Object.keys(redes).forEach(key => {
+        if (redes[key] === null) {
+          delete redes[key];
+        }
+      });
        const disponibilidad = this.disponibilidadRepository.create({horasSemanales, diasDisponibles, activo})
+       
 
        await this.disponibilidadRepository.save(disponibilidad)
        await this.redesRepository.save(redes)

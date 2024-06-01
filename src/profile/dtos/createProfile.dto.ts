@@ -1,8 +1,9 @@
+import { isObject } from "class-validator";
+
 export class CreateProfileDto {
   
   conocimientos: string[];
   idiomas: string;
-  ubicacion: string;
   experiencia: string;
   precio: number;
   estudios: string;
@@ -10,6 +11,11 @@ export class CreateProfileDto {
   fotoDePerfil: string;
   descripcion: string;
   nacimiento: Date;
+
+  ubicacion: {
+    pais: string;
+    ciudad: string;
+  }
 
   horasSemanales:number;
   diasDisponibles: string[];
