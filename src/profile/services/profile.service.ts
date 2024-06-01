@@ -189,7 +189,6 @@ export class ProfileService{
           }
         })
         
-    
 
         const fileName = uploadResponse[0].name;
         const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
@@ -216,17 +215,20 @@ export class ProfileService{
      async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile>{
        const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, ...profileData } = createProfileDto;
        
+
+
        const redes = this.redesRepository.create({facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode})
        Object.keys(redes).forEach(key => {
         if (redes[key] === null) {
           delete redes[key];
         }
       });
-       const disponibilidad = this.disponibilidadRepository.create({horasSemanales, diasDisponibles, activo})
-       
+      await this.redesRepository.save(redes);
 
+
+       const disponibilidad = this.disponibilidadRepository.create({horasSemanales, diasDisponibles, activo})
        await this.disponibilidadRepository.save(disponibilidad)
-       await this.redesRepository.save(redes)
+
 
        const user = await this.usersRepository.findOne({where: {id: userId }})
        if (!user) {
@@ -237,10 +239,8 @@ export class ProfileService{
 
        userId = user.id
      
-       const profile = this.profileRepository.create({...profileData, ...redes, disponibilidad, userId})
+       const profile = this.profileRepository.create({...profileData, redes, disponibilidad, userId})
        await this.profileRepository.save(profile);
-
-       profile.redes = redes;
        profile.disponibilidad = disponibilidad;
 
 
