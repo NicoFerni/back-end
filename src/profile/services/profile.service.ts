@@ -191,7 +191,6 @@ export class ProfileService{
           }
         })
         
-        console.log("Image uploaded successfully!");
     
 
         const fileName = uploadResponse[0].name;
@@ -203,13 +202,6 @@ export class ProfileService{
         profile.fotoDePerfil = url
   
         await this.profileRepository.save(profile)
-  
-        console.log("Profile picture URL updated:", url);
-        if (profile) {
-          console.log("Profile details:", profile);
-      } else {
-          console.log("Profile not found for ID:", Id);
-      }
 
 
         return profile; 
@@ -243,6 +235,9 @@ export class ProfileService{
      
        const profile = this.profileRepository.create({...profileData, ...redes, ...disponibilidad, userId})
        await this.profileRepository.save(profile);
+
+       profile.redes = redes;
+       profile.disponibilidad = disponibilidad;
 
        Object.keys(profile).forEach(key => {
         if (profile[key] === null || profile[key] === '') {
