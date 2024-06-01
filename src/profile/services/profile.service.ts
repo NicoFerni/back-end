@@ -233,14 +233,8 @@ export class ProfileService{
 
        userId = user.id
      
-       const profile = this.profileRepository.create({...profileData, ...redes, ...disponibilidad, userId})
+       const profile = this.profileRepository.create({...profileData, ...(redes || {}), ...disponibilidad, userId})
        await this.profileRepository.save(profile);
-
-       Object.keys(profile.redes).forEach(key => {
-        if (profile.redes[key] === null || profile.redes[key] === '') {
-          delete profile.redes[key];
-        }
-      });
 
        profile.redes = redes;
        profile.disponibilidad = disponibilidad;
