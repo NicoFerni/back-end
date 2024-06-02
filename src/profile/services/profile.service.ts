@@ -20,6 +20,14 @@ import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
 
+interface ProfileWithDisponibilidad extends Profile {
+  disponibilidad: {
+    horas: string;
+    dias: string[];
+    activo: boolean;
+  };
+}
+
 @Injectable()
 export class ProfileService {
   constructor(
@@ -211,9 +219,15 @@ export class ProfileService {
   }
 
 
-  async transformProfile(profile: Profile): Promise<Profile> {
-    const transformedProfile = { ...profile };
-
+  async transformProfile(profile: Profile): Promise<ProfileWithDisponibilidad> {
+    const transformedProfile: ProfileWithDisponibilidad = {
+      ...profile,
+      disponibilidad: {
+        horas: profile.horas,
+        dias: profile.dias,
+        activo: profile.activo,
+      },
+    };
 
     Object.keys(transformedProfile.redes).forEach(key => {
       if (transformedProfile.redes[key] === null) {
@@ -236,31 +250,26 @@ export class ProfileService {
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
     const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horas, dias, activo, pais, ciudad, idiomas, ...profileData } = createProfileDto;
-
-
-
-    const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode })
+  
+    const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode });
     await this.redesRepository.save(redes);
-
   
-    const ubicacion = { pais: pais, ciudad: ciudad }
+    const ubicacion = { pais: pais, ciudad: ciudad };
   
-
-
-    const user = await this.usersRepository.findOne({ where: { id: userId } })
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
     }
-    user.hasProfile = true
+    user.hasProfile = true;
     await this.usersRepository.save(user);
-
-    userId = user.id
-
-    const profile = this.profileRepository.create({ ...profileData, redes, userId, ubicacion, horas, dias, activo , idiomas})
+  
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, horas, dias, activo });
+    profile.redes = redes;
+    profile.userId = user.id;
     await this.profileRepository.save(profile);
-
-
-    return this.transformProfile(profile)
+  
+    return this.transformProfile(profile);
   }
+  
 }
 

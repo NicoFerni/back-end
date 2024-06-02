@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { Redes } from "./redes.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Profile {
@@ -89,7 +90,6 @@ export class Profile {
     nullable: true,
     name: 'user_id'
   })
-  userId: string;
 
 
    @Column({
@@ -115,9 +115,11 @@ export class Profile {
   })
   activo: boolean;
 
-
   @OneToOne(() => Redes, redes => redes.profile, { cascade: true, eager: true })
   @JoinColumn()
   redes: Redes;
 
+
+  @OneToOne(() => User)
+  userId: User;
 }
