@@ -7,6 +7,7 @@ import { LocationService } from "../services/location.service";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { TechnologiesService } from "../services/programingLanguagesList.service"
+import { Profile } from "../../typeorm";
 
 @ApiTags('profiles')
     @Controller('api/v1/profile')
@@ -29,7 +30,7 @@ import { TechnologiesService } from "../services/programingLanguagesList.service
         }
   
         @Get('')
-        getProfiles(){
+        getProfiles(): Promise<Profile[]>{
             return this.profileService.getProfiles()
         }
 

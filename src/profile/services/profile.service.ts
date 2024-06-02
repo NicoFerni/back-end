@@ -50,8 +50,10 @@ export class ProfileService {
     return this.programingLangaugesService.getTechnologies()
   }
 
-  async getProfiles() {
-    return this.profileRepository.find()
+  async getProfiles(): Promise<Profile[]> {
+    const profiles = await this.profileRepository.find()
+
+    return Promise.all(profiles.map(profile => this.transformProfile(profile)))
   }
 
   async getLanguages() {
