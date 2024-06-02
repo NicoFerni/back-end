@@ -64,12 +64,12 @@ export class ProfileService {
 
 
   async disponibilidad(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
-    const { horasSemanales, diasDisponibles, activo } = disponibilidadDto
+    const { horas, dias, activo } = disponibilidadDto
     const profile = await this.findProfileById(Id)
 
     const availability = new Disponibilidad();
-    availability.horasSemanales = horasSemanales;
-    availability.diasDisponibles = diasDisponibles;
+    availability.horas = horas;
+    availability.dias = dias;
     availability.activo = activo;
 
     profile.disponibilidad = new Disponibilidad;
@@ -245,7 +245,7 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horasSemanales, diasDisponibles, activo, pais, ciudad, idiomas, ...profileData } = createProfileDto;
+    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horas, dias, activo, pais, ciudad, idiomas, ...profileData } = createProfileDto;
 
 
 
@@ -254,7 +254,7 @@ export class ProfileService {
 
   
     const ubicacion = { pais: pais, ciudad: ciudad }
-    const disponibilidad = this.disponibilidadRepository.create({ horasSemanales, diasDisponibles, activo })
+    const disponibilidad = this.disponibilidadRepository.create({ horas, dias, activo })
     await this.disponibilidadRepository.save(disponibilidad)
 
 

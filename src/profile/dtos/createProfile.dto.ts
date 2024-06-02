@@ -17,9 +17,9 @@ export class CreateProfileDto {
     ciudad: string;
   
 
-  horasSemanales:number;
-  diasDisponibles: string[];
-  activo: string
+  horas:number;
+  dias: string[];
+  activo: boolean
 
   facebook: string;
   instagram: string;

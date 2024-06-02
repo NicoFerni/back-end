@@ -12,7 +12,7 @@ export class Disponibilidad {
         default: 0,
         name: 'horas_semanales'
     })
-    horasSemanales: number;
+    horas: number;
 
     @Column(
         "simple-array",
@@ -21,15 +21,15 @@ export class Disponibilidad {
             default: [],
             name: 'dias_disponibles'
         })
-    diasDisponibles: string[];
+    dias: string[];
 
 
     @Column({
         nullable: false,
-        default: '',
+        default: false,
         name: 'activo'
     })
-    activo: string;
+    activo: boolean;
 
     @OneToOne(() => Profile, profile => profile.disponibilidad)
     @JoinColumn()
