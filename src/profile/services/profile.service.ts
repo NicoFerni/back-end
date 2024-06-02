@@ -219,22 +219,8 @@ export class ProfileService {
   }
 
 
-  async transformProfile(profile: Profile): Promise<ProfileWithDisponibilidad> {
-    const transformedProfile: ProfileWithDisponibilidad = {
-      ...profile,
-      disponibilidad: {
-        horas: profile.horas,
-        dias: profile.dias,
-        activo: profile.activo,
-      },
-    };
-
-    Object.keys(transformedProfile.redes).forEach(key => {
-      if (transformedProfile.redes[key] === null) {
-        delete transformedProfile.redes[key];
-      }
-    });
-
+  async transformProfile(profile: Profile): Promise<Profile> {
+    const transformedProfile = profile
 
     if (transformedProfile.redes) {
       Object.keys(transformedProfile.redes).forEach(key => {
