@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsIn, IsArray, ArrayMinSize, ArrayMaxSize, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsIn, IsArray, ArrayMinSize, ArrayMaxSize, Min, Max, IsBoolean } from 'class-validator';
 
 export class disponibilidadDto {
   @IsNotEmpty()
@@ -13,5 +13,6 @@ export class disponibilidadDto {
   dias: string[];
 
   @IsString()
+  @IsBoolean()
   activo: boolean;
 }

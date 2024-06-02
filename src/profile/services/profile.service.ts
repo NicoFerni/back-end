@@ -72,7 +72,7 @@ export class ProfileService {
     availability.dias = dias;
     availability.activo = activo;
 
-    profile.disponibilidad = new Disponibilidad;
+    profile.disponibilidad = availability
 
     await this.profileRepository.save(profile);
 
