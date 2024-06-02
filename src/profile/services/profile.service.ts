@@ -215,7 +215,7 @@ export class ProfileService {
 
 
   async transformProfile(profile: Profile): Promise<Profile> {
-    const transformedProfile = { ...profile };
+    const transformedProfile = { ...profile, disponibilidad: profile.disponibilidad };
 
 
     Object.keys(transformedProfile.redes).forEach(key => {
@@ -257,7 +257,6 @@ export class ProfileService {
   
     const ubicacion = { pais: pais, ciudad: ciudad }
     const disponibilidad = this.disponibilidadRepository.create({ horas, dias, activo })
-    await this.disponibilidadRepository.save(disponibilidad)
 
 
     const user = await this.usersRepository.findOne({ where: { id: userId } })
@@ -272,6 +271,8 @@ export class ProfileService {
     const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId, ubicacion, idiomas})
     await this.profileRepository.save(profile);
     profile.disponibilidad = disponibilidad;
+    await this.disponibilidadRepository.save(disponibilidad)
+    
 
 
     return this.transformProfile(profile)
