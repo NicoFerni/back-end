@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { Redes } from "./redes.entity";
-import { Disponibilidad } from "./availability.entity";
 
 @Entity()
 export class Profile {
@@ -92,9 +91,29 @@ export class Profile {
   })
   userId: string;
 
-  @OneToOne(() => Disponibilidad, disponibilidad => disponibilidad.profile, { cascade: true })
-  @JoinColumn()
-  disponibilidad: Disponibilidad;
+
+   @Column({
+    nullable: false,
+    default: '',
+    name: 'horas_semanales'
+  })
+  horas: string;
+
+  @Column(
+    "simple-array",
+    {
+      nullable: false,
+      default: [],
+      name: 'dias_disponibles'
+    })
+  dias: string[];
+
+  @Column({
+    nullable: false,
+    default: false,
+    name: 'activo'
+  })
+  activo: boolean;
 
 
   @OneToOne(() => Redes, redes => redes.profile, { cascade: true, eager: true })

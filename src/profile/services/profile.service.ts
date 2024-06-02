@@ -15,7 +15,7 @@ import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
-import { Disponibilidad } from "../../typeorm/availability.entity";
+// import { Disponibilidad } from "../../typeorm/availability.entity";
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
@@ -27,8 +27,8 @@ export class ProfileService {
     private readonly profileRepository: Repository<Profile>,
     @InjectRepository(Redes)
     private readonly redesRepository: Repository<Redes>,
-    @InjectRepository(Disponibilidad)
-    private disponibilidadRepository: Repository<Disponibilidad>,
+   // @InjectRepository(Disponibilidad)
+  //  private disponibilidadRepository: Repository<Disponibilidad>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly languagesService: LanguagesService,
@@ -69,12 +69,9 @@ export class ProfileService {
     const { horas, dias, activo } = disponibilidadDto
     const profile = await this.findProfileById(Id)
 
-    const availability = new Disponibilidad();
-    availability.horas = horas
-    availability.dias = dias;
-    availability.activo = activo;
-
-    profile.disponibilidad = availability
+    profile.horas = horas;
+    profile.dias = dias;
+    profile.activo = activo;
 
     await this.profileRepository.save(profile);
 
@@ -215,7 +212,7 @@ export class ProfileService {
 
 
   async transformProfile(profile: Profile): Promise<Profile> {
-    const transformedProfile = { ...profile, disponibilidad: profile.disponibilidad };
+    const transformedProfile = { ...profile };
 
 
     Object.keys(transformedProfile.redes).forEach(key => {
@@ -233,15 +230,6 @@ export class ProfileService {
       });
     }
 
-
-    if (transformedProfile.disponibilidad) {
-      Object.keys(transformedProfile.disponibilidad).forEach(key => {
-        if (key === 'Id') {
-          delete transformedProfile.disponibilidad[key];
-        }
-      });
-    }
-  
     return transformedProfile;
   }
 
@@ -256,7 +244,7 @@ export class ProfileService {
 
   
     const ubicacion = { pais: pais, ciudad: ciudad }
-    const disponibilidad = this.disponibilidadRepository.create({ horas, dias, activo })
+  
 
 
     const user = await this.usersRepository.findOne({ where: { id: userId } })
@@ -268,11 +256,8 @@ export class ProfileService {
 
     userId = user.id
 
-    const profile = this.profileRepository.create({ ...profileData, redes, disponibilidad, userId, ubicacion, idiomas})
+    const profile = this.profileRepository.create({ ...profileData, redes, userId, ubicacion, horas, dias, activo , idiomas})
     await this.profileRepository.save(profile);
-    profile.disponibilidad = disponibilidad;
-    await this.disponibilidadRepository.save(disponibilidad)
-    
 
 
     return this.transformProfile(profile)
