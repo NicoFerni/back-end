@@ -68,7 +68,7 @@ export class ProfileService {
     const profile = await this.findProfileById(Id)
 
     const availability = new Disponibilidad();
-    availability.horas = horas;
+    availability.horas = horas
     availability.dias = dias;
     availability.activo = activo;
 

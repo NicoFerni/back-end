@@ -9,10 +9,10 @@ export class Disponibilidad {
 
     @Column({
         nullable: false,
-        default: 0,
+        default: '',
         name: 'horas_semanales'
     })
-    horas: number;
+    horas: string;
 
     @Column(
         "simple-array",

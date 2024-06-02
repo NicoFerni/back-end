@@ -1,4 +1,3 @@
-import { isObject } from "class-validator";
 
 export class CreateProfileDto {
   
@@ -12,12 +11,10 @@ export class CreateProfileDto {
   descripcion: string;
   nacimiento: Date;
 
-  
-    pais: string;
-    ciudad: string;
-  
+  pais: string;
+  ciudad: string;
 
-  horas:number;
+  horas:string;
   dias: string[];
   activo: boolean
 
