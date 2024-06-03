@@ -226,7 +226,7 @@ export class ProfileService {
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
     const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
   
-    const redes = { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode };
+    const redes = { facebook: facebook, instagram: instagram, threads: threads, twitter: twitter, reddit: reddit, linkedin: linkedin, youtube: youtube, discord: discord, whatsapp: whatsapp, github: github, areaCode: areaCode };
     const ubicacion = { pais: pais, ciudad: ciudad };
   
     const user = await this.usersRepository.findOne({ where: { id: userId } });
@@ -235,9 +235,9 @@ export class ProfileService {
     }
     user.hasProfile = true;
     await this.usersRepository.save(user);
-  
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, redes });
-    profile.userId = user.id;
+
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, redes, userId: user });
+   
     await this.profileRepository.save(profile);
   
     return this.transformProfile(profile);
