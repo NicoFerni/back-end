@@ -18,7 +18,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
-
 @Injectable()
 export class ProfileService {
   constructor(
@@ -33,11 +32,7 @@ export class ProfileService {
 
 
   async findProfileById(Id: any): Promise<Profile> {
-    const profile = await this.profileRepository.findOne(Id);
-    if (!profile) {
-      throw new NotFoundException(`Perfil con ID ${Id} no encontrado`);
-    }
-    return profile;
+    return await this.profileRepository.findOne(Id);
   }
 
   async getTechnologies() {
