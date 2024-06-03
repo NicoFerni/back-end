@@ -157,10 +157,7 @@ export class ProfileService {
 async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{ 
 
 
-    const profile = await this.profileRepository.findOne({ where: { Id: Id } });
-    if (!profile) {
-      throw new NotFoundException(`Profile with ID ${Id} not found`);
-    }
+    const profile = await this.findProfileById(Id)
 
     profile.redes = redesData;
   
@@ -202,8 +199,7 @@ async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{
     }
     catch (error) {
       console.error("Error during image upload:", error);
-
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
@@ -238,9 +234,12 @@ async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, userId: user.id });
    
-    
     await this.profileRepository.save(profile);
-  
+
+    if (profile) {
+    throw new Error('Ya hay un usuario asociado a esta cuenta');
+  }
+
     return this.transformProfile(profile);
   }
   
