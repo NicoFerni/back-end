@@ -108,7 +108,7 @@ export class Profile {
     default: {},
     name: 'redes'
   })
-  redes: Partial<{
+  redes: {
     facebook: string;
     instagram: string;
     threads: string;
@@ -120,7 +120,7 @@ export class Profile {
     whatsapp: string;
     github: string;
     areaCode: string;
-  }>;
+  };
 
 
   @OneToOne(() => User)

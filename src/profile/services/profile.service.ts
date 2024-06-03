@@ -17,6 +17,7 @@ import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
+import { profile } from "console";
 
 
 @Injectable()
@@ -29,7 +30,7 @@ export class ProfileService {
     private readonly languagesService: LanguagesService,
     private readonly locationService: LocationService,
     private readonly programingLangaugesService: TechnologiesService
-    ) { }
+  ) { }
 
 
   async findProfileById(Id: any): Promise<Profile> {
@@ -47,7 +48,7 @@ export class ProfileService {
   async getProfiles(): Promise<Profile[]> {
     const profiles = await this.profileRepository.find()
 
-    return Promise.all(profiles.map(profile => this.transformProfile(profile)))
+    return profiles
   }
 
   async getLanguages() {
@@ -62,20 +63,20 @@ export class ProfileService {
   async availability(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
     const { horas, dias, activo } = disponibilidadDto;
     const profile = await this.findProfileById(Id);
-  
-  
+
+
     profile.disponibilidad = {
       horas: horas,
       dias: dias,
       activo: activo,
     };
-  
+
     await this.profileRepository.save(profile);
-  
+
     return profile;
   }
-  
-  
+
+
 
   async experience(experienceDto: ExperienceDto, Id: any): Promise<Profile> {
     const { experiencia } = experienceDto
@@ -154,18 +155,35 @@ export class ProfileService {
   }
 
 
-async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{ 
-
-
+  async social(Id: any, redesDto: RedesDto): Promise<Profile> {
+    const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode } = redesDto
     const profile = await this.findProfileById(Id)
 
-    profile.redes = redesData;
-  
+    profile.redes = {
+      facebook: facebook,
+      instagram: instagram,
+      twitter: twitter,
+      reddit: reddit,
+      linkedin: linkedin,
+      youtube: youtube,
+      discord: discord,
+      whatsapp: whatsapp,
+      github: github,
+      areaCode: areaCode,
+      threads: threads
+    }
+
+    if(profile.redes){
+      Object.keys(profile.redes).forEach((key) => (profile.redes[key] == null) && delete profile.redes[key]);
+    }
+
     await this.profileRepository.save(profile);
-  
+
     return profile;
   }
-  
+
+
+
 
   async saveImage(file: Express.Multer.File, Id: string): Promise<Profile> {
     try {
@@ -199,32 +217,18 @@ async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{
     }
     catch (error) {
       console.error("Error during image upload:", error);
-    throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }
 
-
-  async transformProfile(profile: Profile): Promise<Profile> {
-    const transformedProfile = profile
-
-    if (transformedProfile.redes) {
-      Object.keys(transformedProfile.redes).forEach(key => {
-        if (transformedProfile.redes[key] === null) {
-          delete transformedProfile.redes[key];
-        }
-      });
-    }
-
-    return transformedProfile;
-  }
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
     const { disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
 
     const ubicacion = { pais: pais, ciudad: ciudad };
-  
+
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
@@ -233,11 +237,11 @@ async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{
     await this.usersRepository.save(user);
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, userId: user.id });
-   
+
     await this.profileRepository.save(profile);
 
-    return this.transformProfile(profile);
+    return profile
   }
-  
+
 }
 
