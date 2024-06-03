@@ -1,4 +1,4 @@
-import { Controller, Query, UseInterceptors, UploadedFile, Param } from "@nestjs/common";
+import { Controller, Query, UseInterceptors, UploadedFile, Param, NotFoundException } from "@nestjs/common";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService} from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
@@ -34,11 +34,15 @@ import { Profile } from "../../typeorm";
             return this.profileService.getProfiles()
         }
 
-        
         @Get(':id')
-        findProfileById(@Param('id') id: string){
-            return this.profileService.findProfileById(id)
+        async findProfileById(@Param('id') id: string) {
+          const profile = await this.profileService.findProfileById(id);
+          if (!profile) {
+            throw new NotFoundException(`Perfil con ID ${id} no encontrado`);
+          }
+          return profile;
         }
+      
 
         @Post('')
         @UseInterceptors(FileInterceptor('fotoDePerfil'))
