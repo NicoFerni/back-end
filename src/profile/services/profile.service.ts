@@ -225,9 +225,10 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
+    const { pais, ciudad, idiomas, horas, dias, activo, ...profileData } = createProfileDto;
 
     const ubicacion = { pais: pais, ciudad: ciudad };
+    const disponibilidad = { horas: horas, dias: dias, activo: activo}
 
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -236,7 +237,7 @@ export class ProfileService {
     user.hasProfile = true;
     await this.usersRepository.save(user);
 
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, userId: user.id });
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId: user.id });
 
     await this.profileRepository.save(profile);
 
