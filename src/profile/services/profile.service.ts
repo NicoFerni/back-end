@@ -234,10 +234,12 @@ export class ProfileService {
       throw new Error('User not found');
     }
     user.hasProfile = true;
+    console.log(user);
     await this.usersRepository.save(user);
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, redes, userId: user });
    
+    console.log(profile);
     await this.profileRepository.save(profile);
   
     return this.transformProfile(profile);
