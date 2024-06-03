@@ -100,7 +100,7 @@ export class Profile {
     horas: string;
     dias: string[];
     activo: boolean;
-  };
+  };  
 
   @Column({
     type: 'json',
