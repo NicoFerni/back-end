@@ -15,18 +15,8 @@ import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
 import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
-// import { Disponibilidad } from "../../typeorm/availability.entity";
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
-
-
-interface ProfileWithDisponibilidad extends Profile {
-  disponibilidad: {
-    horas: string;
-    dias: string[];
-    activo: boolean;
-  };
-}
 
 @Injectable()
 export class ProfileService {
@@ -35,15 +25,13 @@ export class ProfileService {
     private readonly profileRepository: Repository<Profile>,
     @InjectRepository(Redes)
     private readonly redesRepository: Repository<Redes>,
-   // @InjectRepository(Disponibilidad)
-  //  private disponibilidadRepository: Repository<Disponibilidad>,
+
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly languagesService: LanguagesService,
     private readonly locationService: LocationService,
-    private readonly programingLangaugesService: TechnologiesService,
-    private httpService: HttpService
-  ) { }
+    private readonly programingLangaugesService: TechnologiesService
+    ) { }
 
 
   async findProfileById(Id: any): Promise<Profile> {
@@ -73,18 +61,23 @@ export class ProfileService {
   }
 
 
-  async disponibilidad(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
-    const { horas, dias, activo } = disponibilidadDto
-    const profile = await this.findProfileById(Id)
-
-    profile.horas = horas;
-    profile.dias = dias;
-    profile.activo = activo;
-
+  async availability(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
+    const { horas, dias, activo } = disponibilidadDto;
+    const profile = await this.findProfileById(Id);
+  
+  
+    profile.disponibilidad = {
+      horas: horas,
+      dias: dias,
+      activo: activo,
+    };
+  
     await this.profileRepository.save(profile);
-
-    return profile
+  
+    return profile;
   }
+  
+  
 
   async experience(experienceDto: ExperienceDto, Id: any): Promise<Profile> {
     const { experiencia } = experienceDto
@@ -235,12 +228,14 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, horas, dias, activo, pais, ciudad, idiomas, ...profileData } = createProfileDto;
-  
+    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
+
+
     const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode });
     await this.redesRepository.save(redes);
   
     const ubicacion = { pais: pais, ciudad: ciudad };
+  
   
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -249,7 +244,7 @@ export class ProfileService {
     user.hasProfile = true;
     await this.usersRepository.save(user);
   
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, horas, dias, activo });
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad });
     profile.redes = redes;
     profile.userId = user.id;
     await this.profileRepository.save(profile);

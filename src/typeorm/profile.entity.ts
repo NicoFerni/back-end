@@ -91,29 +91,19 @@ export class Profile {
     name: 'user_id'
   })
 
-
-   @Column({
-    nullable: false,
-    default: '',
-    name: 'horas_semanales'
-  })
-  horas: string;
-
-  @Column(
-    "simple-array",
-    {
-      nullable: false,
-      default: [],
-      name: 'dias_disponibles'
-    })
-  dias: string[];
-
   @Column({
+    type: 'json',
     nullable: false,
-    default: false,
-    name: 'activo'
+    default: {},
+    name: 'disponibilidad'
   })
-  activo: boolean;
+  disponibilidad: {
+    horas: string;
+    dias: string[];
+    activo: boolean;
+  };
+
+
 
   @OneToOne(() => Redes, redes => redes.profile, { cascade: true, eager: true })
   @JoinColumn()
