@@ -123,6 +123,10 @@ export class Profile {
   };
 
 
-  @OneToOne(() => User)
-  userId: User;
+  @Column({
+    nullable: true,
+    name: 'user_id'
+  })
+  userId: string;
+
 }

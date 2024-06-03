@@ -17,7 +17,6 @@ import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
-import { profile } from "console";
 
 
 @Injectable()
@@ -61,9 +60,8 @@ export class ProfileService {
 
 
   async availability(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
-    const { horas, dias, activo } = disponibilidadDto;
+    let { horas, dias, activo } = disponibilidadDto;
     const profile = await this.findProfileById(Id);
-
 
     profile.disponibilidad = {
       horas: horas,
@@ -238,7 +236,9 @@ export class ProfileService {
     user.hasProfile = true;
     await this.usersRepository.save(user);
 
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, redes, userId: user.id });
+    userId = user.id
+
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, redes, userId  });
 
     await this.profileRepository.save(profile);
 
