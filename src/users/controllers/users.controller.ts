@@ -9,6 +9,7 @@ import {
     ValidationPipe,
     Query,
     Headers,
+    Param,
     } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users/users.service';
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -34,6 +35,11 @@ import { ApiTags } from '@nestjs/swagger';
         return this.userService.createUser(createUserDto);
       }
 
+      @Get(':id')
+      findById(@Param('id') id: string) { 
+        return this.userService.findById(id);
+      }
+    
       @Post('signin')
       login(@Body() loginDto: LoginDto) : Promise<{accessToken: string}>{
         return this.userService.login(loginDto)
