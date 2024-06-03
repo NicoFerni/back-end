@@ -1,8 +1,7 @@
-import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Profile, Redes, User } from "src/typeorm";
+import { Profile, User } from "src/typeorm";
 import { Repository } from "typeorm";
-import { HttpService } from '@nestjs/axios';
 import { LanguagesService } from "./languages.service";
 import { LocationService } from "./location.service";
 import { disponibilidadDto } from "../dtos/availability.dto";
@@ -18,14 +17,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
 
+
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
-    @InjectRepository(Redes)
-    private readonly redesRepository: Repository<Redes>,
-
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly languagesService: LanguagesService,
@@ -155,23 +152,22 @@ export class ProfileService {
     return profile
   }
 
-  async social(Id: string, redesData: Partial<Redes>): Promise<Redes> {
-    const profile = await this.profileRepository.findOne({ where: { Id: Id }, relations: ['redes'] });
+  async social(Id: string, redesData: Partial<{  facebook: string; instagram: string; threads: string; twitter: string; reddit: string; linkedin: string; youtube: string; discord: string; whatsapp: string; github: string; areaCode: string; }>): Promise<Profile> {
+
+
+    const profile = await this.profileRepository.findOne({ where: { Id: Id } });
     if (!profile) {
       throw new NotFoundException(`Profile with ID ${Id} not found`);
     }
-    let redes: Redes;
-    if (profile.redes) {
-      redes = this.redesRepository.merge(profile.redes, redesData);
-    } else {
-      redes = this.redesRepository.create(redesData);
-      profile.redes = redes;
-      await this.profileRepository.save(profile);
-    }
-    await this.redesRepository.save(redes);
-
-    return redes;
+  
+    // Update the 'redes' field directly in the Profile entity
+    profile.redes = redesData;
+  
+    await this.profileRepository.save(profile);
+  
+    return profile;
   }
+  
 
   async saveImage(file: Express.Multer.File, Id: string): Promise<Profile> {
     try {
@@ -217,7 +213,7 @@ export class ProfileService {
 
     if (transformedProfile.redes) {
       Object.keys(transformedProfile.redes).forEach(key => {
-        if (transformedProfile.redes[key] === null || key === 'id') {
+        if (transformedProfile.redes[key] === null) {
           delete transformedProfile.redes[key];
         }
       });
@@ -229,13 +225,9 @@ export class ProfileService {
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
     const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
-
-
-    const redes = this.redesRepository.create({ facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode });
-    await this.redesRepository.save(redes);
   
+    const redes = { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode };
     const ubicacion = { pais: pais, ciudad: ciudad };
-  
   
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -244,8 +236,7 @@ export class ProfileService {
     user.hasProfile = true;
     await this.usersRepository.save(user);
   
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad });
-    profile.redes = redes;
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, redes });
     profile.userId = user.id;
     await this.profileRepository.save(profile);
   

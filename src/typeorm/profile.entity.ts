@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { Redes } from "./redes.entity";
 import { User } from "./user.entity";
 
 @Entity()
@@ -45,10 +44,10 @@ export class Profile {
 
   @Column({
     nullable: false,
-    default: 0,
+    default: '',
     name: 'precio'
   })
-  precio: number;
+  precio: string;
 
   @Column({
     nullable: false,
@@ -103,11 +102,25 @@ export class Profile {
     activo: boolean;
   };
 
-
-
-  @OneToOne(() => Redes, redes => redes.profile, { cascade: true, eager: true })
-  @JoinColumn()
-  redes: Redes;
+  @Column({
+    type: 'json',
+    nullable: false,
+    default: {},
+    name: 'redes'
+  })
+  redes: Partial<{
+    facebook: string;
+    instagram: string;
+    threads: string;
+    twitter: string;
+    reddit: string;
+    linkedin: string;
+    youtube: string;
+    discord: string;
+    whatsapp: string;
+    github: string;
+    areaCode: string;
+  }>;
 
 
   @OneToOne(() => User)

@@ -4,7 +4,7 @@ export class CreateProfileDto {
   conocimientos: string[];
   idiomas: string[];
   experiencia: string;
-  precio: number;
+  precio: string;
   estudios: string;
   sexo: string;
   fotoDePerfil: string;
