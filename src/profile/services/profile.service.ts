@@ -32,7 +32,7 @@ export class ProfileService {
 
 
   async findProfileById(Id: any): Promise<Profile> {
-    return await this.profileRepository.findOne(Id);
+    return await this.profileRepository.findOne({where : {Id: Id}});
   }
 
   async getTechnologies() {
