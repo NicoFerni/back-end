@@ -11,6 +11,7 @@ import { BirthdayDto } from "../dtos/birthday.dto";
 import { GenderDto } from "../dtos/gender.dto";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { SelectedLanguageDto } from "../dtos/selectedLanguage.dto";
+import { RedesDto } from "../dtos/socialNetwork.dto";
 import 'firebase/storage';
 import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
@@ -152,15 +153,15 @@ export class ProfileService {
     return profile
   }
 
-  async social(Id: string, redesData: Partial<{  facebook: string; instagram: string; threads: string; twitter: string; reddit: string; linkedin: string; youtube: string; discord: string; whatsapp: string; github: string; areaCode: string; }>): Promise<Profile> {
+
+async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{ 
 
 
     const profile = await this.profileRepository.findOne({ where: { Id: Id } });
     if (!profile) {
       throw new NotFoundException(`Profile with ID ${Id} not found`);
     }
-  
-    // Update the 'redes' field directly in the Profile entity
+
     profile.redes = redesData;
   
     await this.profileRepository.save(profile);
@@ -224,9 +225,8 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { facebook, instagram, threads, twitter, reddit, linkedin, youtube, discord, whatsapp, github, areaCode, disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
-  
-    const redes = { facebook: facebook, instagram: instagram, threads: threads, twitter: twitter, reddit: reddit, linkedin: linkedin, youtube: youtube, discord: discord, whatsapp: whatsapp, github: github, areaCode: areaCode };
+    const { disponibilidad, pais, ciudad, idiomas, ...profileData } = createProfileDto;
+
     const ubicacion = { pais: pais, ciudad: ciudad };
   
     const user = await this.usersRepository.findOne({ where: { id: userId } });
@@ -236,7 +236,7 @@ export class ProfileService {
     user.hasProfile = true;
     await this.usersRepository.save(user);
 
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, redes, userId: user.id });
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, idiomas, disponibilidad, userId: user.id });
    
     
     await this.profileRepository.save(profile);

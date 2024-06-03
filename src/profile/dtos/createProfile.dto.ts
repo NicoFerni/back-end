@@ -20,6 +20,7 @@ export class CreateProfileDto {
   activo: boolean
   }
 
+  redes:{
   facebook: string;
   instagram: string;
   threads: string;
@@ -31,4 +32,5 @@ export class CreateProfileDto {
   whatsapp: string;
   github: string;
   areaCode: string;
+  }
 }
