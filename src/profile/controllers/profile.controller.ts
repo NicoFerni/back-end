@@ -34,11 +34,11 @@ import { Profile } from "../../typeorm";
             return this.profileService.getProfiles()
         }
 
-        @Get(':id')
-        async findProfileById(@Param('id') id: string) {
-          const profile = await this.profileService.findProfileById(id);
+        @Get(':Id')
+        async findProfileById(@Param('Id') Id: string) {
+          const profile = await this.profileService.findProfileById(Id);
           if (!profile) {
-            throw new NotFoundException(`Perfil con ID ${id} no encontrado`);
+            throw new NotFoundException(`Perfil con ID ${Id} no encontrado`);
           }
           return profile;
         }
