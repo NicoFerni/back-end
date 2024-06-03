@@ -1,4 +1,4 @@
-import { Controller, Query, UseInterceptors, UploadedFile, Delete } from "@nestjs/common";
+import { Controller, Query, UseInterceptors, UploadedFile, Param } from "@nestjs/common";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService} from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
@@ -32,6 +32,12 @@ import { Profile } from "../../typeorm";
         @Get('')
         getProfiles(): Promise<Profile[]>{
             return this.profileService.getProfiles()
+        }
+
+        
+        @Get(':id')
+        findProfileById(@Param('id') id: string){
+            return this.profileService.findProfileById(id)
         }
 
         @Post('')
