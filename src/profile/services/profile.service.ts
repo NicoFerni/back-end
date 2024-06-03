@@ -236,15 +236,8 @@ async social(Id:any, redesData: Partial<RedesDto>): Promise<Profile>{
    
     await this.profileRepository.save(profile);
 
-    try {
-      if (user.hasProfile === true) {
-        throw new HttpException('Ya hay un usuario asociado a esta cuenta', HttpStatus.CONFLICT);
-      }
-      return this.transformProfile(profile);
-    } catch (error) {
-      
-      console.log(error);
-    }
+    return this.transformProfile(profile);
   }
+  
 }
 
