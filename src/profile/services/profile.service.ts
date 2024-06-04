@@ -57,14 +57,10 @@ export class ProfileService {
   async availability(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
     let { horas, dias, activo } = disponibilidadDto;
     const profile = await this.findProfileById(Id);
-    const auxDias: string[] = []
 
-    if(dias){
-      dias.forEach(dia => auxDias.push(dia));
-    }
     profile.disponibilidad = {
       horas: horas,
-      dias: auxDias,
+      dias: dias,
       activo: activo,
     };
 

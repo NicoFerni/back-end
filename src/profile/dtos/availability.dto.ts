@@ -9,9 +9,9 @@ export class disponibilidadDto {
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(7)
-  @IsString({ each: true })
+  @IsString()
   @IsIn(['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'], { each: true })
-  dias: string[];
+  dias: Array<String>;
 
 
   @IsBoolean()

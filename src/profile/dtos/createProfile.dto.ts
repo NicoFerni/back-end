@@ -16,7 +16,7 @@ export class CreateProfileDto {
 
   
   horas:string;
-  dias: string[];
+  dias: Array<String>;
   activo: boolean
 
   facebook: string;
