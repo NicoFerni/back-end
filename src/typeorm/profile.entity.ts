@@ -1,5 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+
+import { Transform } from 'class-transformer';
+
+export class Disponibilidad {
+  horas: string;
+
+  @Transform(({ value }) => JSON.stringify(value), { toClassOnly: true })
+  @Transform(({ value }) => JSON.parse(value), { toPlainOnly: true })
+  dias: string[];
+
+  activo: boolean;
+}
 
 @Entity()
 export class Profile {
@@ -96,11 +107,7 @@ export class Profile {
     default: {},
     name: 'disponibilidad'
   })
-  disponibilidad: {
-    horas: string;
-    dias: string[];
-    activo: boolean;
-  };  
+  disponibilidad: Disponibilidad;
 
   @Column({
     type: 'json',
