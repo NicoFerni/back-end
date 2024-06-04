@@ -35,10 +35,7 @@ import { ApiTags } from '@nestjs/swagger';
         return this.userService.createUser(createUserDto);
       }
 
-      @Get(':id')
-      findById(@Param('id') id: string) { 
-        return this.userService.findById(id);
-      }
+
     
       @Post('signin')
       login(@Body() loginDto: LoginDto) : Promise<{accessToken: string}>{
@@ -65,4 +62,8 @@ import { ApiTags } from '@nestjs/swagger';
           return this.userService.resetPassword(resetPasswordDto);
         }
       
+        @Get(':id')
+        findById(@Param('id') id: string) { 
+          return this.userService.findById(id);
+        }
     }
