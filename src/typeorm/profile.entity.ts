@@ -1,10 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
+import { Transform } from 'class-transformer';
 
 export class Disponibilidad {
   horas: string;
 
-  dias: Array<String>;
+  @Transform(({ value }) => JSON.stringify(value), { toClassOnly: true })
+  @Transform(({ value }) => JSON.parse(value), { toPlainOnly: true })
+  dias: String[];
 
   activo: boolean;
 }
