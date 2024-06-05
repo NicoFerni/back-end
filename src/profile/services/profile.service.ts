@@ -148,7 +148,7 @@ export class ProfileService {
   }
 
 
-  async social(Id: any, redesDto: RedesDto): Promise<Profile> {
+  async social(Id: any, redesDto: RedesDto): Promise<RedesDto> {
     const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode } = redesDto
     const profile = await this.findProfileById(Id)
 
@@ -172,7 +172,7 @@ export class ProfileService {
 
     await this.profileRepository.save(profile);
 
-    return profile;
+    return profile.redes;
   }
 
 
@@ -223,7 +223,7 @@ export class ProfileService {
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo}
    // const redes = { facebook: facebook, instagram: instagram, twitter: twitter, reddit: reddit, linkedin: linkedin, youtube:youtube, discord: discord, whatsapp: whatsapp, github: github, areaCode: areaCode, threads: threads }
-   
+
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
@@ -235,11 +235,10 @@ export class ProfileService {
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
 
+
     await this.profileRepository.save(profile);
 
     const profileId = profile.Id;
-
-    await this.social(profileId, createProfileDto.redes);
 
     const updatedProfile = await this.profileRepository.findOne(profileId);
 
