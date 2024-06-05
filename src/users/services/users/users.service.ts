@@ -34,8 +34,8 @@ export class UsersService {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
   }
     const newUser = this.userRepository.create({
-      names: names.charAt(0).toUpperCase + names.slice(1),
-      lastNames: lastNames.charAt(0).toUpperCase + names.slice(1),
+      names: names.charAt(0).toUpperCase() + names.slice(1),
+      lastNames: lastNames.charAt(0).toUpperCase() + names.slice(1),
       email,
       password: hashedPass,
       activationToken: token,
