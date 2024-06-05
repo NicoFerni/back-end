@@ -8,6 +8,7 @@ import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { TechnologiesService } from "../services/programingLanguagesList.service"
 import { Profile } from "../../typeorm";
+import { RedesDto } from "../dtos/socialNetwork.dto";
 
 @ApiTags('profiles')
     @Controller('api/v1/profile')
@@ -37,9 +38,9 @@ import { Profile } from "../../typeorm";
 
         @Post('')
         @UseInterceptors(FileInterceptor('fotoDePerfil'))
-        async createProfile(@UploadedFile() fotoDePerfil: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string) {
+        async createProfile(@UploadedFile() fotoDePerfil: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string, @Body() redesDto: RedesDto) {
 
-          const profile = await this.profileService.createProfile(createProfileDto, userId)
+          const profile = await this.profileService.createProfile(createProfileDto, userId, redesDto)
           if (fotoDePerfil) {
             await this.profileService.saveImage(fotoDePerfil, profile.Id);
           }
