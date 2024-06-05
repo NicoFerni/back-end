@@ -223,8 +223,7 @@ export class ProfileService {
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo}
    // const redes = { facebook: facebook, instagram: instagram, twitter: twitter, reddit: reddit, linkedin: linkedin, youtube:youtube, discord: discord, whatsapp: whatsapp, github: github, areaCode: areaCode, threads: threads }
-    const redes = createProfileDto.redes
-
+   
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
@@ -234,11 +233,17 @@ export class ProfileService {
 
     userId = user.id
 
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId, redes  });
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
 
     await this.profileRepository.save(profile);
 
-    return profile
+    const profileId = profile.Id;
+
+    await this.social(profileId, createProfileDto.redes);
+
+    const updatedProfile = await this.profileRepository.findOne(profileId);
+
+    return updatedProfile
   }
 
 }
