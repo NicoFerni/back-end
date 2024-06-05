@@ -160,7 +160,7 @@ export class ProfileService {
       linkedin: `linkedin.com/in/${linkedin}`,
       youtube: `youtube.com/${youtube}`,
       discord: discord,
-      whatsapp: `wa.me/${areaCode.concat(whatsapp)}`,
+      whatsapp: areaCode && whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : undefined,
       github: `github.com/${github}`,
       areaCode: areaCode,
       threads: `threads.net/${threads}`
