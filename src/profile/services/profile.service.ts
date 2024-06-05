@@ -153,17 +153,17 @@ export class ProfileService {
     const profile = await this.findProfileById(Id)
 
     profile.redes = {
-      facebook: facebook,
-      instagram: instagram,
-      twitter: twitter,
-      reddit: reddit,
-      linkedin: linkedin,
-      youtube: youtube,
+      facebook: `facebook.com/${facebook}`,
+      instagram: `intragram.com/${instagram}`,
+      twitter: `x.com/${twitter}`,
+      reddit: `reddit.com/user/${reddit}`,
+      linkedin: `linkedin.com/in/${linkedin}`,
+      youtube: `youtube.com/${youtube}`,
       discord: discord,
-      whatsapp: whatsapp,
-      github: github,
+      whatsapp: `wa.me/${areaCode.concat(whatsapp)}`,
+      github: `github.com/${github}`,
       areaCode: areaCode,
-      threads: threads
+      threads: `threads.net/${threads}`
     }
 
     if(profile.redes){

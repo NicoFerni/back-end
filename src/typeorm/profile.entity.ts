@@ -4,11 +4,7 @@ import { Transform } from 'class-transformer';
 
 export class Disponibilidad {
   horas: string;
-
-  @Transform(({ value }) => JSON.stringify(value), { toClassOnly: true })
-  @Transform(({ value }) => JSON.parse(value), { toPlainOnly: true })
   dias: String[];
-
   activo: boolean;
 }
 
