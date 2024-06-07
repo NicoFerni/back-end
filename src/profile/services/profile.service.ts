@@ -69,8 +69,6 @@ export class ProfileService {
     return profile;
   }
 
-
-
   async experience(experienceDto: ExperienceDto, Id: any): Promise<Profile> {
     const { experiencia } = experienceDto
     const profile = await this.findProfileById(Id)
@@ -227,6 +225,10 @@ export class ProfileService {
     if (!user) {
       throw new Error('User not found');
     }
+    if (user.hasProfile) {
+      throw new Error('User already has a profile');
+    }
+    
     user.hasProfile = true;
     await this.usersRepository.save(user);
 
@@ -239,7 +241,7 @@ export class ProfileService {
     if (createProfileDto.redes) {
       await this.social(profile.Id, createProfileDto.redes);
     }
-    
+
     return profile
   }
 
