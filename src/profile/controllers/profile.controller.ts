@@ -47,10 +47,10 @@ import { RedesDto } from "../dtos/socialNetwork.dto";
           return profile;
         }
 
-        @Get('state')
-        getStates(@Query('country') country : string){
-           return this.locationService.getStates(country);
-        }
+        // @Get('state')
+        // getStates(@Query('country') country : string){
+        //    return this.locationService.getStates(country);
+        // }
 
         @Get('tech')
         getTechnologies(){

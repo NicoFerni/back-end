@@ -170,6 +170,10 @@ export class UsersService {
 
     const user: User = await this.userRepository.findOne({where: {activationToken}})
 
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     if(user.activo === true){
       return {
         "Verified" : true

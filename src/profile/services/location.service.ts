@@ -24,21 +24,21 @@ import { map, catchError } from 'rxjs/operators';
              )
         }
 
-         getStates(country_name: string){
-           const url = `https://www.universal-tutorial.com/api/states/${country_name}`;
-           const headerRequest = {
-               'Authorization': `Bearer ${this.configService.get('AUTHORIZATION')}`,
-               'Accept' : 'application/json'
-           }
-            return this.httpService.get(url, { headers: headerRequest })
-            .pipe(
-             map(response => response.data),
-              catchError(error => {
-                console.error('Error occurred:', error);
-                throw error;
-              }),
-            )
-       }
+      //    getStates(country_name: string){
+      //      const url = `https://www.universal-tutorial.com/api/states/${country_name}`;
+      //      const headerRequest = {
+      //          'Authorization': `Bearer ${this.configService.get('AUTHORIZATION')}`,
+      //          'Accept' : 'application/json'
+      //      }
+      //       return this.httpService.get(url, { headers: headerRequest })
+      //       .pipe(
+      //        map(response => response.data),
+      //         catchError(error => {
+      //           console.error('Error occurred:', error);
+      //           throw error;
+      //         }),
+      //       )
+      //  }
 
         }
       
