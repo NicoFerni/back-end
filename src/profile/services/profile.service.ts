@@ -223,12 +223,12 @@ export class ProfileService {
      
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
-      throw new Error('User not found');
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     if (user.hasProfile) {
-      throw new Error('User already has a profile');
+      throw new HttpException('User already has a profile', HttpStatus.BAD_REQUEST);
     }
-    
+
     user.hasProfile = true;
     await this.usersRepository.save(user);
 
