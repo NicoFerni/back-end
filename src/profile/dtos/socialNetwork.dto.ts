@@ -1,4 +1,3 @@
-
 export class RedesDto {
   facebook: string;
   instagram: string;

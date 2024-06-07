@@ -38,9 +38,9 @@ import { RedesDto } from "../dtos/socialNetwork.dto";
 
         @Post('')
         @UseInterceptors(FileInterceptor('fotoDePerfil'))
-        async createProfile(@UploadedFile() fotoDePerfil: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string, @Body() redesDto: RedesDto) {
+        async createProfile(@UploadedFile() fotoDePerfil: Express.Multer.File , @Body() createProfileDto: CreateProfileDto, @Query('userId') userId: string) {
 
-          const profile = await this.profileService.createProfile(createProfileDto, userId, redesDto)
+          const profile = await this.profileService.createProfile(createProfileDto, userId)
           if (fotoDePerfil) {
             await this.profileService.saveImage(fotoDePerfil, profile.Id);
           }

@@ -44,9 +44,9 @@ export class UsersService {
     await this.userRepository.save(newUser);
     this.sendMailActivation(newUser.email, newUser.activationToken);
 
-    return(
-     'Account created successfully'
-    )
+    return({
+      'Activation Token': newUser.activationToken
+    })
     
   }
 
@@ -88,17 +88,19 @@ export class UsersService {
     return await bcryptjs.compare(password, userPassword)
   }
 
-  async login(loginDto: LoginDto): Promise<{accessToken: string, profile: boolean, id: string}>{
+  async login(loginDto: LoginDto): Promise<{accessToken: string, profile: boolean, id: string, activationToken: string}>{
     const { email, password } = loginDto;
     const user:User = await this.findOneByEmail(email)
     
     if (await this.checkPassword(password, user.password)){
+        const activationToken = user.activationToken
         const payload: JwtPayload = { id: user.id, email, activo: user.activo};
-        const accessToken = await this.jwtService.sign(payload)
+        const accessToken = this.jwtService.sign(payload)
         return { 
           "accessToken": accessToken,
           "profile": user.hasProfile,
-          "id": user.id
+          "id": user.id,
+          "activationToken": activationToken
          }
       }
       throw new UnauthorizedException('Chequea tus credenciales')
@@ -111,9 +113,12 @@ export class UsersService {
     return await bcryptjs.hash(password, 10);
   }
 
-  async activateUser(user:User): Promise<void>{
+  async activateUser(user:User): Promise<string>{
     user.activo = true;
     this.userRepository.save(user);
+    return(
+      `Activation token: ${user.activationToken}`
+    )
   }
 
   async findOneInactivoByIdAndActivationToken(
@@ -174,8 +179,6 @@ export class UsersService {
       "Verified" : false
     }
   }
-
-  
 
   getUsers() {
     return this.userRepository.find();
