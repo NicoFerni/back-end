@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import {TypeOrmModule} from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './typeorm';
 import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -30,4 +30,4 @@ import { ProfileModule } from './profile/profile.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
