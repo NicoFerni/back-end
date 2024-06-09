@@ -216,11 +216,11 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
+    const { pais, ciudad, idiomas, horas, dias, activo, facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode, ...profileData } = createProfileDto;
 
     const ubicacion =  { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo}
-     
+    const redes = { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode}
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -235,7 +235,7 @@ export class ProfileService {
     userId = user.id
     
 
-    const profile =  this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, redes, userId });
+    const profile =  this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, redes, idiomas, userId });
     
 
     await this.profileRepository.save(profile);
