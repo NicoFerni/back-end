@@ -32,7 +32,7 @@ export class ProfileService {
 
 
   async findProfileById(Id: any): Promise<Profile> {
-    return await this.profileRepository.findOne({where : {Id: Id}});
+    return await this.profileRepository.findOne({ where: { Id: Id } });
   }
 
   async getTechnologies() {
@@ -147,7 +147,7 @@ export class ProfileService {
 
 
   async social(Id: string, redesDto: RedesDto): Promise<Profile> {
-    const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode } = redesDto
+    const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads, areaCode } = redesDto
     const profile = await this.findProfileById(Id)
 
     profile.redes = {
@@ -160,11 +160,11 @@ export class ProfileService {
       discord: discord ? discord : null,
       whatsapp: areaCode && whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : null,
       github: github ? `github.com/${github}` : null,
-      areaCode: areaCode? areaCode : null,
+      areaCode: areaCode ? areaCode : null,
       threads: threads ? `threads.net/${threads}` : null
     }
 
-    if(profile.redes){
+    if (profile.redes) {
       Object.keys(profile.redes).forEach((key) => (profile.redes[key] == null) && delete profile.redes[key]);
     }
 
@@ -216,15 +216,29 @@ export class ProfileService {
 
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
-    const { pais, ciudad, idiomas, horas, dias, activo, ...profileData } = createProfileDto;
-    //   facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode,
-  
+    const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
+    const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads, areaCode } = redes;
 
 
-    const ubicacion =  { pais: pais, ciudad: ciudad };
-    const disponibilidad = { horas: horas, dias: dias, activo: activo}
-    // const redes = { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads , areaCode}
-  
+    const ubicacion = { pais: pais, ciudad: ciudad };
+    const disponibilidad = { horas: horas, dias: dias, activo: activo }
+    const socialMedia = {
+      facebook: facebook ? `facebook.com/${facebook}` : null,
+      instagram: instagram ? `intragram.com/${instagram}` : null,
+      twitter: twitter ? `x.com/${twitter} ` : null,
+      reddit: reddit ? `reddit.com/user/${reddit}` : null,
+      linkedin: linkedin ? `linkedin.com/in/${linkedin}` : null,
+      youtube: youtube ? `youtube.com/${youtube}` : null,
+      discord: discord ? discord : null,
+      whatsapp: areaCode && whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : null,
+      github: github ? `github.com/${github}` : null,
+      areaCode: areaCode ? areaCode : null,
+      threads: threads ? `threads.net/${threads}` : null
+    }
+    if (socialMedia) {
+      Object.keys(socialMedia).forEach((key) => (socialMedia[key] == null) && delete socialMedia[key]);
+    }
+
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -237,15 +251,11 @@ export class ProfileService {
     await this.usersRepository.save(user);
 
     userId = user.id
-    
 
-    const profile =  this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId, redes:socialMedia });
 
-    const redes = await this.social(profile.Id, createProfileDto.redes);
-    
-    await this.profileRepository.save(redes);
     await this.profileRepository.save(profile);
-  
+
 
     return profile
   }
