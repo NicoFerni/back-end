@@ -73,6 +73,7 @@ export class Profile {
   @Column({
     nullable: false,
     name: 'nacimiento',
+    default: ''
   })
   nacimiento: string;
 
@@ -90,10 +91,6 @@ export class Profile {
   })
   descripcion: string;
 
-  @Column({
-    nullable: true,
-    name: 'user_id'
-  })
 
   @Column({
     type: 'json',
