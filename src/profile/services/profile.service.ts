@@ -215,7 +215,7 @@ export class ProfileService {
 
 
 
-  async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
+  async createProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
     const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
 
     const ubicacion = { pais: pais, ciudad: ciudad };
@@ -237,11 +237,10 @@ export class ProfileService {
 
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId});
-    
-    await this.social(profile.Id, createProfileDto.redes);
- 
+  
     await this.profileRepository.save(profile);
-
+    
+    await this.social(profile.Id, redesDto);
     
 
     return profile
