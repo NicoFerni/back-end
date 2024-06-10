@@ -235,12 +235,11 @@ export class ProfileService {
 
     userId = user.id
 
-    await this.profileRepository.save({redes})
 
     const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, redes ,userId});
-
+ 
     await this.profileRepository.save(profile);
-
+    await this.social(profile.Id, createProfileDto.redes);
 
     return profile
   }
