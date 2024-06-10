@@ -94,7 +94,7 @@ export class ProfileService {
 
     const profile = await this.findProfileById(Id)
 
-    profile.nacimiento = new Date(nacimiento)
+    profile.nacimiento = nacimiento
 
     await this.profileRepository.save(profile)
 

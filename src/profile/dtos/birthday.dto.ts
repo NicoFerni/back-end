@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsDateString } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class BirthdayDto {
     @IsNotEmpty()
-    @IsDateString()
-    nacimiento: Date;
+    nacimiento: string;
 }

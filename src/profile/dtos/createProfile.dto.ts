@@ -10,7 +10,7 @@ export class CreateProfileDto {
   sexo: string;
   fotoDePerfil: string;
   descripcion: string;
-  nacimiento: Date;
+  nacimiento: string;
 
   pais: string;
   ciudad: string;

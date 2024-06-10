@@ -73,9 +73,8 @@ export class Profile {
   @Column({
     nullable: false,
     name: 'nacimiento',
-    type: 'date'
   })
-  nacimiento: Date;
+  nacimiento: string;
 
   @Column({
     nullable: true,
