@@ -1,13 +1,47 @@
+import { IsOptional, IsString } from 'class-validator';
+
 export class RedesDto {
-  facebook: string;
-  instagram: string;
-  threads: string;
-  twitter: string;
-  reddit: string;
-  linkedin: string;
-  youtube: string;
-  discord: string;
-  whatsapp: string;
-  github: string;
-  areaCode: string;
+  @IsOptional()
+  @IsString()
+  facebook?: string;
+
+  @IsOptional()
+  @IsString()
+  instagram?: string;
+
+  @IsOptional()
+  @IsString()
+  twitter?: string;
+
+  @IsOptional()
+  @IsString()
+  reddit?: string;
+
+  @IsOptional()
+  @IsString()
+  linkedin?: string;
+
+  @IsOptional()
+  @IsString()
+  youtube?: string;
+
+  @IsOptional()
+  @IsString()
+  discord?: string;
+
+  @IsOptional()
+  @IsString()
+  whatsapp?: string;
+
+  @IsOptional()
+  @IsString()
+  github?: string;
+
+  @IsOptional()
+  @IsString()
+  threads?: string;
+
+  @IsOptional()
+  @IsString()
+  areaCode?: string;
 }
