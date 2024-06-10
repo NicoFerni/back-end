@@ -217,27 +217,10 @@ export class ProfileService {
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string): Promise<Profile> {
     const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
-    const { facebook, instagram, twitter, reddit, linkedin, youtube, discord, whatsapp, github, threads, areaCode } = redes;
-
 
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo }
-    const socialMedia = {
-      facebook: facebook ? `facebook.com/${facebook}` : null,
-      instagram: instagram ? `intragram.com/${instagram}` : null,
-      twitter: twitter ? `x.com/${twitter} ` : null,
-      reddit: reddit ? `reddit.com/user/${reddit}` : null,
-      linkedin: linkedin ? `linkedin.com/in/${linkedin}` : null,
-      youtube: youtube ? `youtube.com/${youtube}` : null,
-      discord: discord ? discord : null,
-      whatsapp: areaCode && whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : null,
-      github: github ? `github.com/${github}` : null,
-      areaCode: areaCode ? areaCode : null,
-      threads: threads ? `threads.net/${threads}` : null
-    }
-    if (socialMedia) {
-      Object.keys(socialMedia).forEach((key) => (socialMedia[key] == null) && delete socialMedia[key]);
-    }
+
 
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -252,7 +235,9 @@ export class ProfileService {
 
     userId = user.id
 
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId, redes:socialMedia });
+    await this.profileRepository.save({redes})
+
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, redes ,userId});
 
     await this.profileRepository.save(profile);
 

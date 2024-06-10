@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { RedesDto } from "../profile/dtos/socialNetwork.dto";
 
 export class Disponibilidad {
   horas: string;
@@ -109,19 +110,7 @@ export class Profile {
     default: {},
     name: 'redes'
   })
-  redes: {
-    facebook: string;
-    instagram: string;
-    threads: string;
-    twitter: string;
-    reddit: string;
-    linkedin: string;
-    youtube: string;
-    discord: string;
-    whatsapp: string;
-    github: string;
-    areaCode: string;
-  };
+  redes: RedesDto;
 
 
   @Column({
