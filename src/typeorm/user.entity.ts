@@ -39,7 +39,7 @@ export class User{
       activo: boolean;
       
       @Column({
-        default: 0,
+        default: '',
         name: 'activation_token'})
        activationToken: string;
 
