@@ -41,7 +41,7 @@ export class User{
       @Column({
         default: 0,
         name: 'activation_token'})
-       activationToken: number;
+       activationToken: string;
 
       @Column({
         type: 'uuid',

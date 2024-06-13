@@ -30,7 +30,7 @@ export class AuthController {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
     }
 
-    const activationToken = this.authService.generateCode();
+    const activationToken = this.authService.generateCode().toString();
     const newUser = this.userService.create({
       names: names.charAt(0).toUpperCase() + names.slice(1),
       lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),

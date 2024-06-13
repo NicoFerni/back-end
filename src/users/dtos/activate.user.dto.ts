@@ -6,5 +6,5 @@ export class ActivateUserDto {
     email: string
 
     @IsNotEmpty()
-    code: number;
+    code: string;
 }

@@ -51,7 +51,7 @@ export class UsersController {
   }
 
   @Post('/email/verified')
-  isVerified(@Headers('token') activo: number) {
+  isVerified(@Headers('token') activo: string) {
     return this.authService.isVerified(activo)
   }
 
