@@ -6,6 +6,5 @@ export class ActivateUserDto {
     email: string
 
     @IsNotEmpty()
-    @IsUUID('4')
-    code: string;
+    code: number;
 }

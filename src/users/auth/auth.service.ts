@@ -21,13 +21,13 @@ export class AuthService {
   ) {}
 
   generateCode(): number {
-    return Math.floor(10000 + Math.random() * 90000);
+    return Math.floor(100000 + Math.random() * 900000);
   }
 
   async createUser({names, lastNames, password, email}: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
     const existingUser = await this.userRepository.findOne( {where: { email: email }});
-    const token = v4()
+    const token = this.generateCode()
 
     if (existingUser) {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
 
-  async sendMailActivation(email: string, activationToken: string) {
+  async sendMailActivation(email: string, activationToken: number) {
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -66,7 +66,7 @@ export class AuthService {
       subject: 'Esto es una prueba',
       text: `Activa tu cuenta con el siguiente código ${activationToken}`
     };
-    await transporter.sendMail(mailOptions, function (error: string, info: any) {
+    await transporter.sendMail(mailOptions, function (error: string) {
       if (error) {
         console.log(error);
       } else {
@@ -83,7 +83,7 @@ export class AuthService {
     return await bcryptjs.hash(password, 10);
   }
 
-  async login(loginDto: LoginDto): Promise<{ accessToken: string, profile: boolean, id: string, activationToken: string }> {
+  async login(loginDto: LoginDto): Promise<{ accessToken: string, profile: boolean, id: string, activationToken: number }> {
     const { email, password } = loginDto;
     const user: User = await this.userRepository.findOne({ where: { email } });
 
@@ -109,7 +109,7 @@ export class AuthService {
     return `Activation token: ${user.activationToken}`;
   }
 
-  async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
+  async findOneInactivoByIdAndActivationToken(email: string, code: number): Promise<User> {
     return this.userRepository.findOne({ where: { email, activationToken: code, activo: false } });
   }
 
@@ -150,7 +150,7 @@ export class AuthService {
     await this.userRepository.save(user);
   }
 
-  async isVerified(activationToken: string) {
+  async isVerified(activationToken: number) {
     const user: User = await this.userRepository.findOne({ where: { activationToken } });
 
     if (!user) {
