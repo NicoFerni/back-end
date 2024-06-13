@@ -64,7 +64,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Activa tu cuenta',
-      html: `<h1>Bienvenido!</h1><p>Activa tu cuente con el siguiente codigo: ${activationToken}</p>`,
+      html: `<h1>Bienvenido!</h1><p>Activa tu cuentacon el siguiente codigo: ${activationToken}</p>`,
     };
     await transporter.sendMail(mailOptions)
   
