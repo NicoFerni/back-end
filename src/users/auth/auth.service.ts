@@ -66,13 +66,8 @@ export class AuthService {
       subject: 'Esto es una prueba',
       text: `Activa tu cuenta con el siguiente código ${activationToken}`
     };
-    await transporter.sendMail(mailOptions, function (error: string) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent');
-      }
-    });
+    await transporter.sendMail(mailOptions)
+  
   }
 
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
