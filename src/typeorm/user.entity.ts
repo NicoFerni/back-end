@@ -39,9 +39,9 @@ export class User{
       activo: boolean;
       
       @Column({
-        default: 'false',
+        default: 0,
         name: 'activation_token'})
-       activationToken: string;
+       activationToken: number;
 
       @Column({
         type: 'uuid',

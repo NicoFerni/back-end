@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './typeorm';
 import { ProfileModule } from './profile/profile.module';
+import { AuthModule } from './users/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,9 +26,10 @@ import { ProfileModule } from './profile/profile.module';
     }),
     UsersModule,
     ProfileModule,
+    AuthModule
   ],
   exports: [],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
