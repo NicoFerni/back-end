@@ -69,7 +69,7 @@ export class AuthService {
     user.activationToken = newToken;
   
     await this.userRepository.save(user);
-    
+
     this.sendMailActivation(user.email, user.activationToken);
   }
   
@@ -89,7 +89,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Activa tu cuenta',
-      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p>, <h1>${activationToken}</h1> `,
+      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> `,
     };
     await transporter.sendMail(mailOptions)
   
@@ -133,7 +133,7 @@ export class AuthService {
     return `Activation token: ${user.activationToken}`;
   }
 
-  async activateUserDto(activateUserDto: ActivateUserDto): Promise<ActivateUserDto> {
+  async activateUserDto(activateUserDto: ActivateUserDto): Promise<string> {
     const { email, code } = activateUserDto;
     const user: User = await this.findOneInactivoByIdAndActivationToken(email, code);
 
@@ -142,7 +142,7 @@ export class AuthService {
     }
     await this.activateUser(user);
 
-    return { email, code };
+    return user.id, user.activationToken;
   }
 
   async requestResetPassword(requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
