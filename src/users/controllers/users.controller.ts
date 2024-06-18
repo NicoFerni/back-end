@@ -38,7 +38,10 @@ export class UsersController {
     return this.authService.createUser(createUserDto);
   }
 
-
+  @Post('resend-activation-code')
+  async resendActivationCode(@Body('email') email: string): Promise<void> {
+    return this.authService.resendActivationCode(email);
+  }
 
   @Post('signin')
   login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
