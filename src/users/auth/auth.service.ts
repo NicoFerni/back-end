@@ -26,28 +26,53 @@ export class AuthService {
 
   async createUser({names, lastNames, password, email}: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
-    const existingUser = await this.userRepository.findOne( {where: { email: email }});
-    const token = this.generateCode().toString()
+    let existingUser = await this.userRepository.findOne( {where: { email: email }});
 
-    if (existingUser) {
+
+    if (existingUser && existingUser.activo === true) {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
-  }
-    const newUser = this.userRepository.create({
-      names: names.charAt(0).toUpperCase() + names.slice(1),
-      lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),
-      email,
-      password: hashedPass,
-      activationToken: token,
-      hasProfile: false,
-    });
-    await this.userRepository.save(newUser);
-    this.sendMailActivation(newUser.email, newUser.activationToken);
+    }
 
+    if (existingUser && existingUser.activo === false){
+      const token = this.generateCode().toString();
+      existingUser.names = names.charAt(0).toUpperCase() + names.slice(1);
+      existingUser.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);
+      existingUser.password = hashedPass;
+      existingUser.activationToken = token;
+    }else {
+      const token = this.generateCode().toString();
+      existingUser = this.userRepository.create({
+        names: names.charAt(0).toUpperCase() + names.slice(1),
+        lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),
+        email,
+        password: hashedPass,
+        activationToken: token,
+        hasProfile: false,
+        activo: false,
+      });
+    }
+  
+    await this.userRepository.save(existingUser);
+    this.sendMailActivation(existingUser.email, existingUser.activationToken);
+  
     return({
-      'Activation Token': newUser.activationToken
-    })
-    
+      'Activation Token': existingUser.activationToken
+    });
   }
+
+  async resendActivationCode(email: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { email: email, activo: false } });
+    if (!user) {
+      throw new HttpException('No inactive account found with the provided email', HttpStatus.NOT_FOUND);
+    }
+    const newToken = this.generateCode().toString();
+    user.activationToken = newToken;
+  
+    await this.userRepository.save(user);
+    
+    this.sendMailActivation(user.email, user.activationToken);
+  }
+  
 
 
   async sendMailActivation(email: string, activationToken: string) {
@@ -64,7 +89,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Activa tu cuenta',
-      html: `<h1>Bienvenido!</h1><p>Activa tu cuentacon el siguiente codigo: ${activationToken}</p>`,
+      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p>, <h1>${activationToken}</h1> `,
     };
     await transporter.sendMail(mailOptions)
   
@@ -98,14 +123,14 @@ export class AuthService {
     };
   }
 
+  async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
+    return this.userRepository.findOne({ where: { email, activationToken: code, activo: false } });
+  }
+  
   async activateUser(user: User): Promise<string> {
     user.activo = true;
     await this.userRepository.save(user);
     return `Activation token: ${user.activationToken}`;
-  }
-
-  async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
-    return this.userRepository.findOne({ where: { email, activationToken: code, activo: false } });
   }
 
   async activateUserDto(activateUserDto: ActivateUserDto): Promise<ActivateUserDto> {
