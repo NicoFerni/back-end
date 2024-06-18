@@ -133,7 +133,7 @@ export class AuthService {
     return `Activation token: ${user.activationToken}`;
   }
 
-  async activateUserDto(activateUserDto: ActivateUserDto): Promise<string> {
+  async activateUserDto(activateUserDto: ActivateUserDto) {
     const { email, code } = activateUserDto;
     const user: User = await this.findOneInactivoByIdAndActivationToken(email, code);
 
@@ -142,7 +142,8 @@ export class AuthService {
     }
     await this.activateUser(user);
 
-    return user.id, user.activationToken;
+    return {'id': user.id, 
+      "token" :user.activationToken};
   }
 
   async requestResetPassword(requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {

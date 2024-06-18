@@ -22,28 +22,5 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  async createUser({ names, lastNames, password, email }: CreateUserDto) {
-    const hashedPass = await this.authService.hashPassword(password);
-    const existingUser = await this.userService.findOne({ where: { email } });
-
-    if (existingUser) {
-      throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
-    }
-
-    const activationToken = this.authService.generateCode().toString();
-    const newUser = this.userService.create({
-      names: names.charAt(0).toUpperCase() + names.slice(1),
-      lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),
-      email,
-      password: hashedPass,
-      activationToken,
-      hasProfile: false,
-    });
-
-    await this.userService.save(newUser);
-    this.authService.sendMailActivation(newUser.email, newUser.activationToken);
-
-    return { 'Activation Token': newUser.activationToken };
-  }
-
+  
 }
