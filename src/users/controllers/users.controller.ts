@@ -55,13 +55,16 @@ export class UsersController {
   }
 
   @Patch('request-reset-password')
-  requestResetPasswordDto(@Body() RequestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
-    return this.authService.requestResetPassword(RequestResetPasswordDto)
+  async requestResetPasswordDto(@Body() requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
+    const { email } = requestResetPasswordDto
+    await this.authService.requestResetPassword(email);
   }
 
   @Patch('reset-password')
-  resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
-    return this.authService.resetPassword(resetPasswordDto);
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const { resetPasswordToken, newPassword } = resetPasswordDto;
+
+    await this.authService.resetPassword(resetPasswordToken, newPassword)
   }
 
 

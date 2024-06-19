@@ -51,6 +51,14 @@ export class User{
       })
       resetPasswordToken: string;
 
+      @Column({
+        type: 'date',
+        unique: true,
+        name: 'reset_token_expiration',
+        nullable: true,
+      })
+      resetTokenExpiration : Date;
+
       @CreateDateColumn({
         name: 'created_on',
       })

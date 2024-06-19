@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from 'src/users/dtos/login.dto';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { v4 } from 'uuid';
@@ -18,28 +18,28 @@ export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   generateCode(): number {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  async createUser({names, lastNames, password, email}: CreateUserDto) {
+  async createUser({ names, lastNames, password, email }: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
-    let existingUser = await this.userRepository.findOne( {where: { email: email }});
+    let existingUser = await this.userRepository.findOne({ where: { email: email } });
 
 
     if (existingUser && existingUser.activo === true) {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
     }
 
-    if (existingUser && existingUser.activo === false){
+    if (existingUser && existingUser.activo === false) {
       const token = this.generateCode().toString();
       existingUser.names = names.charAt(0).toUpperCase() + names.slice(1);
       existingUser.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);
       existingUser.password = hashedPass;
       existingUser.activationToken = token;
-    }else {
+    } else {
       const token = this.generateCode().toString();
       existingUser = this.userRepository.create({
         names: names.charAt(0).toUpperCase() + names.slice(1),
@@ -51,11 +51,11 @@ export class AuthService {
         activo: false,
       });
     }
-  
+
     await this.userRepository.save(existingUser);
     this.sendMailActivation(existingUser.email, existingUser.activationToken);
-  
-    return({
+
+    return ({
       'Activation Token': existingUser.activationToken
     });
   }
@@ -67,12 +67,12 @@ export class AuthService {
     }
     const newToken = this.generateCode().toString();
     user.activationToken = newToken;
-  
+
     await this.userRepository.save(user);
 
     this.sendMailActivation(user.email, user.activationToken);
   }
-  
+
 
 
   async sendMailActivation(email: string, activationToken: string) {
@@ -92,9 +92,32 @@ export class AuthService {
       html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> `,
     };
     await transporter.sendMail(mailOptions)
-  
+
   }
 
+  async sendResetEmail(email: string, resetToken: string) {
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
+    });
+  
+    const resetLink = `https://programadoresweb.netlify.app/reset-password?token=${resetToken}`;
+  
+    let mailOptions = {
+      from: `Nicolas Fernandez ${process.env.EMAIL}`,
+      to: email,
+      subject: 'Restablece tu contraseña',
+      html: `<h3>Hola,</h3><p>Parece que estás intentado recuperar tu cuenta. Utiliza el siguiente enlace para cambiar tu contraseña</p> <button href="${resetLink}">Cambiar contraseña</button> <p>Este enlace expirará en 48 horas.</p>`,
+    };
+  
+    await transporter.sendMail(mailOptions);
+  }
+  
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
     return await bcryptjs.compare(password, userPassword);
   }
@@ -126,7 +149,7 @@ export class AuthService {
   async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
     return this.userRepository.findOne({ where: { email, activationToken: code, activo: false } });
   }
-  
+
   async activateUser(user: User): Promise<string> {
     user.activo = true;
     await this.userRepository.save(user);
@@ -142,32 +165,43 @@ export class AuthService {
     }
     await this.activateUser(user);
 
-    return {'id': user.id, 
-      "token" :user.activationToken};
+    return {
+      'id': user.id,
+      'token': user.activationToken
+    };
   }
 
-  async requestResetPassword(requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
-    const { email } = requestResetPasswordDto;
+  async requestResetPassword(email: string): Promise<void> {
     const user: User = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
     }
 
-    user.resetPasswordToken = v4();
+    const resetPasswordToken = v4();
+    const expirationDate = new Date();
+
+    expirationDate.setHours(expirationDate.getHours() + 48);
+    user.resetTokenExpiration = expirationDate
+
     await this.userRepository.save(user);
+    this.sendResetEmail(user.email, resetPasswordToken);
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
-    const { resetPasswordToken, password } = resetPasswordDto;
-    const user: User = await this.userRepository.findOne({ where: { resetPasswordToken } });
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    const user: User = await this.userRepository.findOne({ where: { 
+      resetPasswordToken: token,
+      resetTokenExpiration: MoreThan(new Date()) 
+    } });
 
     if (!user) {
-      throw new NotFoundException(`User with reset token not found`);
+      throw new NotFoundException(`Invalid or expired password reset token`);
     }
 
-    user.password = await this.hashPassword(password);
-    user.resetPasswordToken = null;
+    user.password = await this.hashPassword(newPassword);
+    user.resetPasswordToken = null; 
+    user.resetTokenExpiration = null;
+    
     await this.userRepository.save(user);
   }
 
