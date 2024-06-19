@@ -44,7 +44,6 @@ export class User{
        activationToken: string;
 
       @Column({
-        type: 'uuid',
         unique: true,
         name: 'reset_password_token',
         nullable: true,
