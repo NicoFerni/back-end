@@ -3,7 +3,6 @@ import { IsNotEmpty, MinLength, MaxLength, IsUUID, isNotEmpty } from "class-vali
 export class ResetPasswordDto{
 
     @IsNotEmpty()
-    @IsUUID('4')
     resetPasswordToken: string;
 
     @IsNotEmpty()
