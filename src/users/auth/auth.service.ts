@@ -112,7 +112,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Restablece tu contraseña',
-      html: `<h3>Hola,</h3><p>Parece que estás intentado recuperar tu cuenta. Utiliza el siguiente enlace para cambiar tu contraseña</p> <button href="${resetLink}">Cambiar contraseña</button> <p>Este enlace expirará en 48 horas.</p>`,
+      html: `<h3>Hola,</h3><p>Parece que estás intentado recuperar tu cuenta. Utiliza el siguiente enlace para cambiar tu contraseña</p> <a href="${resetLink}">Cambiar contraseña</a> <p>Este enlace expirará en 48 horas.</p>`,
     };
   
     await transporter.sendMail(mailOptions);
@@ -178,13 +178,15 @@ export class AuthService {
       throw new NotFoundException(`User with email ${email} not found`);
     }
 
-    const resetPasswordToken = v4();
+    const resetPasswordToken = this.generateCode().toString();
     const expirationDate = new Date();
 
     expirationDate.setHours(expirationDate.getHours() + 48);
     user.resetTokenExpiration = expirationDate
+    user.resetPasswordToken = resetPasswordToken
 
     await this.userRepository.save(user);
+
     this.sendResetEmail(user.email, resetPasswordToken);
   }
 
@@ -201,7 +203,7 @@ export class AuthService {
     user.password = await this.hashPassword(newPassword);
     user.resetPasswordToken = null; 
     user.resetTokenExpiration = null;
-    
+
     await this.userRepository.save(user);
   }
 
