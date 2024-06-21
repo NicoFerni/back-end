@@ -10,7 +10,7 @@ import { TechnologiesService } from "../services/programingLanguagesList.service
 import { Profile } from "../../typeorm";
 import { RedesDto } from "../dtos/socialNetwork.dto";
 
-@ApiTags('profiles')
+@ApiTags('Profiles')
 @Controller('api/v1/profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService,

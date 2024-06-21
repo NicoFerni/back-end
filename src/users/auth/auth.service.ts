@@ -186,6 +186,8 @@ export class AuthService {
     await this.userRepository.save(user);
 
     this.sendResetEmail(user.email, resetPasswordToken);
+    throw new HttpException('Email sent', HttpStatus.OK);
+
   }
 
   async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<void> {
@@ -196,19 +198,20 @@ export class AuthService {
       }
     });
 
-    if (!user) {
+    if (!user || (user.activationToken != token)) {
       throw new NotFoundException(`Invalid or expired password reset token`);
     }
 
     if (newPassword != repeatPassword) {
-      throw new UnauthorizedException('Password must be match')
+      throw new UnauthorizedException('Passwords must be match')
     } else {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
-    }
 
-    await this.userRepository.save(user);
+      await this.userRepository.save(user);
+      throw new HttpException('Password changed successfully', HttpStatus.OK);
+    }
   }
 
   async isVerified(activationToken: string) {
