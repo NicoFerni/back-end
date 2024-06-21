@@ -6,10 +6,7 @@ import { User } from 'src/typeorm';
 import { MoreThan, Repository } from 'typeorm';
 import { LoginDto } from 'src/users/dtos/login.dto';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
-import { v4 } from 'uuid';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
-import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
-import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
 import * as nodemailer from 'nodemailer';
 import { CreateUserDto } from '../dtos/create.user.dto';
 
@@ -76,6 +73,7 @@ export class AuthService {
 
 
   async sendMailActivation(email: string, activationToken: string) {
+    const link = `https://programadoresweb.netlify.app/`
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -89,7 +87,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Activa tu cuenta',
-      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> `,
+      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> <p>Ingresar a <a href=${link} >"Nombre de la web" /a> y confirmar mi cuenta</p>`,
     };
     await transporter.sendMail(mailOptions)
 
@@ -105,19 +103,19 @@ export class AuthService {
         pass: process.env.PASSWORD
       }
     });
-  
-    const resetLink = `https://programadoresweb.netlify.app/reset-password?token=${resetToken}`;
-  
+
+    const resetLink = `https://programadoresweb.netlify.app/reset-password/${resetToken}`;
+
     let mailOptions = {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Restablece tu contraseña',
-      html: `<h3>Hola,</h3><p>Parece que estás intentado recuperar tu cuenta. Utiliza el siguiente enlace para cambiar tu contraseña</p> <a href="${resetLink}">Cambiar contraseña</a> <p>Este enlace expirará en 48 horas.</p>`,
+      html: `<h3>Hola,</h3><p>Parece que estás intentado recuperar tu cuenta. Utiliza el siguiente enlace para cambiar tu contraseña</p> <a href="${resetLink}">Cambiar contraseña</a> <h4>Este enlace expirará en 48 horas.</h4>`,
     };
-  
+
     await transporter.sendMail(mailOptions);
   }
-  
+
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
     return await bcryptjs.compare(password, userPassword);
   }
@@ -190,19 +188,25 @@ export class AuthService {
     this.sendResetEmail(user.email, resetPasswordToken);
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<void> {
-    const user: User = await this.userRepository.findOne({ where: { 
-      resetPasswordToken: token,
-      resetTokenExpiration: MoreThan(new Date()) 
-    } });
+  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<void> {
+    const user: User = await this.userRepository.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetTokenExpiration: MoreThan(new Date())
+      }
+    });
 
     if (!user) {
       throw new NotFoundException(`Invalid or expired password reset token`);
     }
 
-    user.password = await this.hashPassword(newPassword);
-    user.resetPasswordToken = null; 
-    user.resetTokenExpiration = null;
+    if (newPassword != repeatPassword) {
+      throw new UnauthorizedException('Password must be match')
+    } else {
+      user.password = await this.hashPassword(newPassword);
+      user.resetPasswordToken = null;
+      user.resetTokenExpiration = null;
+    }
 
     await this.userRepository.save(user);
   }

@@ -62,9 +62,8 @@ export class UsersController {
 
   @Patch('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
-    const { resetPasswordToken, newPassword } = resetPasswordDto;
-
-    await this.authService.resetPassword(resetPasswordToken, newPassword)
+    const { resetPasswordToken, newPassword, repeatPassword } = resetPasswordDto;
+    await this.authService.resetPassword(resetPasswordToken, newPassword, repeatPassword)
   }
 
 
