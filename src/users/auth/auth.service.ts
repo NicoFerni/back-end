@@ -198,8 +198,8 @@ export class AuthService {
       }
     });
 
-    if (user.activationToken != token) {
-      throw new NotFoundException(`Invalid or expired password reset token`);
+    if (!user || (user.resetPasswordToken != token)) {
+      throw new NotFoundException('Invalid or expired password reset token');
     }
 
     if (newPassword != repeatPassword) {
