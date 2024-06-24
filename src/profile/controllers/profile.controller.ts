@@ -19,7 +19,7 @@ export class ProfileController {
     private readonly technologiesService: TechnologiesService
   ) { }
 
-
+  
   @Get('languages')
   getLanguages() {
     return this.languagesService.getLanguages()

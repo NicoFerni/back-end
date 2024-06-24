@@ -1,14 +1,12 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
   UsePipes,
   Patch,
   ValidationPipe,
   Query,
   Headers,
-  Param,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -29,7 +27,7 @@ export class AuthController {
     private readonly authService: AuthService
 ) {}
 
-
+@ApiOperation({ summary: 'Login Method'})
   @Post('login')
   async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);

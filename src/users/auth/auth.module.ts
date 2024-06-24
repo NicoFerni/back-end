@@ -19,7 +19,6 @@ import { User } from '../../typeorm';
             expiresIn: 3600, 
           }
         }),
-        
     ],
     controllers: [AuthController],
     providers: [AuthService],

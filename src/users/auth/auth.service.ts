@@ -26,11 +26,11 @@ export class AuthService {
     let existingUser = await this.userRepository.findOne({ where: { email: email } });
 
 
-    if (existingUser && existingUser.activo === true) {
+    if (existingUser && existingUser.active === true) {
       throw new HttpException('El email registrado ya existe', HttpStatus.BAD_REQUEST);
     }
 
-    if (existingUser && existingUser.activo === false) {
+    if (existingUser && existingUser.active === false) {
       const token = this.generateCode().toString();
       existingUser.names = names.charAt(0).toUpperCase() + names.slice(1);
       existingUser.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);
@@ -45,7 +45,7 @@ export class AuthService {
         password: hashedPass,
         activationToken: token,
         hasProfile: false,
-        activo: false,
+        active: false,
       });
     }
 
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   async resendActivationCode(email: string): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { email: email, activo: false } });
+    const user = await this.userRepository.findOne({ where: { email: email, active: false } });
     if (!user) {
       throw new HttpException('No inactive account found with the provided email', HttpStatus.NOT_FOUND);
     }
@@ -133,7 +133,7 @@ export class AuthService {
     }
 
     const activationToken = user.activationToken;
-    const payload: JwtPayload = { id: user.id, email, activo: user.activo };
+    const payload: JwtPayload = { id: user.id, email, activo: user.active };
     const accessToken = this.jwtService.sign(payload);
 
     return {
@@ -145,11 +145,11 @@ export class AuthService {
   }
 
   async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
-    return this.userRepository.findOne({ where: { email, activationToken: code, activo: false } });
+    return this.userRepository.findOne({ where: { email, activationToken: code, active: false } });
   }
 
   async activateUser(user: User): Promise<string> {
-    user.activo = true;
+    user.active = true;
     await this.userRepository.save(user);
     return `Activation token: ${user.activationToken}`;
   }
@@ -198,7 +198,7 @@ export class AuthService {
       }
     });
 
-    if (!user || (user.activationToken != token)) {
+    if (user.activationToken != token) {
       throw new NotFoundException(`Invalid or expired password reset token`);
     }
 
@@ -221,6 +221,6 @@ export class AuthService {
       throw new Error('User not found');
     }
 
-    return { "Verified": user.activo };
+    return { "Verified": user.active };
   }
 }
