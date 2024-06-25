@@ -31,7 +31,7 @@ Finally, I make the documentation with Swagger, which my frontend teammate can s
 | `id` | `UUID string (PK)` | 
 | `knowledges` | `string array` | 
 | `languages` | `string array` | 
-| `location` | `object` | 
+| `location` | `JSON` | 
 | `experience` | `array` | 
 | `price` | `string` | 
 | `education` | `string` | 
@@ -39,8 +39,8 @@ Finally, I make the documentation with Swagger, which my frontend teammate can s
 | `birthdate` | `date` | 
 | `profile_picture` | `string` | 
 | `description` | `string` | 
-| `availability` | `object` |
-| `social_network` | `object` | 
+| `availability` | `JSON` |
+| `social_network` | `JSON` | 
 | `user_id` | `UUID string` |
 
 
