@@ -198,10 +198,9 @@ export class AuthService {
       }
     });
 
-    if (!user || (user.resetPasswordToken != token)) {
+    if (!user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null)) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
-
     if (newPassword != repeatPassword) {
       throw new UnauthorizedException('Passwords must be match')
     } else {
@@ -213,6 +212,7 @@ export class AuthService {
       throw new HttpException('Password changed successfully', HttpStatus.OK);
     }
   }
+
 
   async isVerified(activationToken: string) {
     const user: User = await this.userRepository.findOne({ where: { activationToken } });
