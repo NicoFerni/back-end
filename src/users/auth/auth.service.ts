@@ -58,10 +58,10 @@ export class AuthService {
   }
 
   async resendActivationCode(email: string): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { email: email} });
-    if (user.active === true) {
-      throw new HttpException('No inactive account found with the provided email', HttpStatus.NOT_FOUND);
-    }
+    const user = await this.userRepository.findOne({ where: { email: email }});
+    // if (user.active === true || user.active === null) {
+    //   throw new HttpException('No inactive account found with the provided email', HttpStatus.NOT_FOUND);
+    // }
     const newToken = this.generateCode().toString();
     user.activationToken = newToken;
 
