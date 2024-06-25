@@ -9,7 +9,7 @@ import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import * as nodemailer from 'nodemailer';
 import { CreateUserDto } from '../dtos/create.user.dto';
-import {  ResendCodeDto } from '../dtos/resend-code-dto';
+import { ResendCodeDto } from '../dtos/resend-code-dto';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +60,7 @@ export class AuthService {
 
 
   async resendActivationCode(resendCodeDto: ResendCodeDto): Promise<void> {
-    const { email } = resendCodeDto 
+    const { email } = resendCodeDto
     const user: User = await this.userRepository.findOne({ where: { email } });
     const newToken = this.generateCode().toString();
 
@@ -69,7 +69,9 @@ export class AuthService {
       await this.userRepository.save(user);
       this.sendMailActivation(user.email, user.activationToken);
     }
-    throw new NotFoundException(`User not found with email: ${email}`)
+    else {
+      throw new NotFoundException(`User not found with email: ${email}`)
+    }
   }
 
 
