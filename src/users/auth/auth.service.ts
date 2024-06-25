@@ -87,7 +87,7 @@ export class AuthService {
       from: `Nicolas Fernandez ${process.env.EMAIL}`,
       to: email,
       subject: 'Activa tu cuenta',
-      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> <p>Ingresar a <a href=${link} >"Nombre de la web" /a> y confirmar mi cuenta</p>`,
+      html: `<h2>Hola,</h2><p>Para crear tu cuenta en "Nombre de la página" necesitás confirmar tus datos a través del siguiente código:</p> <h1>${activationToken}</h1> <p>Ingresar a <a href=${link}>"Nombre de la web" y confirmar mi cuenta</p>`,
     };
     await transporter.sendMail(mailOptions)
 
