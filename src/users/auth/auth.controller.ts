@@ -18,6 +18,7 @@ import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
 import { RequestResetPasswordDto } from 'src/users/dtos/request-reset-password.dto';
 import { ResetPasswordDto } from 'src/users/dtos/reset-password-dto';
 import { CreateUserDto } from '../dtos/create.user.dto';
+import {  ResendCodeDto } from '../dtos/resend-code-dto';
 
 @ApiTags('Auth')
 @Controller('api/v1/auth')
@@ -48,9 +49,9 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Resend the activation code'})
-  @Post('resend-activation')
-  async resend_activation(@Query() activateUserDto: ActivateUserDto) {
-    return this.authService.activateUserDto(activateUserDto)
+  @Patch('resend-activation')
+  async resend_activation(@Body() resendCodeDto: ResendCodeDto) {
+    return this.authService.resendActivationCode(resendCodeDto)
   }
 
   @ApiOperation({ summary: 'Returns the status of the user, if is verified or not'})
