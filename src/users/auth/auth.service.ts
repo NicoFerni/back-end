@@ -57,18 +57,19 @@ export class AuthService {
     });
   }
 
-  async resendActivationCode(email: string): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { email: email }});
-    // if (user.active === true || user.active === null) {
-    //   throw new HttpException('No inactive account found with the provided email', HttpStatus.NOT_FOUND);
-    // }
-    const newToken = this.generateCode().toString();
-    user.activationToken = newToken;
 
-    await this.userRepository.save(user);
-
-    this.sendMailActivation(user.email, user.activationToken);
-  }
+  // async resendActivationCode(email: string): Promise<void> {
+  //   const user: User = await this.userRepository.findOne({ where: { email: email } });
+  //   const newToken = this.generateCode().toString();
+  //   if (user) {
+  //     user.activationToken = newToken;
+  //     await this.userRepository.save(user);
+  //     this.sendMailActivation(user.email, user.activationToken);
+  //   }
+  //   console.log(user.email, user.activationToken)
+  //   console.log(user)
+  //   console.log(newToken)
+  // }
 
 
 
@@ -144,7 +145,7 @@ export class AuthService {
     };
   }
 
-  async findOneInactivoByIdAndActivationToken(email: string, code: string): Promise<User> {
+  async findOneInactiveByIdAndActivationToken(email: string, code: string): Promise<User> {
     return this.userRepository.findOne({ where: { email, activationToken: code, active: false } });
   }
 
@@ -156,12 +157,13 @@ export class AuthService {
 
   async activateUserDto(activateUserDto: ActivateUserDto) {
     const { email, code } = activateUserDto;
-    const user: User = await this.findOneInactivoByIdAndActivationToken(email, code);
+    const user: User = await this.findOneInactiveByIdAndActivationToken(email, code);
 
-    if (!user) {
+    if (!user || user.active === true) {
       throw new UnprocessableEntityException('This action cannot be done');
     }
     await this.activateUser(user);
+    await this.sendMailActivation(user.email, user.activationToken)
 
     return {
       'id': user.id,

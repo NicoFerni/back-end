@@ -49,8 +49,8 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Resend the activation code'})
   @Post('resend-activation')
-  async resend_activate(@Query() email: string) {
-    return this.authService.resendActivationCode(email)
+  async resend_activation(@Query() activateUserDto: ActivateUserDto) {
+    return this.authService.activateUserDto(activateUserDto)
   }
 
   @ApiOperation({ summary: 'Returns the status of the user, if is verified or not'})
