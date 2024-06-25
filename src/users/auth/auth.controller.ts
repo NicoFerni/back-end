@@ -48,7 +48,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Resend the activation code'})
-  @Post('resend-activate')
+  @Post('resend-activation')
   async resend_activate(@Query() email: string) {
     return this.authService.resendActivationCode(email)
   }
