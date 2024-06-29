@@ -3,13 +3,9 @@ import { DeleteDateColumn } from "typeorm";
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @MinLength(2)
-  @MaxLength(28)
   names: string;
 
   @IsNotEmpty()
-  @MinLength(2)
-  @MaxLength(29)
   lastNames: string;
 
   @IsNotEmpty()
