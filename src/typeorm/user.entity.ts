@@ -52,7 +52,6 @@ export class User{
 
       @Column({
         type: 'date',
-        unique: true,
         name: 'reset_token_expiration',
         nullable: true,
       })
