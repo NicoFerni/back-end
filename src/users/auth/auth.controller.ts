@@ -7,6 +7,7 @@ import {
   ValidationPipe,
   Query,
   Headers,
+  Get
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/users/dtos/login.dto';
@@ -61,7 +62,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Sent mail for password reset'})
-  @Patch('request-reset-password')
+  @Get('request-reset-password')
   async requestResetPasswordDto(@Body() requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
     const { email } = requestResetPasswordDto
     await this.authService.requestResetPassword(email);
