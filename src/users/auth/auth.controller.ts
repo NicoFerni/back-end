@@ -63,7 +63,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Sent mail for password reset'})
   @Patch('request-reset-password')
-  async requestResetPasswordDto(@Query() requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
+  async requestResetPasswordDto(@Body() requestResetPasswordDto: RequestResetPasswordDto): Promise<void> {
     const { email } = requestResetPasswordDto
     await this.authService.requestResetPassword(email);
   }
