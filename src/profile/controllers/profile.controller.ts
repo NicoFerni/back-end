@@ -25,10 +25,10 @@ export class ProfileController {
     return this.languagesService.getLanguages()
   }
 
-  @Get('countries')
-  getCountries() {
-    return this.locationService.getCountries()
-  }
+  // @Get('countries')
+  // getCountries() {
+  //   return this.locationService.getCountries()
+  // }
 
   @Get('')
   getProfiles(): Promise<Profile[]> {
