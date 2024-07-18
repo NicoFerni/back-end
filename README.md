@@ -1,9 +1,6 @@
 # Back-end project
 
-This is a freelance project that I'm currently building. 
-I developed the backend for an API that users will be able to sign in to on a platform (https://programadoresweb.netlify.app/). This page is a talent pool where programmers can make their own profiles and offer their services.
-I have implement methods to create a profile and manipulate the data to be consumed in the front-end. The information is stored on a PostgreSQL database (deployed on Supabase). I'm also create a Firebase storage to save the profile pictures. The backend is deployed on Render. 
-Finally, I make the documentation with Swagger, which my frontend teammate can see all the routes, and the datatype of each param. 
+This is a freelance project that I'm currently building. I developed the backend for an API that users will be able to sign in to on a platform (https://programadoresweb.netlify.app/). This page is a talent pool where programmers can make their own profiles and offer their services. I have implemented methods to create a profile and manipulate the data to be consumed in the front end. The information is stored on a PostgreSQL database (deployed on Supabase). I'm also creating a Firebase storage to save the profile pictures. The backend is deployed on Render. Finally, I made the documentation with Swagger, in which my frontend teammate can see all the routes and the datatype of each param.
 ## Tables
 
 #### User
