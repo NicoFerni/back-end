@@ -136,6 +136,14 @@ export class AuthService {
       throw new UnauthorizedException('Chequea tus credenciales');
     }
 
+    if(!user){
+      throw new NotFoundException('Correo electrónico incorrecto')
+    }{
+      if(!(await this.checkPassword(password, user.password))){
+        throw new UnauthorizedException('Contraseña incorrecta');
+      }
+    }
+
     const activationToken = user.activationToken;
     const payload: JwtPayload = { id: user.id, email, activo: user.active };
     const accessToken = this.jwtService.sign(payload);

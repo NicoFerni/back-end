@@ -152,15 +152,15 @@ export class ProfileService {
 
     profile.redes = {
       facebook: facebook ? `facebook.com/${facebook}` : null,
-      instagram: instagram ? `intragram.com/${instagram}` : null,
+      instagram: instagram ? `instragram.com/${instagram}` : null,
       twitter: twitter ? `x.com/${twitter} ` : null,
       reddit: reddit ? `reddit.com/user/${reddit}` : null,
       linkedin: linkedin ? `linkedin.com/in/${linkedin}` : null,
       youtube: youtube ? `youtube.com/${youtube}` : null,
       discord: discord ? discord : null,
-      whatsapp: areaCode && whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : null,
-      github: github ? `github.com/${github}` : null,
       areaCode: areaCode ? areaCode : null,
+      whatsapp: whatsapp ? `wa.me/${areaCode.concat(whatsapp)}` : null,
+      github: github ? `github.com/${github}` : null,
       threads: threads ? `threads.net/${threads}` : null
     }
 
