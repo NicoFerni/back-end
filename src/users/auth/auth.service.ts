@@ -166,7 +166,7 @@ export class AuthService {
       throw new UnprocessableEntityException('This action cannot be done');
     }
     await this.activateUser(user);
-    await this.sendMailActivation(user.email, user.activationToken)
+   // await this.sendMailActivation(user.email, user.activationToken)
 
     return {
       'id': user.id,
