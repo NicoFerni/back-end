@@ -184,7 +184,7 @@ export class AuthService {
     const resetPasswordToken = this.generateCode().toString();
     const expirationDate = new Date();
 
-    expirationDate.setHours(expirationDate.getHours() + 48);
+    expirationDate.setHours(expirationDate.getMinutes() + 5);
     user.resetTokenExpiration = expirationDate
     user.resetPasswordToken = resetPasswordToken
 
