@@ -214,6 +214,7 @@ export class AuthService {
     const now = new Date()
 
     if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration <= now) ) {
+      console.log('Error mostrandose')
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
