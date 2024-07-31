@@ -190,9 +190,9 @@ export class AuthService {
     }
 
     const resetPasswordToken = this.generateCode().toString();
-    const expirationDate = new Date();
+    const expirationDate = new Date(); 
 
-    expirationDate.setHours(expirationDate.getMinutes() + 5);
+    expirationDate.setMinutes(expirationDate.getMinutes() + 5);
     user.resetTokenExpiration = expirationDate
     user.resetPasswordToken = resetPasswordToken
 
