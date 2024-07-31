@@ -211,11 +211,13 @@ export class AuthService {
       }
     });
 
-    if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration.getMinutes() < new Date().getMinutes()) ) {
+    const now = new Date()
+
+    if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration <= now) ) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
-      throw new UnauthorizedException('Passwords must be match')
+      throw new UnauthorizedException('Passwords must be match') 
     } else {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
