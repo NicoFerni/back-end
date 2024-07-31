@@ -159,7 +159,7 @@ export class ProfileService {
       youtube: youtube ? `youtube.com/${youtube}` : null,
       discord: discord ? discord : null,
       areaCode: areaCode ? areaCode : null,
-      whatsapp: whatsapp ? `wa.me/${whatsapp}` : null,
+      whatsapp: whatsapp ? whatsapp : null,
       github: github ? `github.com/${github}` : null,
       threads: threads ? `threads.net/${threads}` : null
     }
