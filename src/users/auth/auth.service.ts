@@ -211,7 +211,7 @@ export class AuthService {
       }
     });
 
-    if (!user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null)) {
+    if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration < new Date()) ) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
