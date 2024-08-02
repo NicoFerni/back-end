@@ -227,7 +227,7 @@ export class AuthService {
       user.resetTokenExpiration = null;
 
       await this.userRepository.save(user);
-      throw new HttpException(`Password changed successfully \ accessToken: ${accessToken} \ id: ${user.id} `, HttpStatus.OK);
+      throw new HttpException(`Password changed successfully \ accessToken: ${accessToken} `, HttpStatus.OK);
     }
   }
 
