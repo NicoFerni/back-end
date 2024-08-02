@@ -203,7 +203,7 @@ export class AuthService {
 
   }
 
-  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<void> {
+  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ accessToken: string, id: string }> {
     const user: User = await this.userRepository.findOne({
       where: {
         resetPasswordToken: token,
@@ -213,8 +213,10 @@ export class AuthService {
 
     const now = new Date()
 
+    const payload: JwtPayload = { id: user.id, email: user.email , activo: user.active };
+    const accessToken = this.jwtService.sign(payload);
+
     if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration <= now) ) {
-      console.log('Error mostrandose')
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
@@ -225,7 +227,7 @@ export class AuthService {
       user.resetTokenExpiration = null;
 
       await this.userRepository.save(user);
-      throw new HttpException('Password changed successfully', HttpStatus.OK);
+      throw new HttpException(`Password changed successfully \ accessToken: ${accessToken} \ id: ${user.id} `, HttpStatus.OK);
     }
   }
 
@@ -237,6 +239,6 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    return { "Verified": user.active };
+    return { "Verified": user.active }; 
   }
 }
