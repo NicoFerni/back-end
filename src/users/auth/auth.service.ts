@@ -227,7 +227,7 @@ export class AuthService {
       const accessToken = this.jwtService.sign(payload);
 
       await this.userRepository.save(user);
-      throw new HttpException(`${accessToken}`, HttpStatus.OK);
+      throw new HttpException('Password changed successfully', HttpStatus.OK);
     }
   }
 
