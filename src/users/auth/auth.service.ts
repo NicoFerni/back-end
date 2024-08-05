@@ -136,10 +136,10 @@ export class AuthService {
       throw new UnauthorizedException('Chequea tus credenciales');
     }
 
-    if(!user){
+    if (!user) {
       throw new NotFoundException('Correo electrónico incorrecto')
-    }{
-      if(!(await this.checkPassword(password, user.password))){
+    } {
+      if (!(await this.checkPassword(password, user.password))) {
         throw new UnauthorizedException('Contraseña incorrecta');
       }
     }
@@ -174,7 +174,7 @@ export class AuthService {
       throw new UnprocessableEntityException('This action cannot be done');
     }
     await this.activateUser(user);
-   // await this.sendMailActivation(user.email, user.activationToken)
+    // await this.sendMailActivation(user.email, user.activationToken)
 
     return {
       'id': user.id,
@@ -190,9 +190,10 @@ export class AuthService {
     }
 
     const resetPasswordToken = this.generateCode().toString();
-    const expirationDate = new Date(); 
 
+    const expirationDate = new Date();
     expirationDate.setMinutes(expirationDate.getMinutes() + 5);
+
     user.resetTokenExpiration = expirationDate
     user.resetPasswordToken = resetPasswordToken
 
@@ -203,26 +204,31 @@ export class AuthService {
 
   }
 
-  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<void> {
+  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ accessToken: string }> {
     const user: User = await this.userRepository.findOne({
       where: {
         resetPasswordToken: token,
-     //   resetTokenExpiration: MoreThan(new Date())
       }
     });
 
-    if (!user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null)) {
+    if (!user || (user.resetPasswordToken != token) || user.resetTokenExpiration <= new Date()) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
-      throw new UnauthorizedException('Passwords must be match')
+      throw new UnauthorizedException('Passwords must match')
     } else {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
 
       await this.userRepository.save(user);
-      throw new HttpException('Password changed successfully', HttpStatus.OK);
+      //   throw new HttpException('Password changed successfully', HttpStatus.OK);
+      const payload: JwtPayload = { id: user.id, email: user.email, activo: user.active };
+      const accessToken = this.jwtService.sign(payload);
+
+      return {
+        accessToken
+      };
     }
   }
 
@@ -233,6 +239,6 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    return { "Verified": user.active }; 
+    return { "Verified": user.active };
   }
 }
