@@ -211,26 +211,20 @@ export class AuthService {
       }
     });
 
-    const now = new Date()
-
-    if ( !user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null) || (user.resetTokenExpiration <= now) ) {
+    if (!user || (user.resetPasswordToken != token) || (user.resetPasswordToken === null)) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
-      throw new UnauthorizedException('Passwords must be match') 
+      throw new UnauthorizedException('Passwords must be match')
     } else {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
-      user.resetTokenExpiration = null
-      ;
-      const payload: JwtPayload = { id: user.id, email: user.email, activo: user.active };
-      const accessToken = this.jwtService.sign(payload);
+      user.resetTokenExpiration = null;
 
       await this.userRepository.save(user);
       throw new HttpException('Password changed successfully', HttpStatus.OK);
     }
   }
-
 
   async isVerified(activationToken: string) {
     const user: User = await this.userRepository.findOne({ where: { activationToken } });
