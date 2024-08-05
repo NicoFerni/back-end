@@ -207,7 +207,7 @@ export class AuthService {
     const user: User = await this.userRepository.findOne({
       where: {
         resetPasswordToken: token,
-        resetTokenExpiration: MoreThan(new Date())
+     //   resetTokenExpiration: MoreThan(new Date())
       }
     });
 
