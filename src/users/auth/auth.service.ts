@@ -200,7 +200,7 @@ export class AuthService {
 
   }
 
-  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ activationToken: string }> {
+  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ activationToken: number }> {
     const user: User = await this.userRepository.findOne({
       where: {
         resetPasswordToken: token,
@@ -219,8 +219,7 @@ export class AuthService {
 
       await this.userRepository.save(user);
       //throw new HttpException('Password changed successfully', HttpStatus.OK);
-      const payload: JwtPayload = { id: user.id, email: user.email, activo: user.active };
-      const activationToken = this.jwtService.sign(payload);
+      const activationToken =  this.generateCode()
 
       return {
         activationToken

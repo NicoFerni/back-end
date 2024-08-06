@@ -70,7 +70,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Method to change the password'})
   @Patch('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<{ activationToken: string }> {
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<{ activationToken: number }> {
     return this.authService.resetPassword(resetPasswordDto.resetPasswordToken, resetPasswordDto.newPassword, resetPasswordDto.repeatPassword);
   }
 
