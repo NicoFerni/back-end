@@ -152,7 +152,7 @@ export class ProfileService {
 
     profile.redes = {
       facebook: facebook ? `facebook.com/${facebook}` : null,
-      instagram: instagram ? `instragram.com/${instagram}` : null,
+      instagram: instagram ? `instagram.com/${instagram}` : null,
       twitter: twitter ? `x.com/${twitter} ` : null,
       reddit: reddit ? `reddit.com/user/${reddit}` : null,
       linkedin: linkedin ? `linkedin.com/in/${linkedin}` : null,

@@ -132,10 +132,6 @@ export class AuthService {
     const { email, password } = loginDto;
     const user: User = await this.userRepository.findOne({ where: { email } });
 
-    if (!user || !(await this.checkPassword(password, user.password))) {
-      throw new UnauthorizedException('Chequea tus credenciales');
-    }
-
     if (!user) {
       throw new NotFoundException('Correo electrónico incorrecto')
     } {
@@ -222,7 +218,7 @@ export class AuthService {
       user.resetTokenExpiration = null;
 
       await this.userRepository.save(user);
-      //   throw new HttpException('Password changed successfully', HttpStatus.OK);
+      //throw new HttpException('Password changed successfully', HttpStatus.OK);
       const payload: JwtPayload = { id: user.id, email: user.email, activo: user.active };
       const accessToken = this.jwtService.sign(payload);
 
