@@ -200,7 +200,7 @@ export class AuthService {
 
   }
 
-  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ activationToken: number }> {
+  async resetPassword(token: string, newPassword: string, repeatPassword: string): Promise<{ activationToken: string }> {
     const user: User = await this.userRepository.findOne({
       where: {
         resetPasswordToken: token,
@@ -216,10 +216,13 @@ export class AuthService {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
-
+      
       await this.userRepository.save(user);
       //throw new HttpException('Password changed successfully', HttpStatus.OK);
-      const activationToken =  this.generateCode()
+
+      const activationToken = this.generateCode().toString()
+
+      user.activationToken = activationToken
 
       return {
         activationToken
