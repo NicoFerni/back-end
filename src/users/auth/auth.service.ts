@@ -207,6 +207,8 @@ export class AuthService {
       }
     });
 
+    const activationToken = this.generateCode().toString()
+
     if (!user || (user.resetPasswordToken != token) || user.resetTokenExpiration <= new Date()) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
@@ -216,13 +218,9 @@ export class AuthService {
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
-      
+      user.activationToken = activationToken
       await this.userRepository.save(user);
       //throw new HttpException('Password changed successfully', HttpStatus.OK);
-
-      const activationToken = this.generateCode().toString()
-
-      user.activationToken = activationToken
 
       return {
         activationToken
