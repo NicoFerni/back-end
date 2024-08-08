@@ -25,9 +25,9 @@ export class AuthService {
   async getActivationToken(activationToken: string){
     const user: User = await this.userRepository.findOne({ where: { activationToken } });
 
-    if(!user){
-      Error
-    }{
+    if(user.activationToken != activationToken){
+      throw new Error('No existe un usuario con ese token')
+    } else {
       return activationToken
     }
   }
