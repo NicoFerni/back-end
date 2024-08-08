@@ -22,6 +22,16 @@ export class AuthService {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
+  async getActivationToken(activationToken: string){
+    const user: User = await this.userRepository.findOne({ where: { activationToken } });
+
+    if(!user){
+      Error
+    }{
+      return activationToken
+    }
+  }
+
   async createUser({ names, lastNames, password, email }: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
     let existingUser = await this.userRepository.findOne({ where: { email: email } });

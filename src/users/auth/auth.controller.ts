@@ -74,4 +74,10 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordDto.resetPasswordToken, resetPasswordDto.newPassword, resetPasswordDto.repeatPassword);
   }
 
+  @ApiOperation({ summary: 'Return the activation Token'})
+  @Get('token')
+  async getActivationToken(@Headers('activation Token') activationToken: string) {
+      return this.authService.getActivationToken(activationToken)
+  }
+
 }
