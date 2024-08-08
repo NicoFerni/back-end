@@ -76,7 +76,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Return the activation Token'})
   @Get('token')
-  async getActivationToken(@Headers('Activation-Token') activationToken: string) {
+  async getActivationToken(@Body() activationToken: string) {
       return this.authService.getActivationToken(activationToken)
   }
 
