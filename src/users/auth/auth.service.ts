@@ -28,7 +28,7 @@ export class AuthService {
     if(!user){
       throw new HttpException('No existe un usuario con ese token', HttpStatus.NOT_FOUND )
     } else {
-      return activationToken
+      return (HttpStatus.ACCEPTED, activationToken)
     }
   }
 
