@@ -28,10 +28,10 @@ export class AuthService {
     if(!user){
       throw new HttpException('No existe un usuario con ese token', HttpStatus.NOT_FOUND )
     } else {
-      return (HttpStatus.ACCEPTED, activationToken)
+      return new HttpException(activationToken, HttpStatus.ACCEPTED)
     }
   }
-
+H
   async createUser({ names, lastNames, password, email }: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
     let existingUser = await this.userRepository.findOne({ where: { email: email } });
