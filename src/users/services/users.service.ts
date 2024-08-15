@@ -20,7 +20,7 @@ export class UsersService {
     if (deleteUser.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }{
-      throw new HttpException('Profile deleted', 200)
+      throw new HttpException('User deleted', 200)
     }
   }
 

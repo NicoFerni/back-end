@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -15,7 +16,7 @@ export class UsersController {
   constructor(
     private readonly userService: UsersService,
 
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Get all users' })
   @Get('')
@@ -25,7 +26,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Delete User by id' })
   @Delete('delete')
-  deleteUser(@Body('id') id: string){
+  deleteUser(@Body('id') id: string) {
     return this.userService.deleteUser(id)
   }
 

@@ -57,11 +57,10 @@ export class ProfileService {
     const deleteProfile = await this.profileRepository.delete(id)
 
     if(deleteProfile.affected === 0){
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`Profile with ID ${id} not found`);
     }{
       throw new HttpException('Profile deleted', 200)
     }
-
   }
 
 
