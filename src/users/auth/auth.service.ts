@@ -197,8 +197,9 @@ H
 
     const resetPasswordToken = this.generateCode().toString();
 
-    const expirationDate = new Date();
-    expirationDate.setMinutes(expirationDate.getMinutes() + 5);
+    const now = new Date();
+    const expirationMinutes = 5;
+    const expirationDate = new Date(now.getTime() + expirationMinutes * 60 * 1000);
 
     user.resetTokenExpiration = expirationDate
     user.resetPasswordToken = resetPasswordToken
@@ -216,10 +217,14 @@ H
         resetPasswordToken: token,
       }
     });
-
+    const now = new Date()
     const activationToken = this.generateCode().toString()
 
-    if (!user || (user.resetPasswordToken != token) || user.resetTokenExpiration <= new Date()) {
+    if (typeof user.resetTokenExpiration === 'string') {
+      user.resetTokenExpiration = new Date(user.resetTokenExpiration);
+    }
+
+    if ( !user || (user.resetPasswordToken != token) || now.getTime() > user.resetTokenExpiration.getTime() ) {
       throw new NotFoundException('Invalid or expired password reset token');
     }
     if (newPassword != repeatPassword) {
@@ -230,7 +235,6 @@ H
       user.resetTokenExpiration = null;
       user.activationToken = activationToken
       await this.userRepository.save(user);
-      //throw new HttpException('Password changed successfully', HttpStatus.OK);
 
       return {
         activationToken

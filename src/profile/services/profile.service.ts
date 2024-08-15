@@ -53,6 +53,17 @@ export class ProfileService {
     return this.locationService.getCountries()
   }
 
+  async deleteProfile(id: string): Promise<void>{
+    const deleteProfile = await this.profileRepository.delete(id)
+
+    if(deleteProfile.affected === 0){
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }{
+      throw new HttpException('Profile deleted', 200)
+    }
+
+  }
+
 
   async availability(disponibilidadDto: disponibilidadDto, Id: any): Promise<Profile> {
     let { horas, dias, activo } = disponibilidadDto;

@@ -1,4 +1,4 @@
-import { Controller, Query, UseInterceptors, UploadedFile, Param, NotFoundException } from "@nestjs/common";
+import { Controller, Query, UseInterceptors, UploadedFile, Param, NotFoundException, Delete } from "@nestjs/common";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService } from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
@@ -9,6 +9,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { TechnologiesService } from "../services/programingLanguagesList.service"
 import { Profile } from "../../typeorm";
 import { RedesDto } from "../dtos/socialNetwork.dto";
+import { ApiOperation } from "@nestjs/swagger";
 
 @ApiTags('Profiles')
 @Controller('api/v1/profile')
@@ -23,6 +24,12 @@ export class ProfileController {
   @Get('languages')
   getLanguages() {
     return this.languagesService.getLanguages()
+  }
+
+  @ApiOperation({ summary: 'Delete Profile by id' })
+  @Delete('delete')
+  deleteProfile(@Body('id') id: string){
+    return this.profileService.deleteProfile(id)
   }
 
   // @Get('countries')

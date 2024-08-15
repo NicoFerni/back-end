@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +14,15 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  async deleteUser(id: string): Promise <void>{
+    const deleteUser = await this.userRepository.delete(id)
+
+    if (deleteUser.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }{
+      throw new HttpException('Profile deleted', 200)
+    }
+  }
 
   async findOneByEmail(email: string): Promise<User> {
     const user: User = await this.userRepository.findOne({ where: { email } });

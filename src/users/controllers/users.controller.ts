@@ -1,5 +1,7 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
 } from '@nestjs/common';
@@ -21,6 +23,11 @@ export class UsersController {
     return this.userService.getUsers();
   }
 
+  @ApiOperation({ summary: 'Delete User by id' })
+  @Delete('delete')
+  deleteUser(@Body('id') id: string){
+    return this.userService.deleteUser(id)
+  }
 
   @ApiOperation({ summary: 'Get User by id' })
   @Get(':id')
