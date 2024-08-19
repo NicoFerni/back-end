@@ -51,11 +51,11 @@ export class User{
       resetPasswordToken: string;
 
       @Column({
-        type: 'date',
+        type: 'bigint',
         name: 'reset_token_expiration',
         nullable: true,
       })
-      resetTokenExpiration : Date;
+      resetTokenExpiration : number;
 
       @CreateDateColumn({
         name: 'created_on',

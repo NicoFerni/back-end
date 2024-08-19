@@ -198,10 +198,10 @@ H
     const resetPasswordToken = this.generateCode().toString();
 
     const now = new Date();
-    const expirationMinutes = 5;
-    const expirationDate = new Date(now.getTime() + expirationMinutes * 60 * 1000);
+    const expirationMinutes = 1;
+    const expirationTime = new Date(now).getTime() + expirationMinutes * 60 * 1000;
 
-    user.resetTokenExpiration = expirationDate
+    user.resetTokenExpiration = expirationTime
     user.resetPasswordToken = resetPasswordToken
 
     await this.userRepository.save(user);
@@ -220,12 +220,9 @@ H
     const now = new Date()
     const activationToken = this.generateCode().toString()
 
-    if (typeof user.resetTokenExpiration === 'string') {
-      user.resetTokenExpiration = new Date(user.resetTokenExpiration);
-    }
 
-    if ( !user || (user.resetPasswordToken != token) || now.getTime() > user.resetTokenExpiration.getTime() ) {
-      throw new NotFoundException('Invalid or expired password reset token');
+    if ( !user || (user.resetPasswordToken != token) || now.getTime() > user.resetTokenExpiration ) {
+      throw new NotFoundException('Invalid or expired reset password token');
     }
     if (newPassword != repeatPassword) {
       throw new UnauthorizedException('Passwords must match')
