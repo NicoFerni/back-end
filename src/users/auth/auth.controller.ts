@@ -42,7 +42,11 @@ export class AuthController {
     return this.authService.createUser(createUserDto);
   }
 
-  
+  @Get('get-password-code-status')
+  async getPasswordCodeStatus(@Body('activation-token') activationToken: string){
+    return this.authService.getPasswordCodeStatus(activationToken)
+  }
+
   @ApiOperation({ summary: 'Activate User via Email'})
   @Post('activate')
   async activate(@Query() activateUserDto: ActivateUserDto) {

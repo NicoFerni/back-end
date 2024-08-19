@@ -166,6 +166,16 @@ H
     return this.userRepository.findOne({ where: { email, activationToken: code, active: false } });
   }
 
+  async getPasswordCodeStatus(activationToken: string) {
+    const user = await this.userRepository.findOne({ where: { activationToken }})
+
+    if(!user){
+      return false
+    }{
+      return true
+    }
+  }
+
   async activateUser(user: User): Promise<string> {
     user.active = true;
     await this.userRepository.save(user);
