@@ -172,7 +172,7 @@ export class AuthService {
     if(!user){
       return false
     }{
-      return user.id
+      return user.resetPasswordToken
     }
   }
 
