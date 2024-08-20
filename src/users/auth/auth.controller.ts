@@ -43,8 +43,8 @@ export class AuthController {
   }
 
   @Post('get-password-code-status')
-  async getPasswordCodeStatus(@Body('reset-password-token') activationToken: string){
-    return this.authService.getPasswordCodeStatus(activationToken)
+  async getPasswordCodeStatus(@Body('reset-password-token') resetPasswordToken: string){
+    return this.authService.getPasswordCodeStatus(resetPasswordToken)
   }
 
   @ApiOperation({ summary: 'Activate User via Email'})
