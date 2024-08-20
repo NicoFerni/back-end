@@ -166,8 +166,8 @@ H
     return this.userRepository.findOne({ where: { email, activationToken: code, active: false } });
   }
 
-  async getPasswordCodeStatus(activationToken: string) {
-    const user = await this.userRepository.findOne({ where: { activationToken }})
+  async getPasswordCodeStatus(resetPasswordToken: string) {
+    const user = await this.userRepository.findOne({ where: { resetPasswordToken }})
 
     if(!user){
       return false
@@ -228,8 +228,6 @@ H
       }
     });
     const now = new Date()
-
-
 
     if ( !user || (user.resetPasswordToken != token) || now.getTime() > user.resetTokenExpiration ) {
       throw new NotFoundException('Invalid or expired reset password token');
