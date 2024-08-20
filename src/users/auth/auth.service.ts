@@ -31,7 +31,7 @@ export class AuthService {
       return new HttpException(activationToken, HttpStatus.ACCEPTED)
     }
   }
-H
+
   async createUser({ names, lastNames, password, email }: CreateUserDto) {
     const hashedPass = await this.hashPassword(password)
     let existingUser = await this.userRepository.findOne({ where: { email: email } });
@@ -190,7 +190,6 @@ H
       throw new UnprocessableEntityException('This action cannot be done');
     }
     await this.activateUser(user);
-    // await this.sendMailActivation(user.email, user.activationToken)
 
     return {
       'id': user.id,
@@ -236,10 +235,12 @@ H
       throw new UnauthorizedException('Passwords must match')
     } else {
       const activationToken = this.generateCode().toString()
+
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
       user.activationToken = activationToken
+
       await this.userRepository.save(user);
 
       return {

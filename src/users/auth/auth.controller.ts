@@ -43,7 +43,7 @@ export class AuthController {
   }
 
   @Post('get-password-code-status')
-  async getPasswordCodeStatus(@Body('activation-token') activationToken: string){
+  async getPasswordCodeStatus(@Body('reset-password-token') activationToken: string){
     return this.authService.getPasswordCodeStatus(activationToken)
   }
 
