@@ -168,8 +168,9 @@ export class AuthService {
 
   async getPasswordCodeStatus(resetPasswordToken: string) {
     const user = await this.userRepository.findOne({ where: { resetPasswordToken }})
+    const now = new Date().getTime();
 
-    if(!user){
+    if(!user || now > user.resetTokenExpiration){
       return false
     }{
       return user.resetPasswordToken
