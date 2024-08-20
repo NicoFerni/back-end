@@ -228,7 +228,7 @@ H
       }
     });
     const now = new Date()
-    const activationToken = this.generateCode().toString()
+
 
 
     if ( !user || (user.resetPasswordToken != token) || now.getTime() > user.resetTokenExpiration ) {
@@ -237,6 +237,7 @@ H
     if (newPassword != repeatPassword) {
       throw new UnauthorizedException('Passwords must match')
     } else {
+      const activationToken = this.generateCode().toString()
       user.password = await this.hashPassword(newPassword);
       user.resetPasswordToken = null;
       user.resetTokenExpiration = null;
