@@ -36,6 +36,10 @@ export class AuthService {
     const hashedPass = await this.hashPassword(password)
     let existingUser = await this.userRepository.findOne({ where: { email: email } });
 
+    const now = new Date();
+    const expirationMinutes = 5;
+    const expirationTime = new Date(now).getTime() + expirationMinutes * 60 * 1000;
+
 
     if (existingUser && existingUser.active === true) {
       throw new HttpException('El email registrado ya existe', HttpStatus.CONFLICT);
@@ -45,6 +49,7 @@ export class AuthService {
       const token = this.generateCode().toString();
       existingUser.names = names.charAt(0).toUpperCase() + names.slice(1);
       existingUser.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);
+      existingUser.activationTokenExpiration = expirationTime
       existingUser.password = hashedPass;
       existingUser.activationToken = token;
     } else {
@@ -52,6 +57,7 @@ export class AuthService {
       existingUser = this.userRepository.create({
         names: names.charAt(0).toUpperCase() + names.slice(1),
         lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),
+        activationTokenExpiration: expirationTime,
         email,
         password: hashedPass,
         activationToken: token,
@@ -178,9 +184,16 @@ export class AuthService {
   }
 
   async activateUser(user: User): Promise<string> {
-    user.active = true;
-    await this.userRepository.save(user);
-    return `Activation token: ${user.activationToken}`;
+    const now = new Date().getTime()
+
+    if( now > user.activationTokenExpiration ){
+      throw new NotFoundException('Invalid or expired activate token');
+    }{
+      user.active = true;
+      await this.userRepository.save(user);
+      return `Activation token: ${user.activationToken}`;
+    }
+
   }
 
   async activateUserDto(activateUserDto: ActivateUserDto) {
@@ -208,7 +221,7 @@ export class AuthService {
     const resetPasswordToken = this.generateCode().toString();
 
     const now = new Date();
-    const expirationMinutes = 1;
+    const expirationMinutes = 5;
     const expirationTime = new Date(now).getTime() + expirationMinutes * 60 * 1000;
 
     user.resetTokenExpiration = expirationTime

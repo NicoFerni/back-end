@@ -57,6 +57,15 @@ export class User{
       })
       resetTokenExpiration : number;
 
+
+      @Column({
+        type: 'bigint',
+        name: 'activate_token_expiration',
+        nullable: true,
+      })
+      activationTokenExpiration : number;
+
+
       @CreateDateColumn({
         name: 'created_on',
       })
