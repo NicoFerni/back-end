@@ -79,12 +79,13 @@ export class AuthService {
     const { email } = resendCodeDto
     const user: User = await this.userRepository.findOne({ where: { email } });
     const newToken = this.generateCode().toString();
-    const now = new Date().getTime()
-
+    const now = new Date();
+    const expirationMinutes = 5;
+    const expirationTime = new Date(now).getTime() + expirationMinutes * 60 * 1000;
 
     if (user) {
       user.activationToken = newToken;
-      user.activationTokenExpiration = now
+      user.activationTokenExpiration = expirationTime
       await this.userRepository.save(user);
       this.sendMailActivation(user.email, user.activationToken);
     }
