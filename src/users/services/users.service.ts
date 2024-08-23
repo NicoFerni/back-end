@@ -30,6 +30,7 @@ export class UsersService {
   async changeInfo(configAccountDto: ConfigAccountDto){
     const { name, lastName, password, email, url} = configAccountDto
     const user: User = await this.userRepository.findOne({ where: { email } });
+    const existingUrl = await this.userRepository.findOne({ where: { profileUrl: url } });
 
     const web = 'https://programadoresweb.netlify.app/'
 
@@ -42,17 +43,24 @@ export class UsersService {
       user.password = await this.authService.hashPassword(password)
       user.email = email
 
+      await this.userRepository.save(user);
       throw new HttpException('Action done successfully', 200)
-    } 
+    }
+    if (!existingUrl){
     {
       user.names = name
       user.lastNames = lastName
       user.password = await this.authService.hashPassword(password)
-      user.email = email
       user.profileUrl = web.concat(url)
-      
+      user.email = email
+
+      await this.userRepository.save(user);
       throw new HttpException('Action done successfully', 200)
     }
+  }{
+    throw new NotFoundException(`URL in use`);
+  }
+
   
   }
 
