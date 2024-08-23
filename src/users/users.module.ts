@@ -7,6 +7,7 @@ import { Profile } from 'src/typeorm/profile.entity';
 import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigController } from './controllers/config.controller';
 
 
 
@@ -19,7 +20,7 @@ import { PassportModule } from '@nestjs/passport';
       expiresIn: 3600, 
     }
   }),],
-  controllers: [UsersController],
+  controllers: [UsersController, ConfigController],
   providers: [UsersService, AuthService],
   exports: [UsersService, AuthService],
 })

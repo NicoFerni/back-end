@@ -2,12 +2,15 @@ import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
+import { AuthService } from '../auth/auth.service';
+import { ConfigAccountDto } from '../dtos/config-account.dto';
 
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly authService: AuthService
   ) {}
 
   async findById(id: string) {
@@ -22,6 +25,35 @@ export class UsersService {
     }{
       throw new HttpException('User deleted', 200)
     }
+  }
+
+  async changeInfo(configAccountDto: ConfigAccountDto){
+    const { name, lastName, password, email, url} = configAccountDto
+    const user: User = await this.userRepository.findOne({ where: { email } });
+
+    const web = 'https://programadoresweb.netlify.app/'
+
+    if (!user) {
+      throw new NotFoundException(`User not found`);
+    }
+    if (user.hasProfile === false){
+      user.names = name
+      user.lastNames = lastName
+      user.password = await this.authService.hashPassword(password)
+      user.email = email
+
+      throw new HttpException('Action done successfully', 200)
+    } 
+    {
+      user.names = name
+      user.lastNames = lastName
+      user.password = await this.authService.hashPassword(password)
+      user.email = email
+      user.profileUrl = web.concat(url)
+      
+      throw new HttpException('Action done successfully', 200)
+    }
+  
   }
 
   async findOneByEmail(email: string): Promise<User> {

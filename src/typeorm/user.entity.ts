@@ -72,6 +72,13 @@ export class User{
       createdOn: Date;
 
       @Column({
+        name: 'profile_url',
+        default: '',
+        nullable: true,
+      })
+      profileUrl: string
+
+      @Column({
         type: 'boolean',
         name: 'has_profile',
         default: false
@@ -81,5 +88,6 @@ export class User{
       @OneToOne(() => Profile)
       @JoinColumn() 
       profile: Profile;
+
  
 }
