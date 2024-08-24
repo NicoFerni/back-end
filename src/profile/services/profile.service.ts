@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile, User } from "src/typeorm";
 import { Repository } from "typeorm";
@@ -32,7 +32,29 @@ export class ProfileService {
 
 
   async findProfileById(Id: any): Promise<Profile> {
-    return await this.profileRepository.findOne({ where: { Id: Id } });
+    const profile = await this.profileRepository.findOne({ where: { Id: Id } });
+
+    if (!profile) {
+      throw new NotFoundException(`Profile not found with this ID`)
+    } {
+      return profile
+    }
+  }
+
+  async findProfileByUrl(profileUrl: string): Promise<Profile> {
+
+    const user: User = await this.usersRepository.findOne({ where: { profileUrl: profileUrl } })
+    if (!user) {
+      throw new NotFoundException(`User not found with the provided Profile URL`);
+    }
+
+    const profile: Profile = await this.profileRepository.findOne({ where: { Id: user.profile } });
+    if (!profile) {
+      throw new NotFoundException(`Profile not found for the user with the Provided profile URL`);
+    }
+
+    return profile;
+
   }
 
   async getTechnologies() {
@@ -53,12 +75,12 @@ export class ProfileService {
     return this.locationService.getCountries()
   }
 
-  async deleteProfile(id: string): Promise<void>{
+  async deleteProfile(id: string): Promise<void> {
     const deleteProfile = await this.profileRepository.delete(id)
 
-    if(deleteProfile.affected === 0){
+    if (deleteProfile.affected === 0) {
       throw new NotFoundException(`Profile with ID ${id} not found`);
-    }{
+    } {
       throw new HttpException('Profile deleted', 200)
     }
   }
@@ -223,8 +245,6 @@ export class ProfileService {
 
   }
 
-
-
   async createProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
     const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
 
@@ -254,6 +274,32 @@ export class ProfileService {
 
 
     return profile
-
   }
+
+  async modifyProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
+    const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
+
+    const ubicacion = { pais: pais, ciudad: ciudad };
+    const disponibilidad = { horas: horas, dias: dias, activo: activo }
+
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    await this.usersRepository.save(user);
+
+    userId = user.id
+
+
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
+
+
+    await this.profileRepository.save(profile);
+    await this.social(profile.Id, redesDto);
+
+    return profile
+  }
+
+
 }
