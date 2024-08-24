@@ -2,8 +2,8 @@ import { IsEmail, IsNotEmpty, MaxLength } from 'class-validator';
 
 export class ConfigAccountDto{
 
-    name?: string
-    lastName?: string
+    names?: string
+    lastNames?: string
     password?: string
 
     @MaxLength(50)

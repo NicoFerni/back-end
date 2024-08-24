@@ -28,7 +28,7 @@ export class UsersService {
   }
 
   async changeInfo(configAccountDto: ConfigAccountDto){
-    const { name, lastName, password, email, url} = configAccountDto
+    const { names, lastNames, password, email, url} = configAccountDto
     const user: User = await this.userRepository.findOne({ where: { email } });
     const existingUrl = await this.userRepository.findOne({ where: { profileUrl: url } });
 
@@ -38,8 +38,8 @@ export class UsersService {
       throw new NotFoundException(`User not found`);
     }
     if (user.hasProfile === false){
-      user.names = name
-      user.lastNames = lastName
+      user.names = names
+      user.lastNames = lastNames
       user.password = await this.authService.hashPassword(password)
       user.email = email
 
@@ -48,8 +48,8 @@ export class UsersService {
     }
     if (!existingUrl){
     {
-      user.names = name
-      user.lastNames = lastName
+      user.names = names
+      user.lastNames = lastNames
       user.password = await this.authService.hashPassword(password)
       user.profileUrl = web.concat(url)
       user.email = email
