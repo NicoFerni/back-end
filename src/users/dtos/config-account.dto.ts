@@ -6,7 +6,6 @@ export class ConfigAccountDto{
     lastNames?: string
     password?: string
 
-    @MaxLength(50)
     url?: string
 
     @IsNotEmpty()
