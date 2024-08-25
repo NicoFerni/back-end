@@ -53,13 +53,13 @@ export class UsersService {
     }
   
  
-    // try {
-    //   await this.userRepository.save(user);
-    //   console.log('User information updated successfully:', user);  // Debug log
-    // } catch (error) {
-    //   console.error('Error saving user information:', error);  // Debug log
-    //   throw new InternalServerErrorException('Failed to update user information');
-    // }
+     try {
+       await this.userRepository.save(user);
+       console.log('User information updated successfully:', user);  // Debug log
+     } catch (error) {
+       console.error('Error saving user information:', error);  // Debug log
+       throw new InternalServerErrorException('Failed to update user information');
+     }
   
     throw new HttpException('Action done successfully', 200);
   }
