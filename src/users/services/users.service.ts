@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
@@ -27,42 +27,35 @@ export class UsersService {
     }
   }
 
-  async changeInfo(configAccountDto: ConfigAccountDto){
-    const { names, lastNames, password, email, url} = configAccountDto
+  async changeInfo(configAccountDto: ConfigAccountDto) {
+    const { names, lastNames, password, email, url } = configAccountDto;
     const user: User = await this.userRepository.findOne({ where: { email } });
-    const existingUrl = await this.userRepository.findOne({ where: { profileUrl: url } });
-
-    const web = 'https://programadoresweb.netlify.app/'
-
+    
     if (!user) {
-      throw new NotFoundException(`User not found`);
+      throw new NotFoundException('User not found');
     }
-    if (user.hasProfile === false){
-      user.names = names
-      user.lastNames = lastNames
-      user.password = await this.authService.hashPassword(password)
-      user.email = email
-
-      await this.userRepository.save(user);
-      throw new HttpException('Action done successfully', 200)
-    }
-    if (!existingUrl){
-    {
-      user.names = names
-      user.lastNames = lastNames
-      user.password = await this.authService.hashPassword(password)
-      user.profileUrl = web.concat(url)
-      user.email = email
-
-      await this.userRepository.save(user);
-      throw new HttpException('Action done successfully', 200)
-    }
-  }{
-    throw new NotFoundException(`URL in use`);
-  }
-
   
+    user.names = names;
+    user.lastNames = lastNames;
+    user.password = await this.authService.hashPassword(password);
+    user.email = email;
+  
+    // Handle the URL only if the user has a profile
+    if (user.hasProfile) {
+      const existingUrl = await this.userRepository.findOne({ where: { profileUrl: url } });
+      const web = 'https://programadoresweb.netlify.app/';
+      
+      if (!existingUrl) {
+        user.profileUrl = web.concat(url);
+      } else {
+        throw new ConflictException('URL is already in use');
+      }
+    }
+  
+    await this.userRepository.save(user);
+    throw new HttpException('Action done successfully', 200);
   }
+  
 
   async findOneByEmail(email: string): Promise<User> {
     const user: User = await this.userRepository.findOne({ where: { email } });
