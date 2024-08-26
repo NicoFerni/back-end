@@ -287,23 +287,18 @@ export class ProfileService {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    if (user.hasProfile) {
-      throw new HttpException('User already has a profile', HttpStatus.BAD_REQUEST);
-    }
-
-    user.hasProfile = true;
+    
     await this.usersRepository.save(user);
 
     userId = user.id
 
     profileUrl = user.profileUrl
-    
+
     const profile = await this.profileRepository.save({ ...profileData, ubicacion, disponibilidad, idiomas, userId, profileUrl });
     await this.social(profile.Id, redesDto);
 
 
     return profile
   }
-
 
 }
