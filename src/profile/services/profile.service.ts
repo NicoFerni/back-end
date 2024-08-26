@@ -278,27 +278,34 @@ export class ProfileService {
 
   async modifyProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
     let { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
-
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo }
-
-
+  
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    
+  
+    const existingProfile = await this.profileRepository.findOne({ where: { userId: user.id } });
+    if (!existingProfile) {
+      throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+    }
+  
+    user.hasProfile = true;
     await this.usersRepository.save(user);
-
-    userId = user.id
-
-    profileUrl = user.profileUrl
-
-    const profile = await this.profileRepository.save({ ...profileData, ubicacion, disponibilidad, idiomas, userId, profileUrl });
-    await this.social(profile.Id, redesDto);
-
-
-    return profile
+  
+    existingProfile.ubicacion = ubicacion;
+    existingProfile.disponibilidad = disponibilidad;
+    existingProfile.idiomas = idiomas;
+    existingProfile.profileUrl = user.profileUrl;
+    Object.assign(existingProfile, profileData);
+  
+    const updatedProfile = await this.profileRepository.save(existingProfile);
+  
+    await this.social(updatedProfile.Id, redesDto);
+  
+    return updatedProfile;
   }
+  
 
 }
