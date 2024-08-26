@@ -17,6 +17,7 @@ import { app } from "src/firebase/firebase.config";
 import { v4 as uuidv4 } from 'uuid';
 import { TechnologiesService } from "./programingLanguagesList.service";
 import { SelectedTechnologiesDto } from "../dtos/selectedTechnologies.dto";
+import { Disponibilidad } from "../../typeorm/profile.entity";
 
 @Injectable()
 export class ProfileService {
@@ -277,16 +278,16 @@ export class ProfileService {
   }
 
   async modifyProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
-    let { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
+    const { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
     const ubicacion = { pais: pais, ciudad: ciudad };
-    const disponibilidad = { horas: horas, dias: dias, activo: activo }
+    const disponibilidad: Disponibilidad = { horas: horas, dias: dias, activo: activo };
   
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const user: User = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   
-    const existingProfile = await this.profileRepository.findOne({ where: { userId: user.id } });
+    const existingProfile: Profile = await this.profileRepository.findOne({ where: { userId: user.id } });
     if (!existingProfile) {
       throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
     }
