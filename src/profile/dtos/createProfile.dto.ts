@@ -21,6 +21,8 @@ export class CreateProfileDto {
   activo: boolean
 
   redes: RedesDto
+
+  profileUrl: string
   // facebook: string;
   // instagram: string;
   // threads: string;

@@ -21,7 +21,7 @@ export class Profile {
     })
   conocimientos: string[];
 
-  @Column('simple-array',{
+  @Column('simple-array', {
     nullable: false,
     default: [],
     name: 'idiomas'
@@ -38,7 +38,7 @@ export class Profile {
     pais: string;
     ciudad: string;
   };
-  
+
 
   @Column({
     nullable: false,
@@ -108,11 +108,16 @@ export class Profile {
   })
   redes: RedesDto;
 
-
   @Column({
     nullable: true,
     name: 'user_id'
   })
   userId: string;
+
+  @Column({
+    nullable: true,
+    name: 'profile_url'
+  })
+  profileUrl: string
 
 }

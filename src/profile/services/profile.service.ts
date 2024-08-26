@@ -45,7 +45,7 @@ export class ProfileService {
 
     const user: User = await this.usersRepository.findOne({ where: { profileUrl: profileUrl } })
     if (!user) {
-      throw new NotFoundException(`User not found with the provided Profile URL`);
+      throw new NotFoundException(`User not found with the provided rofile URL`);
     }
 
     const profile: Profile = await this.profileRepository.findOne({ where: { Id: user.profile } });
@@ -246,7 +246,7 @@ export class ProfileService {
   }
 
   async createProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
-    const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
+    let { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
 
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo }
@@ -265,8 +265,8 @@ export class ProfileService {
 
     userId = user.id
 
-
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
+    profileUrl = user.profileUrl
+    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId, profileUrl });
 
 
     await this.profileRepository.save(profile);
@@ -277,7 +277,7 @@ export class ProfileService {
   }
 
   async modifyProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
-    const { pais, ciudad, idiomas, horas, dias, activo, redes, ...profileData } = createProfileDto;
+    let { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
 
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad = { horas: horas, dias: dias, activo: activo }
@@ -287,16 +287,20 @@ export class ProfileService {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+    if (user.hasProfile) {
+      throw new HttpException('User already has a profile', HttpStatus.BAD_REQUEST);
+    }
+
+    user.hasProfile = true;
     await this.usersRepository.save(user);
 
     userId = user.id
 
-
-    const profile = this.profileRepository.create({ ...profileData, ubicacion, disponibilidad, idiomas, userId });
-
-
-    await this.profileRepository.save(profile);
+    profileUrl = user.profileUrl
+    
+    const profile = await this.profileRepository.save({ ...profileData, ubicacion, disponibilidad, idiomas, userId, profileUrl });
     await this.social(profile.Id, redesDto);
+
 
     return profile
   }

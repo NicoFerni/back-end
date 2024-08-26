@@ -11,60 +11,56 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly authService: AuthService
-  ) {}
+  ) { }
 
   async findById(id: string) {
     return this.userRepository.findOne({ where: { id } });
   }
 
-  async deleteUser(id: string): Promise <void>{
+  async deleteUser(id: string): Promise<void> {
     const deleteUser = await this.userRepository.delete(id)
 
     if (deleteUser.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
-    }{
+    } {
       throw new HttpException('User deleted', 200)
     }
   }
 
   async changeInfo(configAccountDto: ConfigAccountDto) {
     const { names, lastNames, password, email, url } = configAccountDto;
-    
+
     const user: User = await this.userRepository.findOne({ where: { email } });
-  
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  
-    user.names = names;
-    user.lastNames = lastNames;
+
+    user.names = names.charAt(0).toUpperCase() + names.slice(1);
+    user.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);;
     user.password = await this.authService.hashPassword(password);
     user.email = email;
-  
+
     if (user.hasProfile) {
       const existingUrl = await this.userRepository.findOne({ where: { profileUrl: url } });
-      const web = 'https://programadoresweb.netlify.app/';
-  
-      if (!existingUrl) {
-        user.profileUrl = web.concat(url);
-      } else {
-        throw new ConflictException('URL is already in use');
+      if (existingUrl) {
+        throw new ConflictException('URL already in use')
+      } {
+        user.profileUrl = url;
       }
+
     }
-  
- 
-     try {
-       await this.userRepository.save(user);
-       console.log('User information updated successfully:', user);  // Debug log
-     } catch (error) {
-       console.error('Error saving user information:', error);  // Debug log
-       throw new InternalServerErrorException('Failed to update user information');
-     }
-  
-    throw new HttpException('Action done successfully', 200);
+
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update user information');
+    }
+
+    throw new HttpException('User informartion changed successfully', 200);
   }
-  
-  
+
+
 
   async findOneByEmail(email: string): Promise<User> {
     const user: User = await this.userRepository.findOne({ where: { email } });
