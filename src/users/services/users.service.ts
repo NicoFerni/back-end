@@ -27,6 +27,16 @@ export class UsersService {
     }
   }
 
+  phraseToUpperCase(text: string){
+    const textSeparated =  text.split(' ')
+
+    for(let i = 0; i < textSeparated.length; i++){
+      textSeparated[i] = textSeparated[i][0].toUpperCase() + textSeparated[i].slice(1)
+    }
+
+    return textSeparated.join(' ')
+  }
+
   async changeInfo(configAccountDto: ConfigAccountDto) {
     const { names, lastNames, password, email, url } = configAccountDto;
 
@@ -36,8 +46,8 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    user.names = names.charAt(0).toUpperCase() + names.slice(1);
-    user.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);;
+    user.names = this.phraseToUpperCase(names);
+    user.lastNames = this.phraseToUpperCase(lastNames);;
     user.password = await this.authService.hashPassword(password);
     user.email = email;
 

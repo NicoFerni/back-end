@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { LoginDto } from 'src/users/dtos/login.dto';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
 import { ActivateUserDto } from 'src/users/dtos/activate.user.dto';
@@ -15,12 +15,24 @@ import { ResendCodeDto } from '../dtos/resend-code-dto';
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+
   ) { }
 
   generateCode(): number {
     return Math.floor(100000 + Math.random() * 900000);
   }
+
+  phraseToUpperCase(text: string){
+    const textSeparated =  text.split(' ')
+
+    for(let i = 0; i < textSeparated.length; i++){
+      textSeparated[i] = textSeparated[i][0].toUpperCase() + textSeparated[i].slice(1)
+    }
+
+    return textSeparated.join(' ')
+  }
+
 
   async getActivationToken(activationToken: string){
     const user: User = await this.userRepository.findOne({ where: { activationToken } });
@@ -47,16 +59,16 @@ export class AuthService {
 
     if (existingUser && existingUser.active === false) {
       const token = this.generateCode().toString();
-      existingUser.names = names.charAt(0).toUpperCase() + names.slice(1);
-      existingUser.lastNames = lastNames.charAt(0).toUpperCase() + lastNames.slice(1);
+      existingUser.names = this.phraseToUpperCase(names);
+      existingUser.lastNames = this.phraseToUpperCase(lastNames);
       existingUser.activationTokenExpiration = expirationTime
       existingUser.password = hashedPass;
       existingUser.activationToken = token;
     } else {
       const token = this.generateCode().toString();
       existingUser = this.userRepository.create({
-        names: names.charAt(0).toUpperCase() + names.slice(1),
-        lastNames: lastNames.charAt(0).toUpperCase() + lastNames.slice(1),
+        names: this.phraseToUpperCase(names),
+        lastNames: this.phraseToUpperCase(lastNames),
         activationTokenExpiration: expirationTime,
         email,
         password: hashedPass,
