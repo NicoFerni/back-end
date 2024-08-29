@@ -1,5 +1,5 @@
-import { Controller, Query, UseInterceptors, UploadedFile, Param, NotFoundException, Delete, Patch } from "@nestjs/common";
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Query, UseInterceptors, UploadedFile, Param, NotFoundException, Delete, Patch, UploadedFiles } from "@nestjs/common";
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ProfileService } from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
@@ -11,6 +11,8 @@ import { Profile } from "../../typeorm";
 import { RedesDto } from "../dtos/socialNetwork.dto";
 import { ApiOperation } from "@nestjs/swagger";
 import { isUUID } from "class-validator";
+import { ProfileWebProjectService } from "../services/profile-web-project.service";
+import { WebProjectDto } from "../dtos/web-project.dto";
 
 @ApiTags('Profiles')
 @Controller('api/v1/profile')
@@ -18,7 +20,8 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService,
     private readonly languagesService: LanguagesService,
     private readonly locationService: LocationService,
-    private readonly technologiesService: TechnologiesService
+    private readonly technologiesService: TechnologiesService,
+    private readonly webProjectService: ProfileWebProjectService
   ) { }
 
   
@@ -80,5 +83,27 @@ export class ProfileController {
     return profile;
   }
 
+
+  // @Post('web')
+  // @UseInterceptors(FileInterceptor('image'))
+  // async createWebProject(@UploadedFile() image: Express.Multer.File, @Body() webProjectDto: WebProjectDto) {
+
+  //   const webProject = await this.webProjectService.createWebProfile(webProjectDto)
+  //   if (image) {
+  //     await this.webProjectService.saveImage(image, webProject.id);
+  //   }
+  //   return webProject;
+
+  // }
+
+  @Post('web')
+  @UseInterceptors(FilesInterceptor('images'))
+  async createWebProject(@UploadedFiles() images: Express.Multer.File[], @Body() webProjectDto: WebProjectDto) {
+    const webProject = await this.webProjectService.createWebProfile(webProjectDto);
+    if (images && images.length > 0) {
+      await this.webProjectService.saveImages(images, webProject.id);
+    }
+    return webProject;
+  }
 
 } 

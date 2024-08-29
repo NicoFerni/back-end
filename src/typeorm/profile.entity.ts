@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { RedesDto } from "../profile/dtos/socialNetwork.dto";
+import { Profile_web_project } from "./profile-web-project";
 
 export class Disponibilidad {
   horas: string;
@@ -119,5 +120,9 @@ export class Profile {
     name: 'profile_url'
   })
   profileUrl: string
+
+  @OneToOne(() => Profile_web_project)
+  @JoinColumn({name: 'web_profile_id'}) 
+  Profile_web_project: Profile_web_project;
 
 }

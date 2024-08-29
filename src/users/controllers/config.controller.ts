@@ -7,7 +7,6 @@ import {
   import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConfigAccountDto } from '../dtos/config-account.dto';
 
-  @ApiTags('Users')
   @Controller('api/v1/configuration')
   export class ConfigController {
     constructor(
