@@ -3,7 +3,8 @@ import { Profile } from "./profile.entity";
 
 export enum Role {
     Backend = 'Backend',
-    FrontEnd = 'Frontend',
+    Frontend = 'Frontend',
+    FullStack = 'FullStack'
   }
 
 @Entity()
@@ -18,19 +19,12 @@ export class Profile_web_project {
   })
   url: string
 
-  @Column('date', {
+  @Column('varchar', {
     nullable: false,
-    name: 'initial_date',
+    name: 'date',
     
   })
-  initialDate: Date
-
-  @Column('date', {
-    nullable: false,
-    name: 'end_date',
-    
-  })
-  endDate: Date
+  date: string
 
   @Column('varchar', {
     nullable: true,
@@ -41,9 +35,9 @@ export class Profile_web_project {
   @Column('enum', {
     enum: Role, 
     nullable: false,
-    name: 'role',
+    name: 'rol',
   })
-  role: Role[]
+  rol: Role[]
 
   @Column('varchar', {
     nullable: true,

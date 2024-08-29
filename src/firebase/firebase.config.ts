@@ -4,13 +4,13 @@ dotenv.config();
 
 
 const firebaseConfig = {
-credential:admin.credential.cert({
-  projectId: process.env.PROJECT_ID,
-  clientEmail: process.env.CLIENT_ID,
-  privateKey: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-  
-}),
-databaseURL: "https://profile-picture-ee5b2-default-rtdb.firebaseio.com",
+  credential: admin.credential.cert({
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.CLIENT_ID,
+    privateKey: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
+
+  }),
+  databaseURL: "https://profile-picture-ee5b2-default-rtdb.firebaseio.com",
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
   storageBucket: 'gs://profile-picture-ee5b2.appspot.com',

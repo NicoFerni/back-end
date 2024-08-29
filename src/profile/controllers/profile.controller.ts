@@ -24,7 +24,7 @@ export class ProfileController {
     private readonly webProjectService: ProfileWebProjectService
   ) { }
 
-  
+
   @Get('languages')
   getLanguages() {
     return this.languagesService.getLanguages()
@@ -32,7 +32,7 @@ export class ProfileController {
 
   @ApiOperation({ summary: 'Delete Profile by id' })
   @Delete('delete')
-  deleteProfile(@Body('id') id: string){
+  deleteProfile(@Body('id') id: string) {
     return this.profileService.deleteProfile(id)
   }
 

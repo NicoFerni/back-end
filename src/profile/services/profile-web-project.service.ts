@@ -53,7 +53,7 @@ export class ProfileWebProjectService {
 
 
   async createWebProfile(webProjectDto: WebProjectDto): Promise<Partial<Profile_web_project>> {
-    const { profile_id, url, initialDate, endDate, type, role, description, images } = webProjectDto;
+    const { profile_id, url, date , type, rol, description, images } = webProjectDto;
   
     const profile: Profile = await this.profileService.findProfileById(profile_id);
     if (!profile) {
@@ -63,10 +63,9 @@ export class ProfileWebProjectService {
     
     const webProject =  this.webProjectRepository.create({
       url,
-      initialDate: new Date(initialDate),
-      endDate: new Date(endDate),
+      date,
       type,
-      role,
+      rol,
       description,
       images,
       profile: profile.Id, 
