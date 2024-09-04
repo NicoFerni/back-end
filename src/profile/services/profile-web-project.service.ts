@@ -18,6 +18,12 @@ export class ProfileWebProjectService {
   ) { }
 
 
+  async getWebByProfileId(profile: Profile){
+    const web = await this.webProjectRepository.findOne({where: { profile: profile }})
+
+    return web
+  }
+
   async saveImages(files: Express.Multer.File[], id: number): Promise<Profile_web_project> {
     try {
       const bucket = app.storage().bucket();
@@ -49,8 +55,6 @@ export class ProfileWebProjectService {
     }
   }
   
-  
-
 
   async createWebProfile(webProjectDto: WebProjectDto): Promise<Partial<Profile_web_project>> {
     const { profile_id, url, date , type, rol, description, images } = webProjectDto;

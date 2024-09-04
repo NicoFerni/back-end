@@ -106,4 +106,8 @@ export class ProfileController {
     return webProject;
   }
 
+  @Get('web/:id')
+  async getWebByProfileId(@Param('profileId') id: Profile,){
+    return this.webProjectService.getWebByProfileId(id)
+  }
 } 

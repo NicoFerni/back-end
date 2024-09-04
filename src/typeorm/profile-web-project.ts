@@ -22,7 +22,6 @@ export class Profile_web_project {
   @Column('varchar', {
     nullable: false,
     name: 'date',
-    
   })
   date: string
 
