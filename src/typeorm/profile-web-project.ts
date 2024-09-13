@@ -44,7 +44,8 @@ export class Profile_web_project {
   })
   description: string
 
-  @Column('varchar', {
+  @Column('text', {
+    array: true,
     nullable: true,
     name: 'images',
   })

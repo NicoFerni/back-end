@@ -3,7 +3,6 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ProfileService } from "../services/profile.service";
 import { Get, Post, Body } from '@nestjs/common'
 import { LanguagesService } from "../services/languages.service";
-import { LocationService } from "../services/location.service";
 import { CreateProfileDto } from "../dtos/createProfile.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { TechnologiesService } from "../services/programingLanguagesList.service"
@@ -19,7 +18,6 @@ import { WebProjectDto } from "../dtos/web-project.dto";
 export class ProfileController {
   constructor(private readonly profileService: ProfileService,
     private readonly languagesService: LanguagesService,
-    private readonly locationService: LocationService,
     private readonly technologiesService: TechnologiesService,
     private readonly webProjectService: ProfileWebProjectService
   ) { }
@@ -83,18 +81,6 @@ export class ProfileController {
     return profile;
   }
 
-
-  // @Post('web')
-  // @UseInterceptors(FileInterceptor('image'))
-  // async createWebProject(@UploadedFile() image: Express.Multer.File, @Body() webProjectDto: WebProjectDto) {
-
-  //   const webProject = await this.webProjectService.createWebProfile(webProjectDto)
-  //   if (image) {
-  //     await this.webProjectService.saveImage(image, webProject.id);
-  //   }
-  //   return webProject;
-
-  // }
 
   @Post('web')
   @UseInterceptors(FilesInterceptor('images'))
