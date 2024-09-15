@@ -34,11 +34,15 @@ export class ProfileController {
     return this.profileService.deleteProfile(id)
   }
 
+  @Get('webs')
+  async getAllWebs(){
+    return this.webProjectService.getAllWebs()
+  }
+
   @Get('')
   getProfiles(): Promise<Profile[]> {
     return this.profileService.getProfiles()
   }
-
 
   @Post('')
   @UseInterceptors(FileInterceptor('fotoDePerfil'))
@@ -93,7 +97,9 @@ export class ProfileController {
   }
 
   @Get('web/:id')
-  async getWebByProfileId(@Param('profileId') id: Profile,){
+  async getWebByProfileId(@Param('profileId') id: Profile){
     return this.webProjectService.getWebByProfileId(id)
   }
+
+
 } 

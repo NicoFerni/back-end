@@ -24,6 +24,12 @@ export class ProfileWebProjectService {
     return web
   }
 
+  async getAllWebs(){
+    const webs = await this.webProjectRepository.find()
+
+    return webs
+  }
+
   async saveImages(files: Express.Multer.File[], id: number): Promise<Profile_web_project> {
     try {
       const bucket = app.storage().bucket();
@@ -44,7 +50,6 @@ export class ProfileWebProjectService {
         const fileName = uploadResponse[0].name;
         const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
   
-        // Assuming you have a way to store multiple image URLs in your webProject entity
         webProject.images = webProject.images ? [...webProject.images, url] : [url];
       }
   
