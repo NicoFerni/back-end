@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile.entity";
 
 export enum Role {
@@ -51,7 +51,7 @@ export class Profile_web_project {
   })
   images: string[]
 
-  @OneToOne(() => Profile, (profile) => profile.Profile_web_project)
+  @ManyToOne(() => Profile, (profile) => profile.Profile_web_project)
   @JoinColumn({ name: 'profile_id' }) 
   profile: Profile;
 }

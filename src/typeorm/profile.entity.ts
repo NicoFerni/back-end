@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToMany } from "typeorm";
 import { RedesDto } from "../profile/dtos/socialNetwork.dto";
 import { Profile_web_project } from "./profile-web-project";
 
@@ -121,7 +121,7 @@ export class Profile {
   })
   profileUrl: string
 
-  @OneToOne(() => Profile_web_project)
+  @OneToMany(() => Profile_web_project, (webProject) => webProject.id)
   @JoinColumn({name: 'web_profile_id'}) 
   Profile_web_project: Profile_web_project;
 
