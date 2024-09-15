@@ -34,10 +34,7 @@ export class ProfileController {
     return this.profileService.deleteProfile(id)
   }
 
-  @Get('webs')
-  async getAllWebs(){
-    return this.webProjectService.getAllWebs()
-  }
+
 
   @Get('')
   getProfiles(): Promise<Profile[]> {

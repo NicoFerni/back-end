@@ -19,15 +19,9 @@ export class ProfileWebProjectService {
 
 
   async getWebByProfileId(profile: Profile){
-    const web = await this.webProjectRepository.findOne({where: { profile: profile }})
+    const web = await this.webProjectRepository.find({where: { profile: profile }})
 
     return web
-  }
-
-  async getAllWebs(){
-    const webs = await this.webProjectRepository.find()
-
-    return webs
   }
 
   async saveImages(files: Express.Multer.File[], id: number): Promise<Profile_web_project> {
