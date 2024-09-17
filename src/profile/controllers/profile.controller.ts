@@ -34,6 +34,10 @@ export class ProfileController {
     return this.profileService.deleteProfile(id)
   }
 
+  @Get('web/:id')
+  async getWebByProfileId(@Query() id: Profile){
+    return this.webProjectService.getWebByProfileId(id)
+  }
 
 
   @Get('')
@@ -93,10 +97,6 @@ export class ProfileController {
     return webProject;
   }
 
-  @Get('web/:id')
-  async getWebByProfileId(@Param('profileId') id: Profile){
-    return this.webProjectService.getWebByProfileId(id)
-  }
 
 
 } 
