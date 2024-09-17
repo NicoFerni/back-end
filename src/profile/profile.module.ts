@@ -9,6 +9,7 @@ import { LocationService } from "./services/location.service";
 import { MulterModule } from "@nestjs/platform-express";
 import { TechnologiesService } from "./services/programingLanguagesList.service";
 import { ProfileWebProjectService } from "./services/profile-web-project.service";
+import { ProfileWebProjectController } from "./controllers/profile-web-project.controller";
 
 
 @Module({
@@ -18,7 +19,7 @@ import { ProfileWebProjectService } from "./services/profile-web-project.service
                 dest: './uploads',
                    }),
     ],
-    controllers: [ProfileController],
+    controllers: [ProfileController, ProfileWebProjectController],
     providers: [ProfileService, LanguagesService, LocationService, TechnologiesService, ProfileWebProjectService],
 })
 export class ProfileModule {}

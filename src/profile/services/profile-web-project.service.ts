@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Profile, Profile_web_project } from "../../typeorm";
@@ -14,16 +14,25 @@ export class ProfileWebProjectService {
   constructor(
     @InjectRepository(Profile_web_project)
     private readonly webProjectRepository: Repository<Profile_web_project>,
+    @InjectRepository(Profile)
+    private readonly profileRepository: Repository<Profile>,
     private readonly profileService: ProfileService,
   ) { }
 
 
-  async getWebByProfileId(profile: Profile){
-    const web = await this.webProjectRepository.find({where: { profile: profile }})
-
-    return web
+  async getWebByProfileId(profileId: string) {
+    const projects = await this.webProjectRepository.find({
+      where: { profile: { Id: profileId } },
+    });
+  
+    if (projects.length === 0) {
+      throw new NotFoundException('No web projects found for this profile');
+    }
+  
+    return projects;
   }
-
+  
+  
   async saveImages(files: Express.Multer.File[], id: number): Promise<Profile_web_project> {
     try {
       const bucket = app.storage().bucket();
