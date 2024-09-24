@@ -26,7 +26,7 @@ export class ProfileWebProjectService {
     });
   
     if (projects.length === 0) {
-      throw new NotFoundException('No web projects found for this profile');
+      return [];
     }
   
     return projects;
