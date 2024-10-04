@@ -299,7 +299,7 @@ export class ProfileService {
     existingProfile.disponibilidad = disponibilidad;
     existingProfile.idiomas = idiomas;
     existingProfile.profileUrl = user.profileUrl;
-    existingProfile.fotoDePerfil = fotoDePerfil
+    existingProfile.fotoDePerfil = fotoDePerfil || existingProfile.fotoDePerfil;
     Object.assign(existingProfile, profileData);
   
     const updatedProfile = await this.profileRepository.save(existingProfile);
