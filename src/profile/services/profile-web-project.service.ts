@@ -15,7 +15,6 @@ export class ProfileWebProjectService {
     @InjectRepository(Profile_web_project)
     private readonly webProjectRepository: Repository<Profile_web_project>,
     @InjectRepository(Profile)
-    private readonly profileRepository: Repository<Profile>,
     private readonly profileService: ProfileService,
   ) { }
 

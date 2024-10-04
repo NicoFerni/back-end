@@ -278,7 +278,7 @@ export class ProfileService {
   }
 
   async modifyProfile(createProfileDto: CreateProfileDto, userId: string, redesDto: RedesDto): Promise<Profile> {
-    const { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, ...profileData } = createProfileDto;
+    const { pais, ciudad, idiomas, horas, dias, activo, redes, profileUrl, fotoDePerfil, ...profileData } = createProfileDto;
     const ubicacion = { pais: pais, ciudad: ciudad };
     const disponibilidad: Disponibilidad = { horas: horas, dias: dias, activo: activo };
   
@@ -299,6 +299,7 @@ export class ProfileService {
     existingProfile.disponibilidad = disponibilidad;
     existingProfile.idiomas = idiomas;
     existingProfile.profileUrl = user.profileUrl;
+    existingProfile.fotoDePerfil = fotoDePerfil
     Object.assign(existingProfile, profileData);
   
     const updatedProfile = await this.profileRepository.save(existingProfile);
