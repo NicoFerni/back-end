@@ -209,11 +209,20 @@ export class ProfileService {
 
 
 
-  async saveImage(file: Express.Multer.File, Id: string): Promise<Profile> {
+  async saveImage(file: any, Id: string): Promise<Profile> {
+
+    if(typeof file === 'string'){
+      const profile = await this.profileRepository.findOne({ where: { Id: Id } });
+
+      profile.fotoDePerfil = file
+
+      await this.profileRepository.save(profile)
+      return profile;
+    }
     try {
+
       const bucket = app.storage().bucket()
       const uuid = uuidv4()
-
 
       const uploadResponse = await bucket.upload(file.path, {
         destination: `profile-picture/${file.originalname}`,
@@ -224,13 +233,10 @@ export class ProfileService {
           }
         }
       })
-
-
       const fileName = uploadResponse[0].name;
       const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${uuid}`;
 
       const profile = await this.profileRepository.findOne({ where: { Id: Id } });
-
 
       profile.fotoDePerfil = url
 
@@ -291,7 +297,9 @@ export class ProfileService {
     if (!existingProfile) {
       throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
     }
-  
+
+
+
     user.hasProfile = true;
     await this.usersRepository.save(user);
   
@@ -299,7 +307,6 @@ export class ProfileService {
     existingProfile.disponibilidad = disponibilidad;
     existingProfile.idiomas = idiomas;
     existingProfile.profileUrl = user.profileUrl;
-    existingProfile.fotoDePerfil = profileData.fotoDePerfil || existingProfile.fotoDePerfil;
     Object.assign(existingProfile, profileData);
   
     const updatedProfile = await this.profileRepository.save(existingProfile);
