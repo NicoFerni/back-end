@@ -13,9 +13,13 @@ export class UsersService {
     private readonly authService: AuthService
   ) { }
 
-  async findById(id: string) {
-    return this.userRepository.findOne({ where: { id } });
-  }
+  async findById(id: string): Promise<User> {
+    return this.userRepository.findOne({
+        where: { id },
+        relations: ['following'], // Ensure the following relationship is loaded
+    });
+}
+
 
   async deleteUser(id: string): Promise<void> {
     const deleteUser = await this.userRepository.delete(id)

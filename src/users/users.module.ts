@@ -8,6 +8,8 @@ import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigController } from './controllers/config.controller';
+import { FollowersController } from './controllers/followers.controller';
+import { FollowersService } from './services/followers.service';
 
 
 
@@ -20,9 +22,9 @@ import { ConfigController } from './controllers/config.controller';
       expiresIn: 3600, 
     }
   }),],
-  controllers: [UsersController, ConfigController],
-  providers: [UsersService, AuthService],
-  exports: [UsersService, AuthService],
+  controllers: [UsersController, ConfigController, FollowersController],
+  providers: [UsersService, AuthService, FollowersService],
+  exports: [UsersService, AuthService, FollowersService],
 })
 export class UsersModule {}
 
