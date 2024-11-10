@@ -102,4 +102,4 @@ export class User {
   @ManyToMany(() => User, user => user.followers)
   following: User[];
 
-}
+} 

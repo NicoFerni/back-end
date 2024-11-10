@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { UsersService } from "./users.service";
-import { User } from "../../typeorm";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { User } from '../../typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -14,52 +14,79 @@ export class FollowersService {
 
   async getFollowedUsers(followerId: string) {
     const user = await this.userService.findById(followerId);
+
     if (!user) {
       throw new NotFoundException(`User with ID ${followerId} not found`);
     }
 
-    const followedUsers = await this.userRepository
-      .createQueryBuilder('user')
-      .innerJoin('user.following', 'following')
-      .where('user.id = :id', { id: followerId })
-      .getMany();
-
-    return followedUsers.map((followed) => ({
+    return user.following.map((followed) => ({
       followedUser: followed.id,
       followedData: followed,
     }));
   }
 
+  async getFollowers(userId: string) {
+    const user = await this.userService.findById(userId);
 
-  async followUser(followerId: string, followedId: string) {
-    const follower = await this.userService.findById(followerId);
-    if (!follower) {
-        throw new NotFoundException(`User with ID ${followerId} not found`);
-    }
-    const followed = await this.userService.findById(followedId);
-    if (!followed) {
-        throw new NotFoundException(`User with ID ${followedId} not found`);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    if (!follower.following) {
-        follower.following = []; 
-    }
-    if (follower.following.some(user => user.id === followedId)) {
-        throw new Error(`User with ID ${followerId} is already following user with ID ${followedId}`);
-    }
+    return user.followers.map((follower) => ({
+      followerUser: follower.id,
+      followerData: follower,
+    }));
+  }
 
-    follower.following.push(followed);
-    await this.userRepository.save(follower);
-}
+  async isFollower(followerId: string, followedId: string): Promise<{ following: boolean }> {
+    const follower = await this.userRepository.findOne({
+      where: { id: followerId },
+      relations: ['following'],
+    });
 
-   
-  async isFollower(followerId: string, followedId: string): Promise<boolean> {
-    const follower = await this.userService.findById(followerId);
     if (!follower) {
       throw new NotFoundException(`User with ID ${followerId} not found`);
     }
 
-    const isFollowing = follower.following.some(user => user.id === followedId);
-    return isFollowing;
+    const isFollowing = follower.following.some((user) => user.id === followedId);
+    return { following: isFollowing };
+  }
+
+  async followUser(followerId: string, followedId: string) {
+    const follower = await this.userRepository.findOne({
+      where: { id: followerId },
+      relations: ['following'],
+    });
+
+    const followed = await this.userRepository.findOne({
+      where: { id: followedId },
+    });
+
+    if (!follower || !followed) {
+      throw new NotFoundException(`User not found`);
+    }
+
+    if (follower.following.some((user) => user.id === followedId)) {
+      throw new Error(`User with ID ${followerId} is already following user with ID ${followedId}`);
+    }
+
+    follower.following.push(followed);
+    await this.userRepository.save(follower);
+    return { message: 'Successfully followed user' };
+  }
+
+  async unfollowUser(followerId: string, followedId: string) {
+    const follower = await this.userRepository.findOne({
+      where: { id: followerId },
+      relations: ['following'],
+    });
+
+    if (!follower) {
+      throw new NotFoundException(`User with ID ${followerId} not found`);
+    }
+
+    follower.following = follower.following.filter((user) => user.id !== followedId);
+    await this.userRepository.save(follower);
+    return { message: 'Successfully unfollowed user' };
   }
 }

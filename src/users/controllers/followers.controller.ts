@@ -1,33 +1,39 @@
-import { Body, Controller, Get, Post, Param, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
 import { FollowersService } from '../services/followers.service';
-import { UsersService } from '../services/users.service';
+import { Request } from 'express';
 import { User } from '../../typeorm';
 
 @Controller('api/v1/follow')
 export class FollowersController {
-    constructor(
-        private readonly followersService: FollowersService,
-        private readonly userService: UsersService
-    ) { }
+  constructor(private readonly followersService: FollowersService) {}
 
+  @Get()
+  async getFollowedUsers(@Req() request: User) {
+    const followerId = request.id;  // Suponiendo que `request.user.id` tiene el ID del usuario autenticado
+    return this.followersService.getFollowedUsers(followerId);
+  }
 
-    @Get()
-    async getFollowedUsers(@Body('id') id: any) {
-        const userId = id
-        return this.followersService.getFollowedUsers(userId);
-    }
+  @Get('/me')
+  async getFollowers(@Req() request: User) {
+    const userId = request.id;
+    return this.followersService.getFollowers(userId);
+  }
 
-    @Post(':id')
-    async followUser(@Param('id') followedId: string, @Body('followerId') followerId: string) {
-        return this.followersService.followUser(followerId, followedId);
-    }
+  @Get(':id')
+  async isFollower(@Req() request: User, @Param('id') followedId: string) {
+    const followerId = request.id;
+    return this.followersService.isFollower(followerId, followedId);
+  }
 
-    @Get(':id')
-    async isFollower(
-        @Query('followedId') followedId: string, 
-        @Body('followerId') followerId: string
-      ) {
-        return this.followersService.isFollower(followerId, followedId);
-      }
+  @Post(':id')
+  async followUser(@Req() request: User, @Param('id') followedId: string) {
+    const followerId = request.id;
+    return this.followersService.followUser(followerId, followedId);
+  }
 
+  @Delete(':id')
+  async unfollowUser(@Req() request: User, @Param('id') followedId: string) {
+    const followerId = request.id;
+    return this.followersService.unfollowUser(followerId, followedId);
+  }
 }
