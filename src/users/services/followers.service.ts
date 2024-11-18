@@ -13,13 +13,17 @@ export class FollowersService {
   ) {}
 
   async getFollowedUsers(followerId: string) {
-    const user = await this.userService.findById(followerId);
-
+    const user = await this.userRepository.findOne({
+      where: { id: followerId },
+      relations: ['following'], // Make sure the `following` relation is loaded
+    });
+  
     if (!user) {
       throw new NotFoundException(`User with ID ${followerId} not found`);
     }
-
-    return user.following.map((followed) => ({
+  
+    // Ensure `following` is initialized as an array if it's undefined
+    return (user.following || []).map((followed) => ({
       followedUser: followed.id,
       followedData: followed,
     }));
