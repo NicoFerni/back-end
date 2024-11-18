@@ -91,15 +91,16 @@ export class User {
   @JoinColumn()
   profile: Profile;
 
-  @ManyToMany(() => User, user => user.following)
-  @JoinTable({
-    name: 'user_followers',
-    joinColumn: { name: 'follower_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'followed_id', referencedColumnName: 'id' }
-  })
-  followers: User[];
-
+  
   @ManyToMany(() => User, user => user.followers)
+  @JoinTable({
+    name: 'user_followers', 
+    joinColumn: { name: 'follower_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'followed_id', referencedColumnName: 'id' } 
+  })
   following: User[];
 
-} 
+  // Relación inversa de "Seguidores"
+  @ManyToMany(() => User, user => user.following)
+  followers: User[];
+}

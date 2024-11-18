@@ -26,7 +26,10 @@ export class FollowersService {
   }
 
   async getFollowers(userId: string) {
-    const user = await this.userService.findById(userId);
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['followers'],
+    });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);

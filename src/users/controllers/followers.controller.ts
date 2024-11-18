@@ -1,39 +1,33 @@
-import { Body, Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { FollowersService } from '../services/followers.service';
-import { Request } from 'express';
-import { User } from '../../typeorm';
 
 @Controller('api/v1/follow')
 export class FollowersController {
   constructor(private readonly followersService: FollowersService) {}
 
+
   @Get()
-  async getFollowedUsers(@Req() request: User) {
-    const followerId = request.id;  // Suponiendo que `request.user.id` tiene el ID del usuario autenticado
+  async getFollowedUsers(@Param('followerId') followerId: string) {
     return this.followersService.getFollowedUsers(followerId);
   }
 
   @Get('/me')
-  async getFollowers(@Req() request: User) {
-    const userId = request.id;
+  async getFollowers(@Query('userId') userId: string) {
     return this.followersService.getFollowers(userId);
   }
 
   @Get(':id')
-  async isFollower(@Req() request: User, @Param('id') followedId: string) {
-    const followerId = request.id;
+  async isFollower(@Param('followerId') followerId: string, @Param('id') followedId: string) {
     return this.followersService.isFollower(followerId, followedId);
   }
 
   @Post(':id')
-  async followUser(@Req() request: User, @Param('id') followedId: string) {
-    const followerId = request.id;
+  async followUser(@Param('followerId') followerId: string, @Param('id') followedId: string) {
     return this.followersService.followUser(followerId, followedId);
   }
 
   @Delete(':id')
-  async unfollowUser(@Req() request: User, @Param('id') followedId: string) {
-    const followerId = request.id;
+  async unfollowUser(@Param('followerId') followerId: string, @Param('id') followedId: string) {
     return this.followersService.unfollowUser(followerId, followedId);
   }
 }
