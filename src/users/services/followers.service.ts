@@ -15,7 +15,7 @@ export class FollowersService {
   async getFollowedUsers(followerId: string) {
     const user = await this.userRepository.findOne({
       where: { id: followerId },
-      relations: ['following', 'following.profile'], 
+      relations: ['following'], 
     });
   
     if (!user) {
@@ -23,8 +23,8 @@ export class FollowersService {
     }
   
     return (user.following || []).map((followed) => ({
-      followedUser: user,
-      followedData: user.following,
+      followedUser: followed.id,
+      followedData: followed,
     }));
   }
 
