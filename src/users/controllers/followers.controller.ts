@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { FollowersService } from '../services/followers.service';
 
 @Controller('api/v1/follow')
@@ -22,12 +22,19 @@ export class FollowersController {
   }
 
   @Post(':id')
-  async followUser(@Param('followerId') followerId: string, @Param('id') followedId: string) {
+  async followUser(@Query('followerId') followerId: string, @Query('id') followedId: string) {
     return this.followersService.followUser(followerId, followedId);
-  }
+  } 
 
-  @Delete(':id')
-  async unfollowUser(@Param('followerId') followerId: string, @Param('id') followedId: string) {
+  @Delete('/unfollow')
+  async unfollowUser(
+    @Query('followerId') followerId: string, 
+    @Query('followedId') followedId: string
+  ) {
+    if (!followerId || !followedId) {
+      throw new BadRequestException('followerId and followedId are required');
+    }
+    
     return this.followersService.unfollowUser(followerId, followedId);
   }
 }

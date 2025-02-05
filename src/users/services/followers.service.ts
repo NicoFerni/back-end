@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../../typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -86,13 +86,31 @@ export class FollowersService {
       where: { id: followerId },
       relations: ['following'],
     });
-
+  
     if (!follower) {
       throw new NotFoundException(`User with ID ${followerId} not found`);
     }
-
-    follower.following = follower.following.filter((user) => user.id !== followedId);
+  
+    const followedUser = await this.userRepository.findOne({
+      where: { id: followedId },
+    });
+  
+    if (!followedUser) {
+      throw new NotFoundException(`User with ID ${followedId} not found`);
+    }
+  
+    const isFollowing = follower.following.some(user => user.id === followedId);
+    if (!isFollowing) {
+      throw new BadRequestException(`User with ID ${followerId} is not following user with ID ${followedId}`);
+    }
+  
+    follower.following = follower.following.filter(user => user.id !== followedId);
+    
     await this.userRepository.save(follower);
+    console.log('followerId:', followerId);
+console.log('followedId:', followedId);
+
     return { message: 'Successfully unfollowed user' };
   }
 }
+  
