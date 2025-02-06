@@ -100,7 +100,6 @@ export class User {
   })
   following: User[];
 
-  // Relación inversa de "Seguidores"
   @ManyToMany(() => User, user => user.following)
   followers: User[];
 }
